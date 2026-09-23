@@ -124,6 +124,9 @@ export default function App() {
           </p>
           <div className="hero-actions">
             <DownloadButton label="Baixar agora" />
+            <a className="button button-secondary" href="#servicios">
+              <IconSparkles /> Optimización completa
+            </a>
             <a className="button button-secondary" href={LINKS.discord} target="_blank" rel="noreferrer">
               <IconMessage /> Entrar al Discord
             </a>
