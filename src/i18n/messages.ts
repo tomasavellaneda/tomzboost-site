@@ -22,7 +22,7 @@ export const messages = {
     'hero.titleEm': 'máximo',
     'hero.titleAfter': ' de tu PC',
     'hero.body':
-      'Optimizá Windows en pocos clics, reducí procesos innecesarios y aumentá el rendimiento de tus juegos favoritos — con la misma interfaz monocromática premium de Tomz Boost.',
+      'Optimizá Windows en pocos clics, reducí procesos innecesarios y aumentá el rendimiento de tus juegos favoritos.',
     'hero.ctaDownload': 'Descargar ahora',
     'hero.ctaFull': 'Optimización completa',
     'hero.ctaDiscord': 'Entrar al Discord',
@@ -40,7 +40,7 @@ export const messages = {
 
     'screenshots.eyebrow': 'Software',
     'screenshots.title': 'Capturas de TOMZ BOOST',
-    'screenshots.body': 'La misma interfaz Adrenalin de la app: Inicio, Tweaks, Debloat, Affinity y BIOS.',
+    'screenshots.body': 'Recorré Inicio, Tweaks, Debloat, Affinity y BIOS: todo el flujo de la app en acción.',
     'screenshots.inicio': 'Inicio',
     'screenshots.tweaks': 'Tweaks',
     'screenshots.debloat': 'Debloat',
@@ -66,7 +66,7 @@ export const messages = {
     'benefits.05.title': 'Tweaks avanzados',
     'benefits.05.desc': 'Configuraciones reales pensadas para gamers.',
     'benefits.06.title': 'Interfaz simple',
-    'benefits.06.desc': 'El mismo lenguaje visual de la app de escritorio.',
+    'benefits.06.desc': 'Menús claros: encontrás lo que necesitás sin rodeos.',
 
     'comparison.eyebrow': 'Antes y después',
     'comparison.title': 'La diferencia se siente en el juego',
@@ -89,7 +89,7 @@ export const messages = {
     'games.marqueeAria': 'Juegos compatibles',
     'games.eyebrow': 'Juegos',
     'games.title': 'Compatible con tus juegos favoritos',
-    'games.body': 'Logos oficiales en estilo monocromático. Del competitivo al mundo abierto.',
+    'games.body': 'Del competitivo al mundo abierto: pensado para lo que jugás todos los días.',
 
     'results.eyebrow': 'Benchmarks',
     'results.title': 'Resultados en juegos populares',
@@ -155,7 +155,7 @@ export const messages = {
     'services.app.badge': 'Self-service',
     'services.app.title': 'Solo la App',
     'services.app.desc':
-      'Accedé a TOMZ BOOST e optimizá tu PC vos mismo, con la misma interfaz premium de la app.',
+      'Accedé a TOMZ BOOST e optimizá tu PC vos mismo, a tu ritmo.',
     'services.app.f1': 'Descarga e instalación de TOMZ BOOST',
     'services.app.f2': 'Tweaks, Debloat y Affinity',
     'services.app.f3': 'Monitoreo de CPU, GPU y RAM',
@@ -263,7 +263,7 @@ export const messages = {
     'hero.titleEm': 'máximo',
     'hero.titleAfter': ' do seu PC',
     'hero.body':
-      'Otimize o Windows em poucos cliques, reduza processos desnecessários e aumente o desempenho dos seus jogos favoritos — com a mesma interface monocromática premium do Tomz Boost.',
+      'Otimize o Windows em poucos cliques, reduza processos desnecessários e aumente o desempenho dos seus jogos favoritos.',
     'hero.ctaDownload': 'Baixar agora',
     'hero.ctaFull': 'Otimização completa',
     'hero.ctaDiscord': 'Entrar no Discord',
@@ -281,7 +281,7 @@ export const messages = {
 
     'screenshots.eyebrow': 'Software',
     'screenshots.title': 'Capturas do TOMZ BOOST',
-    'screenshots.body': 'A mesma interface Adrenalin do app: Início, Tweaks, Debloat, Affinity e BIOS.',
+    'screenshots.body': 'Veja Início, Tweaks, Debloat, Affinity e BIOS: o fluxo completo do app em ação.',
     'screenshots.inicio': 'Início',
     'screenshots.tweaks': 'Tweaks',
     'screenshots.debloat': 'Debloat',
@@ -307,7 +307,7 @@ export const messages = {
     'benefits.05.title': 'Tweaks avançados',
     'benefits.05.desc': 'Configurações reais pensadas para gamers.',
     'benefits.06.title': 'Interface simples',
-    'benefits.06.desc': 'A mesma linguagem visual do app de desktop.',
+    'benefits.06.desc': 'Menus claros: você acha o que precisa sem rodeios.',
 
     'comparison.eyebrow': 'Antes e depois',
     'comparison.title': 'A diferença se sente no jogo',
@@ -330,7 +330,7 @@ export const messages = {
     'games.marqueeAria': 'Jogos compatíveis',
     'games.eyebrow': 'Jogos',
     'games.title': 'Compatível com seus jogos favoritos',
-    'games.body': 'Logos oficiais em estilo monocromático. Do competitivo ao mundo aberto.',
+    'games.body': 'Do competitivo ao mundo aberto: pensado para o que você joga todo dia.',
 
     'results.eyebrow': 'Benchmarks',
     'results.title': 'Resultados em jogos populares',
@@ -396,7 +396,7 @@ export const messages = {
     'services.app.badge': 'Self-service',
     'services.app.title': 'Só o App',
     'services.app.desc':
-      'Acesse o TOMZ BOOST e otimize seu PC você mesmo, com a mesma interface premium do app.',
+      'Acesse o TOMZ BOOST e otimize seu PC você mesmo, no seu ritmo.',
     'services.app.f1': 'Download e instalação do TOMZ BOOST',
     'services.app.f2': 'Tweaks, Debloat e Affinity',
     'services.app.f3': 'Monitoramento de CPU, GPU e RAM',
@@ -504,7 +504,7 @@ export const messages = {
     'hero.titleEm': 'most',
     'hero.titleAfter': ' from your PC',
     'hero.body':
-      'Optimize Windows in a few clicks, cut unnecessary processes, and boost your favorite games — with the same premium monochrome interface as Tomz Boost.',
+      'Optimize Windows in a few clicks, cut unnecessary processes, and boost your favorite games.',
     'hero.ctaDownload': 'Download now',
     'hero.ctaFull': 'Full optimization',
     'hero.ctaDiscord': 'Join Discord',
@@ -522,7 +522,7 @@ export const messages = {
 
     'screenshots.eyebrow': 'Software',
     'screenshots.title': 'TOMZ BOOST screenshots',
-    'screenshots.body': 'The same Adrenalin-style app UI: Home, Tweaks, Debloat, Affinity, and BIOS.',
+    'screenshots.body': 'Browse Home, Tweaks, Debloat, Affinity, and BIOS — the full app flow in action.',
     'screenshots.inicio': 'Home',
     'screenshots.tweaks': 'Tweaks',
     'screenshots.debloat': 'Debloat',
@@ -548,7 +548,7 @@ export const messages = {
     'benefits.05.title': 'Advanced tweaks',
     'benefits.05.desc': 'Real settings built for gamers.',
     'benefits.06.title': 'Simple interface',
-    'benefits.06.desc': 'The same visual language as the desktop app.',
+    'benefits.06.desc': 'Clear menus so you find what you need without the clutter.',
 
     'comparison.eyebrow': 'Before & after',
     'comparison.title': 'You feel the difference in-game',
@@ -571,7 +571,7 @@ export const messages = {
     'games.marqueeAria': 'Supported games',
     'games.eyebrow': 'Games',
     'games.title': 'Compatible with your favorite games',
-    'games.body': 'Official logos in a monochrome style. From competitive to open world.',
+    'games.body': 'From competitive to open world — built for what you play every day.',
 
     'results.eyebrow': 'Benchmarks',
     'results.title': 'Results in popular games',
@@ -637,7 +637,7 @@ export const messages = {
     'services.app.badge': 'Self-service',
     'services.app.title': 'App only',
     'services.app.desc':
-      'Get TOMZ BOOST and optimize your PC yourself with the same premium app interface.',
+      'Get TOMZ BOOST and optimize your PC yourself, at your own pace.',
     'services.app.f1': 'TOMZ BOOST download and install',
     'services.app.f2': 'Tweaks, Debloat, and Affinity',
     'services.app.f3': 'CPU, GPU, and RAM monitoring',
