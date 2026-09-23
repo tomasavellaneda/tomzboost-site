@@ -385,6 +385,8 @@ export default function App() {
         </div>
       </section>
 
+      <ServicesSection />
+
       <section id="faq" className="faq-band">
         <div className="section-shell faq-layout">
           <div className="section-heading">
@@ -418,8 +420,6 @@ export default function App() {
           </div>
         </div>
       </section>
-
-      <ServicesSection />
 
       <DownloadSection />
 
