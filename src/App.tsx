@@ -274,7 +274,7 @@ export default function App() {
         <div className="section-heading centered">
           <span>Instalación</span>
           <h2>Guía rápida</h2>
-          <p>Descargá el ZIP, ejecutá el instalador como administrador y activá tu licencia.</p>
+          <p>Descargá el tomzboost, ejecutá el instalador como administrador y activá tu licencia.</p>
         </div>
       </section>
 
