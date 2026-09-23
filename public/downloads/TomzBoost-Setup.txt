@@ -1,0 +1,3 @@
+Tomz Boost Setup
+Reemplaza este archivo por el instalador real (.exe).
+Version: 1.0.0

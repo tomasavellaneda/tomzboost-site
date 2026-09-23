@@ -30,9 +30,15 @@ npm run build
 npm run preview
 ```
 
-## Enlaces
+## Enlaces y download
 
-Editá Discord / WhatsApp / descarga en `src/config.ts`.
+Editá en `src/config.ts`:
+
+- `downloadUrl` — ruta o URL del instalador (hoy apunta a `/downloads/TomzBoost-Setup.zip`)
+- `LINKS.discord` / `LINKS.whatsapp` — reemplazá `SEULINK` y `SEUNUMERO`
+- `RELEASE` — versión, tamaño y fecha
+
+Poné el `.exe` / instalador real en `public/downloads/` y actualizá `downloadUrl`.
 
 ## Origen
 

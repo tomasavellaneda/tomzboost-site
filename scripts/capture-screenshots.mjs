@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, '..')
 const outDir = path.join(root, 'public', 'screenshots')
 const base = process.env.SHOT_BASE || 'http://127.0.0.1:43123'
 
-const screens = ['inicio', 'tweaks', 'juegos']
+const screens = ['inicio', 'tweaks', 'juegos', 'debloat', 'affinity', 'bios']
 
 await mkdir(outDir, { recursive: true })
 
@@ -27,7 +27,7 @@ for (const screen of screens) {
   const url = `${base}/?shot=${screen}`
   console.log('Capturando', url)
   await page.goto(url, { waitUntil: 'networkidle' })
-  await page.waitForTimeout(800)
+  await page.waitForTimeout(700)
   const target = page.locator('.app-window')
   await target.waitFor({ state: 'visible' })
   const file = path.join(outDir, `${screen}.png`)

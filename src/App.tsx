@@ -1,17 +1,23 @@
 import { useEffect, useState } from 'react'
 import AppPreview, { type PreviewScreen } from './components/AppPreview'
+import {
+  DownloadButton,
+  DownloadSection,
+  FloatingSocial,
+  GamesSection,
+  ScreenshotCarousel,
+  StatsSection,
+} from './components/LandingExtras'
 import { LINKS } from './config'
 import {
   IconArrowRight,
   IconCheck,
   IconChevron,
-  IconDownload,
-  IconGamepad,
   IconGauge,
+  IconGamepad,
   IconLayers,
   IconMessage,
   IconPointer,
-  IconRocket,
   IconSettings,
   IconShield,
   IconSparkles,
@@ -27,25 +33,6 @@ const BENEFITS = [
   { n: '05', title: 'Tweaks avanzados', desc: 'Configuraciones reales pensadas para gamers.', Icon: IconSettings },
   { n: '06', title: 'Interfaz simple', desc: 'El mismo lenguaje visual de la app de escritorio.', Icon: IconGamepad },
 ]
-
-const GAMES = [
-  ['CS', 'Counter-Strike 2'],
-  ['V', 'Valorant'],
-  ['R6', 'Rainbow Six Siege'],
-  ['COD', 'Call of Duty'],
-  ['A', 'Apex Legends'],
-  ['BF', 'Battlefield'],
-  ['FN', 'Fortnite'],
-  ['GTA', 'GTA V'],
-  ['L', 'League of Legends'],
-  ['D2', 'Dota 2'],
-  ['R', 'Rust'],
-  ['M', 'Minecraft'],
-  ['P', 'PUBG'],
-  ['RL', 'Rocket League'],
-  ['FC', 'EA FC'],
-  ['RDR', 'Red Dead Redemption 2'],
-] as const
 
 const FAQS = [
   { q: '¿El programa es seguro?', a: 'Sí. Los ajustes son reversibles y podés deshacer cambios cuando quieras.' },
@@ -93,7 +80,9 @@ export default function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const s = params.get('shot')
-    if (s === 'inicio' || s === 'tweaks' || s === 'juegos') setShot(s)
+    if (s === 'inicio' || s === 'tweaks' || s === 'juegos' || s === 'debloat' || s === 'affinity' || s === 'bios') {
+      setShot(s)
+    }
   }, [])
 
   if (shot) return <ShotPage screen={shot} />
@@ -107,12 +96,11 @@ export default function App() {
         <nav aria-label="Navegación principal">
           <a href="#beneficios">Beneficios</a>
           <a href="#capturas">Capturas</a>
-          <a href="#comparativo">Resultados</a>
+          <a href="#jogos">Juegos</a>
+          <a href="#download">Download</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <a className="header-cta" href="#download">
-          <IconDownload /> Descargar
-        </a>
+        <DownloadButton className="header-cta" label="Baixar agora" />
       </header>
 
       <section id="top" className="hero section-shell">
@@ -126,12 +114,10 @@ export default function App() {
           </h1>
           <p>
             Optimizá Windows en pocos clics, reducí procesos innecesarios y aumentá el rendimiento de tus juegos
-            favoritos — con la misma interfaz monocromática de Tomz Boost.
+            favoritos — con la misma interfaz monocromática premium de Tomz Boost.
           </p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#download">
-              <IconDownload /> Descargar ahora
-            </a>
+            <DownloadButton label="Baixar agora" />
             <a className="button button-secondary" href={LINKS.discord} target="_blank" rel="noreferrer">
               <IconMessage /> Entrar al Discord
             </a>
@@ -151,45 +137,8 @@ export default function App() {
         </div>
       </section>
 
-      <section id="capturas" className="section-block section-shell">
-        <div className="section-heading">
-          <span>La app real</span>
-          <h2>
-            Misma UI.
-            <br />
-            Mismos paneles.
-          </h2>
-          <p>
-            Capturas generadas desde el shell real de Tomz Boost: sidebar Adrenalin, gauges en vivo, tweaks con
-            switches y perfiles por juego.
-          </p>
-        </div>
-        <div className="shot-grid">
-          <figure className="shot-card">
-            <img src="/screenshots/inicio.png" alt="Pantalla Inicio de Tomz Boost" width={1100} height={688} />
-            <figcaption>
-              <b>Inicio — rendimiento en vivo</b>
-              <span>CPU, GPU, RAM, disco y temperaturas con gauges estilo Adrenalin.</span>
-            </figcaption>
-          </figure>
-          <div className="shot-stack">
-            <figure className="shot-card">
-              <img src="/screenshots/tweaks.png" alt="Pantalla Tweaks de Tomz Boost" width={1100} height={688} />
-              <figcaption>
-                <b>Tweaks</b>
-                <span>Ajustes reales de sistema, GPU, red y juegos.</span>
-              </figcaption>
-            </figure>
-            <figure className="shot-card">
-              <img src="/screenshots/juegos.png" alt="Pantalla Juegos de Tomz Boost" width={1100} height={688} />
-              <figcaption>
-                <b>Juegos</b>
-                <span>Perfiles Net / FPS / Clean y affinity por .exe.</span>
-              </figcaption>
-            </figure>
-          </div>
-        </div>
-      </section>
+      <StatsSection />
+      <ScreenshotCarousel />
 
       <section id="beneficios" className="section-block section-shell">
         <div className="section-heading">
@@ -278,21 +227,7 @@ export default function App() {
         </div>
       </section>
 
-      <section id="jogos" className="section-block section-shell games-section">
-        <div className="section-heading centered">
-          <span>Jugá a tu manera</span>
-          <h2>Compatible con tus juegos favoritos</h2>
-          <p>Del competitivo al mundo abierto, Tomz Boost prepara Windows para tu próxima partida.</p>
-        </div>
-        <div className="games-grid">
-          {GAMES.map(([abbr, name]) => (
-            <div className="game-item" key={name}>
-              <span>{abbr}</span>
-              <b>{name}</b>
-            </div>
-          ))}
-        </div>
-      </section>
+      <GamesSection />
 
       <section className="steps-band">
         <div className="section-shell">
@@ -323,6 +258,14 @@ export default function App() {
               </div>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section id="guia" className="section-block section-shell">
+        <div className="section-heading centered">
+          <span>Instalación</span>
+          <h2>Guía rápida</h2>
+          <p>Descargá el ZIP, ejecutá el instalador como administrador y activá tu licencia.</p>
         </div>
       </section>
 
@@ -369,17 +312,7 @@ export default function App() {
         </div>
       </section>
 
-      <section id="download" className="download-section section-shell">
-        <div className="download-inner">
-          <IconRocket />
-          <h2>¿Listo para sacar más rendimiento de tu PC?</h2>
-          <p>Tu setup ya tiene potencial. Ahora es momento de desbloquearlo.</p>
-          <a className="button button-primary button-large" href="#top">
-            <IconDownload /> Descargar Tomz Boost
-          </a>
-          <small>Compatible con Windows 10 y Windows 11</small>
-        </div>
-      </section>
+      <DownloadSection />
 
       <footer className="site-footer section-shell">
         <img src="/logo.png" alt="TOMZ BOOST" className="footer-logo" />
@@ -387,20 +320,7 @@ export default function App() {
         <span>© {new Date().getFullYear()} TOMZ BOOST</span>
       </footer>
 
-      <div className="floating-actions">
-        <a className="floating-button discord" href={LINKS.discord} target="_blank" rel="noreferrer" aria-label="Discord">
-          <IconGamepad />
-        </a>
-        <a
-          className="floating-button whatsapp"
-          href={LINKS.whatsapp}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="WhatsApp"
-        >
-          <IconMessage />
-        </a>
-      </div>
+      <FloatingSocial />
     </main>
   )
 }

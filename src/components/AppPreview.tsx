@@ -8,7 +8,7 @@ import {
   IconTrash,
 } from './Icons'
 
-export type PreviewScreen = 'inicio' | 'tweaks' | 'juegos'
+export type PreviewScreen = 'inicio' | 'tweaks' | 'juegos' | 'debloat' | 'affinity' | 'bios'
 
 interface AppPreviewProps {
   screen?: PreviewScreen
@@ -83,7 +83,6 @@ function InicioBody() {
           ))}
         </div>
       </div>
-
       <div className="cols-2">
         <div className="mini-panel">
           <div className="ph">
@@ -112,7 +111,6 @@ function InicioBody() {
             <div className="val">12 ms</div>
           </div>
         </div>
-
         <div className="mini-panel">
           <div className="ph">
             <b>Hardware</b>
@@ -142,7 +140,6 @@ function InicioBody() {
           </div>
         </div>
       </div>
-
       <div className="chart-panel">
         <div className="ph">
           <b>Rendimiento</b>
@@ -215,14 +212,130 @@ function JuegosBody() {
   )
 }
 
+function DebloatBody() {
+  const apps = [
+    { name: 'Cortana', desc: 'Asistente de Windows', on: true },
+    { name: 'Xbox Game Bar', desc: 'Overlay y captura', on: true },
+    { name: 'OneDrive', desc: 'Sincronización en la nube', on: false },
+    { name: 'Widgets', desc: 'Panel de noticias', on: true },
+    { name: 'Teams Chat', desc: 'Chat preinstalado', on: true },
+  ]
+  return (
+    <>
+      <div className="banner-line">12 apps preinstaladas detectadas · selecciónalas y desinstalá</div>
+      <div className="live-panel tweak-list">
+        {apps.map((a) => (
+          <div className="setting" key={a.name}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <span className={`check ${a.on ? 'on' : ''}`} />
+              <div>
+                <b>{a.name}</b>
+                <span>{a.desc}</span>
+              </div>
+            </div>
+            <span className="pill">{a.on ? 'Instalada' : 'Ausente'}</span>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
+
+function AffinityBody() {
+  const procs = [
+    { name: 'cs2.exe', prio: 'Alta', cpu: '22%' },
+    { name: 'chrome.exe', prio: 'Normal', cpu: '8%' },
+    { name: 'discord.exe', prio: 'Por encima', cpu: '4%' },
+  ]
+  return (
+    <>
+      <div className="metric-row">
+        {[
+          ['CPU', '18%'],
+          ['Hilos', '16'],
+          ['GHz', '3.8'],
+          ['Cores', '8'],
+        ].map(([k, v]) => (
+          <div className="metric-card" key={k}>
+            <b>{v}</b>
+            <span>{k}</span>
+          </div>
+        ))}
+      </div>
+      <div className="live-panel tweak-list" style={{ marginTop: 10 }}>
+        <div className="live-head">
+          <b>Procesos</b>
+          <span className="mini-cta">Auto Affinity</span>
+        </div>
+        {procs.map((p) => (
+          <div className="setting" key={p.name}>
+            <div>
+              <b>{p.name}</b>
+              <span>Prioridad {p.prio}</span>
+            </div>
+            <span className="val">{p.cpu}</span>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
+
+function BiosBody() {
+  return (
+    <div className="cols-2">
+      <div className="mini-panel">
+        <div className="ph">
+          <b>Placa / CPU</b>
+          <span>WMI</span>
+        </div>
+        {[
+          ['CPU', 'Ryzen 7 5800X'],
+          ['Cores / Threads', '8 / 16'],
+          ['Motherboard', 'ASUS'],
+          ['Modelo', 'ROG STRIX B550'],
+          ['BIOS', 'American Megatrends'],
+          ['Versión', '2803'],
+        ].map(([k, v]) => (
+          <div className="row" key={k}>
+            <div className="meta">
+              <b>{k}</b>
+            </div>
+            <div className="val">{v}</div>
+          </div>
+        ))}
+      </div>
+      <div className="mini-panel">
+        <div className="ph">
+          <b>Acciones</b>
+          <span>Firmware</span>
+        </div>
+        <div className="btn-stack">
+          <div className="fake-btn primary">Exportar config</div>
+          <div className="fake-btn">Ver info</div>
+          <div className="fake-btn">Abrir carpeta</div>
+          <div className="fake-btn">Entrar al BIOS</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const TITLES: Record<PreviewScreen, { kicker: string; title: string }> = {
   inicio: { kicker: 'Vista general', title: 'Vista General del Sistema' },
   tweaks: { kicker: 'Rendimiento', title: 'Tweaks de Rendimiento' },
   juegos: { kicker: 'Perfiles', title: 'Juegos' },
+  debloat: { kicker: 'Limpieza', title: 'Debloat' },
+  affinity: { kicker: 'CPU', title: 'Affinity' },
+  bios: { kicker: 'Firmware', title: 'Bios' },
+}
+
+function navActive(screen: PreviewScreen, key: string) {
+  if (screen === key) return true
+  return false
 }
 
 export default function AppPreview({ screen = 'inicio', flat = false, className = '' }: AppPreviewProps) {
-  const active = screen === 'juegos' ? 'juegos' : screen
   const titles = TITLES[screen]
 
   return (
@@ -242,14 +355,14 @@ export default function AppPreview({ screen = 'inicio', flat = false, className 
           </div>
           <div className="nav-group">General</div>
           {GENERAL.map(({ key, label, Icon }) => (
-            <div key={key} className={`app-nav ${active === key ? 'is-active' : ''}`}>
+            <div key={key} className={`app-nav ${navActive(screen, key) ? 'is-active' : ''}`}>
               <Icon />
               <span>{label}</span>
             </div>
           ))}
           <div className="nav-group">Ajustes</div>
           {AJUSTES.map(({ key, label, Icon }) => (
-            <div key={key} className="app-nav">
+            <div key={key} className={`app-nav ${navActive(screen, key) ? 'is-active' : ''}`}>
               <Icon />
               <span>{label}</span>
             </div>
@@ -276,6 +389,9 @@ export default function AppPreview({ screen = 'inicio', flat = false, className 
             {screen === 'inicio' && <InicioBody />}
             {screen === 'tweaks' && <TweaksBody />}
             {screen === 'juegos' && <JuegosBody />}
+            {screen === 'debloat' && <DebloatBody />}
+            {screen === 'affinity' && <AffinityBody />}
+            {screen === 'bios' && <BiosBody />}
           </div>
         </div>
       </div>
