@@ -1215,6 +1215,7 @@ p {
   position: relative;
   padding: 40px 0 100px;
   border-top: 1px solid var(--border);
+  scroll-margin-top: 88px;
   background:
     radial-gradient(ellipse 70% 55% at 50% 0%, rgba(255, 255, 255, 0.035), transparent 60%),
     var(--bg-soft);
