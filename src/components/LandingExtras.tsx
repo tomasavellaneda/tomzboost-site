@@ -1,22 +1,24 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { downloadUrl, LINKS, RELEASE } from '../config'
+import { useI18n } from '../i18n/I18nProvider'
+import type { MessageKey } from '../i18n/messages'
 import { IconCheck, IconChip, IconDownload, IconRocket, IconSettings, IconShield } from './Icons'
 
 export function DownloadButton({
   className = 'button button-primary',
-  label = 'Descargar ahora',
+  label,
   large = false,
 }: {
   className?: string
   label?: string
   large?: boolean
 }) {
+  const { t } = useI18n()
   const [busy, setBusy] = useState(false)
+  const text = label ?? t('nav.cta')
 
   function handleClick(_e: MouseEvent<HTMLAnchorElement>) {
     setBusy(true)
-    // Indicador visual breve; el atributo download inicia la descarga.
-    // Fallback: si el navegador ignora download en cross-origin, abrir en nueva pestaña.
     window.setTimeout(() => {
       const isAbsolute = /^https?:\/\//i.test(downloadUrl)
       if (isAbsolute) {
@@ -36,11 +38,11 @@ export function DownloadButton({
       {busy ? (
         <>
           <span className="dl-spinner" aria-hidden />
-          Descargando…
+          {t('download.busy')}
         </>
       ) : (
         <>
-          <IconDownload /> {label}
+          <IconDownload /> {text}
         </>
       )}
     </a>
@@ -48,41 +50,42 @@ export function DownloadButton({
 }
 
 export function DownloadSection() {
+  const { t } = useI18n()
   return (
     <section id="download" className="download-section section-shell">
       <div className="download-panel download-panel-solo">
         <div className="download-panel-glow" aria-hidden />
         <div className="download-copy">
-          <span className="eyebrow">Descarga</span>
-          <h2>Descargá TOMZ BOOST</h2>
-          <p>Instalá el optimizador y empezá a ganar FPS en minutos.</p>
+          <span className="eyebrow">{t('download.eyebrow')}</span>
+          <h2>{t('download.title')}</h2>
+          <p>{t('download.body')}</p>
 
           <ul className="release-meta">
             <li>
-              <b>Versión actual</b>
+              <b>{t('download.meta.version')}</b>
               <span>v{RELEASE.version}</span>
             </li>
             <li>
-              <b>Tamaño</b>
+              <b>{t('download.meta.size')}</b>
               <span>{RELEASE.size}</span>
             </li>
             <li>
-              <b>Compatible</b>
+              <b>{t('download.meta.compatible')}</b>
               <span>{RELEASE.platforms.join(' · ')}</span>
             </li>
             <li>
-              <b>Última actualización</b>
+              <b>{t('download.meta.updated')}</b>
               <span>{RELEASE.updatedAt}</span>
             </li>
           </ul>
 
           <div className="hero-actions" style={{ marginTop: 28 }}>
-            <DownloadButton className="button button-primary" label="Descargar TOMZ BOOST" large />
+            <DownloadButton className="button button-primary" label={t('download.cta')} large />
             <a className="button button-secondary" href={LINKS.installGuide}>
-              Ver guía de instalación
+              {t('download.guide')}
             </a>
           </div>
-          <small className="dl-note">Compatible con Windows 10 y Windows 11 · ajustes reversibles</small>
+          <small className="dl-note">{t('download.note')}</small>
         </div>
       </div>
     </section>
@@ -90,6 +93,7 @@ export function DownloadSection() {
 }
 
 export function FloatingSocial() {
+  const { t } = useI18n()
   return (
     <div className="floating-actions">
       <a
@@ -97,7 +101,7 @@ export function FloatingSocial() {
         href={LINKS.discord}
         target="_blank"
         rel="noreferrer"
-        aria-label="Entrar al Discord"
+        aria-label={t('floating.discord')}
       >
         <img src="/icons/discord.svg" alt="" width={22} height={22} />
       </a>
@@ -106,7 +110,7 @@ export function FloatingSocial() {
         href={LINKS.whatsapp}
         target="_blank"
         rel="noreferrer"
-        aria-label="Hablar por WhatsApp"
+        aria-label={t('floating.whatsapp')}
       >
         <img src="/icons/whatsapp.svg" alt="" width={22} height={22} />
       </a>
@@ -114,46 +118,37 @@ export function FloatingSocial() {
   )
 }
 
-const SERVICES = [
-  {
-    id: 'app',
-    badge: 'Self-service',
-    title: 'Solo la App',
-    desc: 'Accedé a TOMZ BOOST e optimizá tu PC vos mismo, con la misma interfaz premium de la app.',
-    features: [
-      'Descarga e instalación de TOMZ BOOST',
-      'Tweaks, Debloat y Affinity',
-      'Monitoreo de CPU, GPU y RAM',
-      'Actualizaciones de la app',
-    ],
-    cta: { label: 'Descargar la app', href: '#download', primary: true },
-  },
-  {
-    id: 'full',
-    badge: '1 a 1 · Recomendado',
-    title: 'Optimización completa',
-    desc: 'Sesión personalizada con un especialista. Dejamos tu PC lista de punta a punta.',
-    features: [
-      'Configuración y optimización de BIOS',
-      'Configuración y optimización de Windows',
-      'Incluye la app TOMZ BOOST',
-      'Acompañamiento 1 a 1 hasta dejarlo listo',
-    ],
-    cta: { label: 'Pedir optimización 1 a 1', href: LINKS.whatsapp, primary: true, external: true },
-  },
-] as const
-
 export function ServicesSection() {
+  const { t } = useI18n()
+  const services = [
+    {
+      id: 'app',
+      badge: t('services.app.badge'),
+      title: t('services.app.title'),
+      desc: t('services.app.desc'),
+      features: [t('services.app.f1'), t('services.app.f2'), t('services.app.f3'), t('services.app.f4')],
+      cta: { label: t('services.app.cta'), href: '#download', primary: true as const },
+    },
+    {
+      id: 'full',
+      badge: t('services.full.badge'),
+      title: t('services.full.title'),
+      desc: t('services.full.desc'),
+      features: [t('services.full.f1'), t('services.full.f2'), t('services.full.f3'), t('services.full.f4')],
+      cta: { label: t('services.full.cta'), href: LINKS.whatsapp, primary: true as const, external: true },
+    },
+  ]
+
   return (
     <section id="servicios" className="section-block section-shell services-section">
       <div className="section-heading centered">
-        <span>Servicios</span>
-        <h2>Elegí cómo querés optimizar</h2>
-        <p>Empezá solo con la app o pedí una optimización completa 1 a 1.</p>
+        <span>{t('services.eyebrow')}</span>
+        <h2>{t('services.title')}</h2>
+        <p>{t('services.body')}</p>
       </div>
 
       <div className="services-grid">
-        {SERVICES.map((s) => (
+        {services.map((s) => (
           <article className={`service-card${s.id === 'full' ? ' is-featured' : ''}`} key={s.id}>
             <div className="service-card-top">
               <span className="service-badge">{s.badge}</span>
@@ -197,7 +192,7 @@ export function ServicesSection() {
           <IconRocket /> App TOMZ BOOST
         </span>
         <span>
-          <IconShield /> Ajustes reversibles
+          <IconShield /> {t('services.note.reversible')}
         </span>
       </div>
     </section>
@@ -224,8 +219,8 @@ export const GAMES = [
 
 /** Carrusel infinito: solo el logo original en monocromo, una fila. */
 export function GamesMarquee() {
+  const { t } = useI18n()
   const trackRef = useRef<HTMLDivElement>(null)
-  // Dos copias bastan: al recorrer el ancho de un set, reseteamos
   const items = [...GAMES, ...GAMES]
 
   useEffect(() => {
@@ -235,13 +230,12 @@ export function GamesMarquee() {
     let raf = 0
     let x = 0
     let last = performance.now()
-    const speed = 55 // px/s — movimiento claro y continuo
+    const speed = 55
 
     const tick = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
       x -= speed * dt
-      // Un set = mitad del track (2 copias idénticas)
       const setWidth = track.scrollWidth / 2
       if (setWidth > 0 && -x >= setWidth) {
         x += setWidth
@@ -250,7 +244,6 @@ export function GamesMarquee() {
       raf = requestAnimationFrame(tick)
     }
 
-    // Esperar a que las imágenes midan el ancho real
     const start = () => {
       cancelAnimationFrame(raf)
       last = performance.now()
@@ -267,7 +260,7 @@ export function GamesMarquee() {
   }, [])
 
   return (
-    <div className="games-marquee" aria-label="Juegos compatibles">
+    <div className="games-marquee" aria-label={t('games.marqueeAria')}>
       <div className="games-marquee-track" ref={trackRef}>
         {items.map((g, i) => (
           <div className="games-marquee-item" key={`${g.name}-${i}`} title={g.name}>
@@ -280,12 +273,13 @@ export function GamesMarquee() {
 }
 
 export function GamesSection() {
+  const { t } = useI18n()
   return (
     <section id="jogos" className="section-block section-shell games-section">
       <div className="section-heading centered">
-        <span>Juegos</span>
-        <h2>Compatible con tus juegos favoritos</h2>
-        <p>Logos oficiales en estilo monocromático. Del competitivo al mundo abierto.</p>
+        <span>{t('games.eyebrow')}</span>
+        <h2>{t('games.title')}</h2>
+        <p>{t('games.body')}</p>
       </div>
       <div className="games-logo-grid">
         {GAMES.map((g) => (
@@ -299,35 +293,35 @@ export function GamesSection() {
   )
 }
 
-const SHOTS = [
-  { id: 'inicio', title: 'Tela Inicial', src: '/screenshots/inicio.png' },
-  { id: 'tweaks', title: 'Tweaks', src: '/screenshots/tweaks.png' },
-  { id: 'debloat', title: 'Debloat', src: '/screenshots/debloat.png' },
-  { id: 'affinity', title: 'Affinity', src: '/screenshots/affinity.png' },
-  { id: 'bios', title: 'BIOS', src: '/screenshots/bios.png' },
-] as const
+const SHOT_IDS = ['inicio', 'tweaks', 'debloat', 'affinity', 'bios'] as const
 
 export function ScreenshotCarousel() {
+  const { t } = useI18n()
   const [index, setIndex] = useState(0)
   const [lightbox, setLightbox] = useState<string | null>(null)
-  const current = SHOTS[index]
+  const shots = SHOT_IDS.map((id) => ({
+    id,
+    title: t(`screenshots.${id}` as MessageKey),
+    src: `/screenshots/${id}.png`,
+  }))
+  const current = shots[index]
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setLightbox(null)
-      if (e.key === 'ArrowRight') setIndex((i) => (i + 1) % SHOTS.length)
-      if (e.key === 'ArrowLeft') setIndex((i) => (i - 1 + SHOTS.length) % SHOTS.length)
+      if (e.key === 'ArrowRight') setIndex((i) => (i + 1) % shots.length)
+      if (e.key === 'ArrowLeft') setIndex((i) => (i - 1 + shots.length) % shots.length)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, [shots.length])
 
   return (
     <section id="capturas" className="section-block section-shell">
       <div className="section-heading centered">
-        <span>Software</span>
-        <h2>Screenshots del TOMZ BOOST</h2>
-        <p>La misma interfaz Adrenalin de la app: Inicio, Tweaks, Debloat, Affinity y BIOS.</p>
+        <span>{t('screenshots.eyebrow')}</span>
+        <h2>{t('screenshots.title')}</h2>
+        <p>{t('screenshots.body')}</p>
       </div>
 
       <div className="shot-carousel">
@@ -335,13 +329,13 @@ export function ScreenshotCarousel() {
           type="button"
           className="shot-main"
           onClick={() => setLightbox(current.src)}
-          aria-label={`Ampliar ${current.title}`}
+          aria-label={`${t('screenshots.expand')} ${current.title}`}
         >
           <img src={current.src} alt={current.title} />
           <span className="shot-badge">{current.title}</span>
         </button>
-        <div className="shot-thumbs" role="tablist" aria-label="Pantallas">
-          {SHOTS.map((s, i) => (
+        <div className="shot-thumbs" role="tablist" aria-label={t('screenshots.thumbsAria')}>
+          {shots.map((s, i) => (
             <button
               key={s.id}
               type="button"
@@ -359,19 +353,12 @@ export function ScreenshotCarousel() {
 
       {lightbox && (
         <div className="lightbox" role="dialog" aria-modal="true" onClick={() => setLightbox(null)}>
-          <img src={lightbox} alt="Captura ampliada" onClick={(e) => e.stopPropagation()} />
+          <img src={lightbox} alt={t('screenshots.lightboxAlt')} onClick={(e) => e.stopPropagation()} />
         </div>
       )}
     </section>
   )
 }
-
-const STATS = [
-  { id: 'fps', prefix: '', suffix: '%', target: 22, label: 'FPS más estables', dir: 'up' as const },
-  { id: 'proc', prefix: '', suffix: '%', target: 35, label: 'Procesos innecesarios', dir: 'down' as const },
-  { id: 'res', prefix: '', suffix: '%', target: 28, label: 'Consumo de recursos', dir: 'down' as const },
-  { id: 'perf', prefix: '', suffix: '%', target: 40, label: 'Desempeño en juegos', dir: 'up' as const },
-]
 
 function useCountUp(target: number, active: boolean, duration = 1400) {
   const [value, setValue] = useState(0)
@@ -418,6 +405,7 @@ function StatCard({
 }
 
 export function StatsSection() {
+  const { t } = useI18n()
   const ref = useRef<HTMLElement>(null)
   const [active, setActive] = useState(false)
 
@@ -426,7 +414,10 @@ export function StatsSection() {
     if (!el) return
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setActive(true)
+        if (entry.isIntersecting) {
+          setActive(true)
+          io.disconnect()
+        }
       },
       { threshold: 0.35 },
     )
@@ -434,21 +425,26 @@ export function StatsSection() {
     return () => io.disconnect()
   }, [])
 
+  const stats = [
+    { id: 'fps', suffix: '%', target: 22, label: t('stats.fps'), dir: 'up' as const },
+    { id: 'proc', suffix: '%', target: 35, label: t('stats.processes'), dir: 'down' as const },
+    { id: 'res', suffix: '%', target: 28, label: t('stats.resources'), dir: 'down' as const },
+    { id: 'perf', suffix: '%', target: 40, label: t('stats.performance'), dir: 'up' as const },
+  ]
+
   return (
-    <section id="stats" className="stats-band" ref={ref}>
-      <div className="section-shell">
-        <div className="section-heading centered">
-          <span>Resultados</span>
-          <h2>¿Qué hace el TOMZ BOOST?</h2>
-          <p>Contadores ilustrativos del impacto típico tras optimizar el sistema.</p>
-        </div>
-        <div className="stats-grid">
-          {STATS.map((s) => (
-            <StatCard key={s.id} {...s} active={active} />
-          ))}
-        </div>
-        <p className="disclaimer">* Valores ilustrativos. El resultado real depende de tu hardware y configuración.</p>
+    <section ref={ref} className="stats-section section-shell section-block">
+      <div className="section-heading centered">
+        <span>{t('stats.eyebrow')}</span>
+        <h2>{t('stats.title')}</h2>
+        <p>{t('stats.body')}</p>
       </div>
+      <div className="stats-grid">
+        {stats.map((s) => (
+          <StatCard key={s.id} {...s} active={active} />
+        ))}
+      </div>
+      <p className="disclaimer">{t('stats.disclaimer')}</p>
     </section>
   )
 }

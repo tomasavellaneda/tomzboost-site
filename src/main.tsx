@@ -4,9 +4,12 @@ import '@fontsource-variable/geist'
 import '@fontsource-variable/geist-mono'
 import './styles/global.css'
 import App from './App'
+import { I18nProvider } from './i18n/I18nProvider'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <I18nProvider>
+      <App />
+    </I18nProvider>
   </StrictMode>,
 )

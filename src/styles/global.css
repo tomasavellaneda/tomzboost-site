@@ -149,6 +149,46 @@ p {
   backdrop-filter: blur(18px);
 }
 
+.header-end {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.lang-switch button {
+  min-width: 36px;
+  min-height: 30px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.lang-switch button.is-active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.lang-switch button:hover:not(.is-active) {
+  color: var(--text);
+}
+
 .header-logo {
   width: 146px;
   height: auto;
@@ -166,7 +206,6 @@ p {
 }
 
 .header-cta {
-  justify-self: end;
   display: inline-flex;
   align-items: center;
   gap: 8px;
