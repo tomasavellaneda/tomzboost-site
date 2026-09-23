@@ -36,12 +36,97 @@ const BENEFITS = [
   { n: '06', title: 'Interfaz simple', desc: 'El mismo lenguaje visual de la app de escritorio.', Icon: IconGamepad },
 ]
 
-const FAQS = [
-  { q: '¿El programa es seguro?', a: 'Sí. Los ajustes son reversibles y podés deshacer cambios cuando quieras.' },
-  { q: '¿Funciona en Windows 10?', a: 'Sí.' },
-  { q: '¿Funciona en Windows 11?', a: 'Sí.' },
-  { q: '¿Necesito saber de informática?', a: 'No. La app está hecha para ser simple: monitoreás, aplicás y listo.' },
-]
+const FAQ_GROUPS = [
+  {
+    title: 'Elegí tu plan',
+    items: [
+      {
+        q: '¿Qué plan elijo?',
+        a: 'Si querés el máximo, andá por la Optimización completa 1 a 1: BIOS, Windows y la app. Si preferís hacerlo vos, elegí Solo la App y aplicás los tweaks desde TOMZ BOOST.',
+      },
+      {
+        q: 'Mi PC es flojo, ¿vale la pena?',
+        a: 'Depende de lo que esperes. Ningún ajuste convierte hardware flojo en hardware fuerte. Sí sacamos lo que tu máquina tiene de más y te digo con claridad qué la está frenando.',
+      },
+    ],
+  },
+  {
+    title: 'Seguridad',
+    items: [
+      {
+        q: '¿Es seguro dejar que entren a mi PC?',
+        a: 'En la sesión 1 a 1 vos mandás. Ves la pantalla todo el tiempo y, si cerrás AnyDesk, el acceso se corta en ese segundo. Nada pasa a escondidas.',
+      },
+      {
+        q: '¿Abren mis archivos?',
+        a: 'No. No abrimos archivos, navegador ni contraseñas. Trabajamos en Windows y en la BIOS, y nada más.',
+      },
+      {
+        q: '¿Y si se rompe algo?',
+        a: 'Antes de tocar nada creamos un punto de restauración para poder volver atrás. Si aparece alguna inestabilidad por lo que hicimos, lo resolvemos sin costo extra.',
+      },
+    ],
+  },
+  {
+    title: 'Antes de la sesión',
+    items: [
+      {
+        q: '¿Necesito formatear Windows?',
+        a: 'Para la Optimización completa, sí: Windows fresco. Si ya corriste otro optimizador o tweaks de YouTube, trabajaríamos encima de esa mezcla y el resultado no sería el mismo.',
+      },
+      {
+        q: '¿Windows 10 u 11?',
+        a: 'Los dos sirven, siempre que sean originales y sin modificaciones.',
+      },
+      {
+        q: '¿Tengo que estar delante de la PC?',
+        a: 'Sí. Liberás el acceso, acompañás la sesión y la cerrás cuando quieras. Si no podés estar presente, mejor reprogramar.',
+      },
+    ],
+  },
+  {
+    title: 'Cómo agendar',
+    items: [
+      {
+        q: '¿Cómo reservo la Optimización completa?',
+        a: 'Escribinos por WhatsApp, elegí el plan y coordinamos día y horario. También podés preguntar en Discord si preferís la comunidad.',
+      },
+      {
+        q: '¿En qué horarios atienden?',
+        a: 'Coordinamos según disponibilidad. Al agendar te confirmamos el horario en tu zona.',
+      },
+      {
+        q: '¿Puedo cambiar el horario?',
+        a: 'Sí. Avisá con anticipación por WhatsApp y reprogramamos en un turno libre.',
+      },
+      {
+        q: 'No vivo en el mismo país, ¿cómo pago?',
+        a: 'El valor y el método se acuerdan dentro del chat al agendar, según tu moneda y país.',
+      },
+    ],
+  },
+  {
+    title: 'Después',
+    items: [
+      {
+        q: '¿Cuánto dura la sesión?',
+        a: 'Entre 40 y 50 minutos en promedio, según el estado de la PC.',
+      },
+      {
+        q: '¿Va a mejorar mi ping?',
+        a: 'No. El ping depende de la distancia al servidor y de tu proveedor. Lo que mejora es el input lag y la fluidez del sistema, que es otra cosa.',
+      },
+      {
+        q: '¿Pierdo la app si cambio de piezas?',
+        a: 'Sí. La licencia se libera por HWID: cambiar hardware o usar spoofer puede quitar el acceso.',
+      },
+      {
+        q: '¿Y si formateo de nuevo?',
+        a: 'La app sigue siendo tuya. El HWID es del hardware, no del sistema: reinstalás y listo.',
+      },
+    ],
+  },
+] as const
 
 const TESTIMONIALS = [
   { quote: 'Mi CS2 quedó mucho más estable.', name: 'Rafael M.', meta: 'Counter-Strike 2', initial: 'R' },
@@ -303,19 +388,32 @@ export default function App() {
       <section id="faq" className="faq-band">
         <div className="section-shell faq-layout">
           <div className="section-heading">
-            <span>Dudas frecuentes</span>
+            <span>Preguntas frecuentes</span>
             <h2>Todo lo que necesitás saber</h2>
-            <p>¿Todavía necesitás ayuda? Hablá con la comunidad en Discord.</p>
+            <p>
+              Planes, seguridad, agenda y qué pasa después de la sesión. ¿No encontraste tu duda?{' '}
+              <a href={LINKS.whatsapp} target="_blank" rel="noreferrer">
+                Escribinos por WhatsApp
+              </a>
+              .
+            </p>
           </div>
-          <div className="faq-list">
-            {FAQS.map((f, i) => (
-              <details key={f.q} open={i === 0}>
-                <summary>
-                  {f.q}
-                  <IconChevron />
-                </summary>
-                <p>{f.a}</p>
-              </details>
+          <div className="faq-groups">
+            {FAQ_GROUPS.map((group) => (
+              <div className="faq-group" key={group.title}>
+                <h3 className="faq-group-title">{group.title}</h3>
+                <div className="faq-list">
+                  {group.items.map((f, i) => (
+                    <details key={f.q} open={group.title === 'Elegí tu plan' && i === 0}>
+                      <summary>
+                        {f.q}
+                        <IconChevron />
+                      </summary>
+                      <p>{f.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
