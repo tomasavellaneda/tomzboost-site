@@ -293,6 +293,97 @@ export function GamesSection() {
   )
 }
 
+const GAME_RESULTS = [
+  { id: 'cs2', name: 'Counter-Strike 2', src: '/games/cs2.svg', before: 280, after: 365 },
+  { id: 'valorant', name: 'Valorant', src: '/games/valorant.svg', before: 240, after: 336 },
+  { id: 'fortnite', name: 'Fortnite', src: '/games/fortnite.svg', before: 405, after: 510 },
+  { id: 'lol', name: 'League of Legends', src: '/games/lol.svg', before: 165, after: 203 },
+  { id: 'apex', name: 'Apex Legends', src: '/games/apex.png', before: 144, after: 188 },
+  { id: 'r6', name: 'Rainbow Six Siege', src: '/games/r6.png', before: 210, after: 275 },
+  { id: 'cod', name: 'Call of Duty', src: '/games/cod.png', before: 118, after: 152 },
+  { id: 'pubg', name: 'PUBG', src: '/games/pubg.png', before: 95, after: 128 },
+  { id: 'gtav', name: 'GTA V', src: '/games/gtav.png', before: 82, after: 110 },
+  { id: 'minecraft', name: 'Minecraft', src: '/games/minecraft.png', before: 130, after: 206 },
+  { id: 'rocket', name: 'Rocket League', src: '/games/rocketleague.png', before: 240, after: 310 },
+  { id: 'rust', name: 'Rust', src: '/games/rust.png', before: 78, after: 108 },
+  { id: 'eafc', name: 'EA Sports FC', src: '/games/eafc26.png', before: 140, after: 182 },
+  { id: 'rdr2', name: 'Red Dead Redemption 2', src: '/games/rdr2.png', before: 62, after: 84 },
+  { id: 'dota', name: 'Dota 2', src: '/games/dota2.png', before: 120, after: 158 },
+] as const
+
+export function GameResultsSection() {
+  const { t } = useI18n()
+  const scrollerRef = useRef<HTMLDivElement>(null)
+
+  function scrollBy(dir: -1 | 1) {
+    const el = scrollerRef.current
+    if (!el) return
+    el.scrollBy({ left: dir * 320, behavior: 'smooth' })
+  }
+
+  return (
+    <section id="resultados" className="game-results-band">
+      <div className="section-shell game-results-shell">
+        <div className="section-heading centered">
+          <span>{t('results.eyebrow')}</span>
+          <h2>{t('results.title')}</h2>
+          <p>{t('results.body')}</p>
+        </div>
+
+        <div className="game-results-controls">
+          <button type="button" className="game-results-nav" onClick={() => scrollBy(-1)} aria-label="Previous">
+            ‹
+          </button>
+          <button type="button" className="game-results-nav" onClick={() => scrollBy(1)} aria-label="Next">
+            ›
+          </button>
+        </div>
+      </div>
+
+      <div className="game-results-scroller" ref={scrollerRef}>
+        {GAME_RESULTS.map((g) => {
+          const gain = Math.round(((g.after - g.before) / g.before) * 100)
+          return (
+            <article className="game-result-card" key={g.id}>
+              <header>
+                <div>
+                  <span className="game-result-cat">{t(`results.${g.id}.cat` as MessageKey)}</span>
+                  <h3>{g.name}</h3>
+                </div>
+                <img src={g.src} alt="" className="game-result-logo" />
+              </header>
+
+              <div className="game-result-fps">
+                <div>
+                  <small>{t('results.without')}</small>
+                  <strong>
+                    {g.before} <span>{t('results.fpsAvg')}</span>
+                  </strong>
+                </div>
+                <div className="is-boosted">
+                  <small>{t('results.with')}</small>
+                  <strong>
+                    {g.after} <span>{t('results.fpsAvg')}</span>
+                  </strong>
+                </div>
+              </div>
+
+              <div className="game-result-badge">
+                +{gain}% {t('results.gain')}
+              </div>
+              <p>{t(`results.${g.id}.desc` as MessageKey)}</p>
+            </article>
+          )
+        })}
+      </div>
+
+      <div className="section-shell">
+        <p className="disclaimer">{t('results.disclaimer')}</p>
+      </div>
+    </section>
+  )
+}
+
 const SHOT_IDS = ['inicio', 'tweaks', 'debloat', 'affinity', 'bios'] as const
 
 export function ScreenshotCarousel() {

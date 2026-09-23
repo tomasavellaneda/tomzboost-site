@@ -4,6 +4,7 @@ import {
   DownloadButton,
   DownloadSection,
   FloatingSocial,
+  GameResultsSection,
   GamesMarquee,
   GamesSection,
   ScreenshotCarousel,
@@ -298,6 +299,7 @@ export default function App() {
       </section>
 
       <GamesSection />
+      <GameResultsSection />
 
       <section className="steps-band">
         <div className="section-shell">
