@@ -131,7 +131,7 @@ export const GAMES = [
   { name: 'PUBG', short: 'PUBG', src: '/games/pubg.png' },
   { name: 'Rocket League', short: 'Rocket League', src: '/games/rocketleague.png' },
   { name: 'Rust', short: 'Rust', src: '/games/rust.png' },
-  { name: 'EA FC 26', short: 'EA Sports FC', src: '/games/eafc26.png' },
+  { name: 'EA FC 27', short: 'EA Sports FC', src: '/games/eafc26.png' },
   { name: 'Red Dead Redemption 2', short: 'Red Dead Redemption 2', src: '/games/rdr2.png' },
   { name: 'Dota 2', short: 'Dota 2', src: '/games/dota2.png' },
 ]
