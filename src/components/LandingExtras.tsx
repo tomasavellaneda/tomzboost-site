@@ -118,7 +118,7 @@ export function FloatingSocial() {
   )
 }
 
-const GAMES = [
+export const GAMES = [
   { name: 'Counter-Strike 2', src: '/games/cs2.jpg' },
   { name: 'Valorant', src: '/games/valorant.svg' },
   { name: 'Fortnite', src: '/games/fortnite.svg' },
@@ -135,6 +135,24 @@ const GAMES = [
   { name: 'Red Dead Redemption 2', src: '/games/rdr2.jpg' },
   { name: 'Dota 2', src: '/games/dota2.jpg' },
 ]
+
+/** Carrusel infinito debajo del header: logos uno al lado del otro en loop. */
+export function GamesMarquee() {
+  const items = [...GAMES, ...GAMES]
+  return (
+    <div className="games-marquee" aria-label="Juegos compatibles">
+      <div className="games-marquee-fade games-marquee-fade-left" aria-hidden />
+      <div className="games-marquee-fade games-marquee-fade-right" aria-hidden />
+      <div className="games-marquee-track">
+        {items.map((g, i) => (
+          <div className="games-marquee-item" key={`${g.name}-${i}`} title={g.name}>
+            <img src={g.src} alt={g.name} loading="eager" draggable={false} />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 export function GamesSection() {
   return (

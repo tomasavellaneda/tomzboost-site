@@ -4,6 +4,7 @@ import {
   DownloadButton,
   DownloadSection,
   FloatingSocial,
+  GamesMarquee,
   GamesSection,
   ScreenshotCarousel,
   StatsSection,
@@ -102,6 +103,10 @@ export default function App() {
         </nav>
         <DownloadButton className="header-cta" label="Baixar agora" />
       </header>
+
+      <div className="hero-top">
+        <GamesMarquee />
+      </div>
 
       <section id="top" className="hero section-shell">
         <div className="hero-copy reveal">
