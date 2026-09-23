@@ -119,34 +119,35 @@ export function FloatingSocial() {
 }
 
 export const GAMES = [
-  { name: 'Counter-Strike 2', src: '/games/cs2.jpg' },
-  { name: 'Valorant', src: '/games/valorant.svg' },
-  { name: 'Fortnite', src: '/games/fortnite.svg' },
-  { name: 'Call of Duty', src: '/games/cod.jpg' },
-  { name: 'Apex Legends', src: '/games/apex.jpg' },
-  { name: 'Rainbow Six Siege', src: '/games/r6.jpg' },
-  { name: 'League of Legends', src: '/games/lol.svg' },
-  { name: 'GTA V', src: '/games/gtav.jpg' },
-  { name: 'Minecraft', src: '/games/minecraft.jpg' },
-  { name: 'PUBG', src: '/games/pubg.jpg' },
-  { name: 'Rocket League', src: '/games/rocketleague.jpg' },
-  { name: 'Rust', src: '/games/rust.jpg' },
-  { name: 'EA FC 26', src: '/games/eafc26.jpg' },
-  { name: 'Red Dead Redemption 2', src: '/games/rdr2.jpg' },
-  { name: 'Dota 2', src: '/games/dota2.jpg' },
+  { name: 'Counter-Strike 2', short: 'Counter-Strike 2', src: '/games/mono/cs2.svg' },
+  { name: 'Valorant', short: 'Valorant', src: '/games/mono/valorant.svg' },
+  { name: 'Fortnite', short: 'Fortnite', src: '/games/mono/fortnite.svg' },
+  { name: 'Call of Duty', short: 'Call of Duty', src: '/games/mono/cod.svg' },
+  { name: 'Apex Legends', short: 'Apex Legends', src: '/games/mono/apex.svg' },
+  { name: 'Rainbow Six Siege', short: 'Rainbow Six Siege', src: '/games/mono/r6.svg' },
+  { name: 'League of Legends', short: 'League of Legends', src: '/games/mono/lol.svg' },
+  { name: 'GTA V', short: 'GTA V', src: '/games/mono/gtav.svg' },
+  { name: 'Minecraft', short: 'Minecraft', src: '/games/mono/minecraft.svg' },
+  { name: 'PUBG', short: 'PUBG', src: '/games/mono/pubg.svg' },
+  { name: 'Rocket League', short: 'Rocket League', src: '/games/mono/rocketleague.svg' },
+  { name: 'Rust', short: 'Rust', src: '/games/mono/rust.svg' },
+  { name: 'EA FC 26', short: 'EA Sports FC', src: '/games/mono/eafc26.svg' },
+  { name: 'Red Dead Redemption 2', short: 'Red Dead Redemption 2', src: '/games/mono/rdr2.svg' },
+  { name: 'Dota 2', short: 'Dota 2', src: '/games/mono/dota2.svg' },
 ]
 
-/** Carrusel infinito debajo del header: logos uno al lado del otro en loop. */
+/** Carrusel infinito monocromático: una sola fila, logos en loop. */
 export function GamesMarquee() {
   const items = [...GAMES, ...GAMES]
   return (
     <div className="games-marquee" aria-label="Juegos compatibles">
-      <div className="games-marquee-fade games-marquee-fade-left" aria-hidden />
-      <div className="games-marquee-fade games-marquee-fade-right" aria-hidden />
       <div className="games-marquee-track">
         {items.map((g, i) => (
           <div className="games-marquee-item" key={`${g.name}-${i}`} title={g.name}>
-            <img src={g.src} alt={g.name} loading="eager" draggable={false} />
+            <div className="games-marquee-icon">
+              <img src={g.src} alt="" loading="eager" draggable={false} />
+            </div>
+            <span>{g.short}</span>
           </div>
         ))}
       </div>
@@ -160,15 +161,15 @@ export function GamesSection() {
       <div className="section-heading centered">
         <span>Juegos</span>
         <h2>Compatible con tus juegos favoritos</h2>
-        <p>Logos oficiales de las marcas. Del competitivo al mundo abierto.</p>
+        <p>Logos en estilo minimalista. Del competitivo al mundo abierto.</p>
       </div>
       <div className="games-logo-grid">
         {GAMES.map((g) => (
-          <article className="game-logo-card" key={g.name} title={g.name}>
+          <article className="game-logo-card mono" key={g.name} title={g.name}>
             <div className="game-logo-frame">
               <img src={g.src} alt={g.name} loading="lazy" />
             </div>
-            <b>{g.name}</b>
+            <b>{g.short}</b>
           </article>
         ))}
       </div>
