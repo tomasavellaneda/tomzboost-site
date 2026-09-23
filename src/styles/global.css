@@ -441,6 +441,63 @@ p {
   filter: blur(90px);
 }
 
+.hero-carousel {
+  position: relative;
+  min-width: 0;
+}
+
+.hero-carousel-stage {
+  position: relative;
+  min-height: 0;
+}
+
+.hero-carousel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.55s var(--ease),
+    transform 0.55s var(--ease);
+  transform: translateX(18px) scale(0.985);
+}
+
+.hero-carousel-slide.is-active {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.hero-carousel-slide .app-window {
+  margin-left: auto;
+}
+
+.hero-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.hero-carousel-dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #3a3a3a;
+  cursor: pointer;
+  transition:
+    width 0.25s var(--ease),
+    background 0.25s var(--ease);
+}
+
+.hero-carousel-dots button.is-active {
+  width: 22px;
+  background: #fff;
+}
+
 /* ——— App window preview (fiel a la app Electron) ——— */
 .app-window {
   position: relative;

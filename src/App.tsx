@@ -7,7 +7,7 @@ import {
   GameResultsSection,
   GamesMarquee,
   GamesSection,
-  ScreenshotCarousel,
+  HeroPreviewCarousel,
   ServicesSection,
   StatsSection,
 } from './components/LandingExtras'
@@ -162,7 +162,6 @@ export default function App() {
         </a>
         <nav aria-label={t('nav.aria')}>
           <a href="#beneficios">{t('nav.benefits')}</a>
-          <a href="#capturas">{t('nav.screenshots')}</a>
           <a href="#jogos">{t('nav.games')}</a>
           <a href="#servicios">{t('nav.services')}</a>
           <a href="#download">{t('nav.download')}</a>
@@ -208,15 +207,13 @@ export default function App() {
           </div>
         </div>
         <div className="hero-visual reveal reveal-delay">
-          <div className="preview-glow" />
-          <AppPreview screen="inicio" />
+          <HeroPreviewCarousel />
         </div>
       </section>
 
       <GameResultsSection />
 
       <StatsSection />
-      <ScreenshotCarousel />
 
       <section id="beneficios" className="section-block section-shell">
         <div className="section-heading">

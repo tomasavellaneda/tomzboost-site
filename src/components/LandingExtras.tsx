@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { downloadUrl, LINKS, RELEASE } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
-import AppPreview from './AppPreview'
+import AppPreview, { type PreviewScreen } from './AppPreview'
 import { IconCheck, IconChip, IconDownload, IconRocket, IconSettings, IconShield } from './Icons'
 
 export function DownloadButton({
@@ -385,75 +385,53 @@ export function GameResultsSection() {
   )
 }
 
-const SHOT_IDS = ['inicio', 'tweaks', 'debloat', 'affinity', 'bios'] as const
+const HERO_SHOTS = ['inicio', 'tweaks', 'debloat'] as const satisfies readonly PreviewScreen[]
 
-export function ScreenshotCarousel() {
+export function HeroPreviewCarousel() {
   const { t } = useI18n()
   const [index, setIndex] = useState(0)
-  const [lightbox, setLightbox] = useState(false)
-  const shots = SHOT_IDS.map((id) => ({
-    id,
-    title: t(`screenshots.${id}` as MessageKey),
-  }))
-  const current = shots[index]
+  const [paused, setPaused] = useState(false)
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightbox(false)
-      if (e.key === 'ArrowRight') setIndex((i) => (i + 1) % shots.length)
-      if (e.key === 'ArrowLeft') setIndex((i) => (i - 1 + shots.length) % shots.length)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [shots.length])
+    if (paused) return
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % HERO_SHOTS.length)
+    }, 4200)
+    return () => window.clearInterval(id)
+  }, [paused])
 
   return (
-    <section id="capturas" className="section-block section-shell">
-      <div className="section-heading centered">
-        <span>{t('screenshots.eyebrow')}</span>
-        <h2>{t('screenshots.title')}</h2>
-        <p>{t('screenshots.body')}</p>
-      </div>
-
-      <div className="shot-carousel">
-        <button
-          type="button"
-          className="shot-main"
-          onClick={() => setLightbox(true)}
-          aria-label={`${t('screenshots.expand')} ${current.title}`}
-        >
-          <div className="shot-live" aria-hidden>
-            <AppPreview screen={current.id} flat />
+    <div
+      className="hero-carousel"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <div className="preview-glow" />
+      <div className="hero-carousel-stage">
+        {HERO_SHOTS.map((screen, i) => (
+          <div
+            key={screen}
+            className={`hero-carousel-slide${i === index ? ' is-active' : ''}`}
+            aria-hidden={i !== index}
+          >
+            <AppPreview screen={screen} />
           </div>
-          <span className="shot-badge">{current.title}</span>
-        </button>
-        <div className="shot-thumbs" role="tablist" aria-label={t('screenshots.thumbsAria')}>
-          {shots.map((s, i) => (
-            <button
-              key={s.id}
-              type="button"
-              role="tab"
-              aria-selected={i === index}
-              className={i === index ? 'is-active' : ''}
-              onClick={() => setIndex(i)}
-            >
-              <div className="shot-thumb-live" aria-hidden>
-                <AppPreview screen={s.id} flat />
-              </div>
-              <span>{s.title}</span>
-            </button>
-          ))}
-        </div>
+        ))}
       </div>
-
-      {lightbox && (
-        <div className="lightbox" role="dialog" aria-modal="true" onClick={() => setLightbox(false)}>
-          <div className="lightbox-live" onClick={(e) => e.stopPropagation()}>
-            <AppPreview screen={current.id} flat />
-          </div>
-        </div>
-      )}
-    </section>
+      <div className="hero-carousel-dots" role="tablist" aria-label={t('screenshots.thumbsAria')}>
+        {HERO_SHOTS.map((screen, i) => (
+          <button
+            key={screen}
+            type="button"
+            role="tab"
+            aria-selected={i === index}
+            aria-label={t(`screenshots.${screen}` as MessageKey)}
+            className={i === index ? 'is-active' : ''}
+            onClick={() => setIndex(i)}
+          />
+        ))}
+      </div>
+    </div>
   )
 }
 
