@@ -1,3 +1,5 @@
+import { useI18n } from '../i18n/I18nProvider'
+import type { MessageKey } from '../i18n/messages'
 import {
   IconAffinity,
   IconBox,
@@ -17,26 +19,17 @@ interface AppPreviewProps {
 }
 
 const GENERAL = [
-  { key: 'inicio', label: 'Inicio', Icon: IconHome },
-  { key: 'tweaks', label: 'Tweaks', Icon: IconSettings },
-  { key: 'instaladores', label: 'Instaladores', Icon: IconBox },
-  { key: 'juegos', label: 'Juegos', Icon: IconGamepad },
+  { key: 'inicio', labelKey: 'app.nav.inicio', Icon: IconHome },
+  { key: 'tweaks', labelKey: 'app.nav.tweaks', Icon: IconSettings },
+  { key: 'instaladores', labelKey: 'app.nav.instaladores', Icon: IconBox },
+  { key: 'juegos', labelKey: 'app.nav.juegos', Icon: IconGamepad },
 ] as const
 
 const AJUSTES = [
-  { key: 'affinity', label: 'Affinity', Icon: IconAffinity },
-  { key: 'debloat', label: 'Debloat', Icon: IconTrash },
-  { key: 'bios', label: 'Bios', Icon: IconChip },
+  { key: 'affinity', labelKey: 'app.nav.affinity', Icon: IconAffinity },
+  { key: 'debloat', labelKey: 'app.nav.debloat', Icon: IconTrash },
+  { key: 'bios', labelKey: 'app.nav.bios', Icon: IconChip },
 ] as const
-
-const GAUGES = [
-  { label: 'CPU', value: 18 },
-  { label: 'GPU', value: 42 },
-  { label: 'RAM', value: 36 },
-  { label: 'Disco', value: 54 },
-  { label: 'CPU °C', value: 48, display: '48°' },
-  { label: 'GPU °C', value: 61, display: '61°' },
-]
 
 const CHART = [42, 55, 40, 68, 52, 78, 70, 88, 74, 92]
 
@@ -70,15 +63,25 @@ function Gauge({ value, label, display }: { value: number; label: string; displa
 }
 
 function InicioBody() {
+  const { t } = useI18n()
+  const gauges = [
+    { label: 'CPU', value: 18 },
+    { label: 'GPU', value: 42 },
+    { label: 'RAM', value: 36 },
+    { label: t('app.inicio.disk'), value: 54 },
+    { label: 'CPU °C', value: 48, display: '48°' },
+    { label: 'GPU °C', value: 61, display: '61°' },
+  ]
+
   return (
     <>
       <div className="live-panel">
         <div className="live-head">
-          <b>Rendimiento en vivo</b>
+          <b>{t('app.inicio.live')}</b>
           <span>Ryzen 7 5800X · RTX 3070</span>
         </div>
         <div className="gauges">
-          {GAUGES.map((g) => (
+          {gauges.map((g) => (
             <Gauge key={g.label} {...g} />
           ))}
         </div>
@@ -86,35 +89,35 @@ function InicioBody() {
       <div className="cols-2">
         <div className="mini-panel">
           <div className="ph">
-            <b>Sistema</b>
+            <b>{t('app.inicio.system')}</b>
             <span>Windows 11</span>
           </div>
           <div className="row">
             <div className="meta">
-              <b>Máquina</b>
+              <b>{t('app.inicio.machine')}</b>
               <span>DESKTOP-TOMZ</span>
             </div>
             <div className="val">x64</div>
           </div>
           <div className="row">
             <div className="meta">
-              <b>Procesador</b>
-              <span>8 núcleos · 16 hilos</span>
+              <b>{t('app.inicio.cpu')}</b>
+              <span>{t('app.inicio.cpuMeta')}</span>
             </div>
             <div className="val">3.8 GHz</div>
           </div>
           <div className="row">
             <div className="meta">
-              <b>Red</b>
-              <span>Ethernet · DNS 1.1.1.1</span>
+              <b>{t('app.inicio.network')}</b>
+              <span>{t('app.inicio.networkMeta')}</span>
             </div>
             <div className="val">12 ms</div>
           </div>
         </div>
         <div className="mini-panel">
           <div className="ph">
-            <b>Hardware</b>
-            <span>Detalles</span>
+            <b>{t('app.inicio.hardware')}</b>
+            <span>{t('app.inicio.details')}</span>
           </div>
           <div className="hw-grid">
             <div className="hw-cell">
@@ -125,7 +128,7 @@ function InicioBody() {
             <div className="hw-cell">
               <div className="k">VRAM</div>
               <div className="v">3.2 / 8.0 GB</div>
-              <div className="s">En uso</div>
+              <div className="s">{t('app.inicio.inUse')}</div>
             </div>
             <div className="hw-cell">
               <div className="k">CPU</div>
@@ -142,7 +145,7 @@ function InicioBody() {
       </div>
       <div className="chart-panel">
         <div className="ph">
-          <b>Rendimiento</b>
+          <b>{t('app.inicio.perf')}</b>
           <span>1 min</span>
         </div>
         <div className="chart-line">
@@ -156,21 +159,22 @@ function InicioBody() {
 }
 
 function TweaksBody() {
+  const { t } = useI18n()
   const rows = [
-    { title: 'Desactivar telemetría', desc: 'Reduce procesos en segundo plano', on: true },
-    { title: 'Modo alto rendimiento', desc: 'Plan de energía para juegos', on: true },
-    { title: 'Prioridad de red para juegos', desc: 'QoS y latencia más baja', on: false },
-    { title: 'Perfil NVIDIA competitivo', desc: 'Baja latencia + máximo rendimiento', on: true },
-    { title: 'Servicios innecesarios', desc: 'Pausa servicios que no usás', on: false },
+    { title: t('app.tweaks.1.title'), desc: t('app.tweaks.1.desc'), on: true },
+    { title: t('app.tweaks.2.title'), desc: t('app.tweaks.2.desc'), on: true },
+    { title: t('app.tweaks.3.title'), desc: t('app.tweaks.3.desc'), on: false },
+    { title: t('app.tweaks.4.title'), desc: t('app.tweaks.4.desc'), on: true },
+    { title: t('app.tweaks.5.title'), desc: t('app.tweaks.5.desc'), on: false },
   ]
   return (
     <>
       <div className="tabs">
-        <span className="active">General</span>
-        <span>GPU</span>
-        <span>Red</span>
-        <span>Seguridad</span>
-        <span>Juegos</span>
+        <span className="active">{t('app.tweaks.tabGeneral')}</span>
+        <span>{t('app.tweaks.tabGpu')}</span>
+        <span>{t('app.tweaks.tabNet')}</span>
+        <span>{t('app.tweaks.tabSecurity')}</span>
+        <span>{t('app.tweaks.tabGames')}</span>
       </div>
       <div className="live-panel tweak-list">
         {rows.map((r) => (
@@ -188,6 +192,7 @@ function TweaksBody() {
 }
 
 function JuegosBody() {
+  const { t } = useI18n()
   const games = [
     { name: 'Counter-Strike 2', profile: 'FPS' },
     { name: 'Valorant', profile: 'Net' },
@@ -196,14 +201,16 @@ function JuegosBody() {
   return (
     <div className="live-panel tweak-list">
       <div className="live-head" style={{ marginBottom: 4 }}>
-        <b>Tus juegos</b>
-        <span>+ Agregar .exe</span>
+        <b>{t('app.juegos.heading')}</b>
+        <span>{t('app.juegos.add')}</span>
       </div>
       {games.map((g) => (
         <div className="setting" key={g.name}>
           <div>
             <b>{g.name}</b>
-            <span>Perfil {g.profile} · Auto affinity</span>
+            <span>
+              {t('app.juegos.profile')} {g.profile} · Auto affinity
+            </span>
           </div>
           <div className="switch on" />
         </div>
@@ -213,16 +220,17 @@ function JuegosBody() {
 }
 
 function DebloatBody() {
+  const { t } = useI18n()
   const apps = [
-    { name: 'Cortana', desc: 'Asistente de Windows', on: true },
-    { name: 'Xbox Game Bar', desc: 'Overlay y captura', on: true },
-    { name: 'OneDrive', desc: 'Sincronización en la nube', on: false },
-    { name: 'Widgets', desc: 'Panel de noticias', on: true },
-    { name: 'Teams Chat', desc: 'Chat preinstalado', on: true },
+    { name: 'Cortana', desc: t('app.debloat.1.desc'), on: true },
+    { name: 'Xbox Game Bar', desc: t('app.debloat.2.desc'), on: true },
+    { name: 'OneDrive', desc: t('app.debloat.3.desc'), on: false },
+    { name: 'Widgets', desc: t('app.debloat.4.desc'), on: true },
+    { name: 'Teams Chat', desc: t('app.debloat.5.desc'), on: true },
   ]
   return (
     <>
-      <div className="banner-line">12 apps preinstaladas detectadas · selecciónalas y desinstalá</div>
+      <div className="banner-line">{t('app.debloat.banner')}</div>
       <div className="live-panel tweak-list">
         {apps.map((a) => (
           <div className="setting" key={a.name}>
@@ -233,7 +241,7 @@ function DebloatBody() {
                 <span>{a.desc}</span>
               </div>
             </div>
-            <span className="pill">{a.on ? 'Instalada' : 'Ausente'}</span>
+            <span className="pill">{a.on ? t('app.debloat.installed') : t('app.debloat.absent')}</span>
           </div>
         ))}
       </div>
@@ -242,17 +250,18 @@ function DebloatBody() {
 }
 
 function AffinityBody() {
+  const { t } = useI18n()
   const procs = [
-    { name: 'cs2.exe', prio: 'Alta', cpu: '22%' },
-    { name: 'chrome.exe', prio: 'Normal', cpu: '8%' },
-    { name: 'discord.exe', prio: 'Por encima', cpu: '4%' },
+    { name: 'cs2.exe', prio: t('app.affinity.prioHigh'), cpu: '22%' },
+    { name: 'chrome.exe', prio: t('app.affinity.prioNormal'), cpu: '8%' },
+    { name: 'discord.exe', prio: t('app.affinity.prioAbove'), cpu: '4%' },
   ]
   return (
     <>
       <div className="metric-row">
         {[
           ['CPU', '18%'],
-          ['Hilos', '16'],
+          [t('app.affinity.threads'), '16'],
           ['GHz', '3.8'],
           ['Cores', '8'],
         ].map(([k, v]) => (
@@ -264,14 +273,16 @@ function AffinityBody() {
       </div>
       <div className="live-panel tweak-list" style={{ marginTop: 10 }}>
         <div className="live-head">
-          <b>Procesos</b>
+          <b>{t('app.affinity.processes')}</b>
           <span className="mini-cta">Auto Affinity</span>
         </div>
         {procs.map((p) => (
           <div className="setting" key={p.name}>
             <div>
               <b>{p.name}</b>
-              <span>Prioridad {p.prio}</span>
+              <span>
+                {t('app.affinity.priority')} {p.prio}
+              </span>
             </div>
             <span className="val">{p.cpu}</span>
           </div>
@@ -282,11 +293,12 @@ function AffinityBody() {
 }
 
 function BiosBody() {
+  const { t } = useI18n()
   return (
     <div className="cols-2">
       <div className="mini-panel">
         <div className="ph">
-          <b>Placa / CPU</b>
+          <b>{t('app.bios.board')}</b>
           <span>WMI</span>
         </div>
         {[
@@ -307,39 +319,39 @@ function BiosBody() {
       </div>
       <div className="mini-panel">
         <div className="ph">
-          <b>Acciones</b>
+          <b>{t('app.bios.actions')}</b>
           <span>Firmware</span>
         </div>
         <div className="btn-stack">
-          <div className="fake-btn primary">Exportar config</div>
-          <div className="fake-btn">Ver info</div>
-          <div className="fake-btn">Abrir carpeta</div>
-          <div className="fake-btn">Entrar al BIOS</div>
+          <div className="fake-btn primary">{t('app.bios.export')}</div>
+          <div className="fake-btn">{t('app.bios.info')}</div>
+          <div className="fake-btn">{t('app.bios.folder')}</div>
+          <div className="fake-btn">{t('app.bios.enter')}</div>
         </div>
       </div>
     </div>
   )
 }
 
-const TITLES: Record<PreviewScreen, { kicker: string; title: string }> = {
-  inicio: { kicker: 'Vista general', title: 'Vista General del Sistema' },
-  tweaks: { kicker: 'Rendimiento', title: 'Tweaks de Rendimiento' },
-  juegos: { kicker: 'Perfiles', title: 'Juegos' },
-  debloat: { kicker: 'Limpieza', title: 'Debloat' },
-  affinity: { kicker: 'CPU', title: 'Affinity' },
-  bios: { kicker: 'Firmware', title: 'Bios' },
+const TITLE_KEYS: Record<PreviewScreen, { kicker: MessageKey; title: MessageKey }> = {
+  inicio: { kicker: 'app.inicio.kicker', title: 'app.inicio.title' },
+  tweaks: { kicker: 'app.tweaks.kicker', title: 'app.tweaks.title' },
+  juegos: { kicker: 'app.juegos.kicker', title: 'app.juegos.title' },
+  debloat: { kicker: 'app.debloat.kicker', title: 'app.debloat.title' },
+  affinity: { kicker: 'app.affinity.kicker', title: 'app.affinity.title' },
+  bios: { kicker: 'app.bios.kicker', title: 'app.bios.title' },
 }
 
 function navActive(screen: PreviewScreen, key: string) {
-  if (screen === key) return true
-  return false
+  return screen === key
 }
 
 export default function AppPreview({ screen = 'inicio', flat = false, className = '' }: AppPreviewProps) {
-  const titles = TITLES[screen]
+  const { t } = useI18n()
+  const titles = TITLE_KEYS[screen]
 
   return (
-    <div className={`app-window ${flat ? 'flat' : ''} ${className}`.trim()} aria-label="Interfaz de Tomz Boost">
+    <div className={`app-window ${flat ? 'flat' : ''} ${className}`.trim()} aria-label={t('app.aria')}>
       <div className="app-titlebar">
         <span>Tomz Boost</span>
         <div className="dots" aria-hidden>
@@ -353,18 +365,18 @@ export default function AppPreview({ screen = 'inicio', flat = false, className 
           <div className="brand">
             <img src="/logo.png" alt="TOMZ BOOST" />
           </div>
-          <div className="nav-group">General</div>
-          {GENERAL.map(({ key, label, Icon }) => (
+          <div className="nav-group">{t('app.nav.general')}</div>
+          {GENERAL.map(({ key, labelKey, Icon }) => (
             <div key={key} className={`app-nav ${navActive(screen, key) ? 'is-active' : ''}`}>
               <Icon />
-              <span>{label}</span>
+              <span>{t(labelKey)}</span>
             </div>
           ))}
-          <div className="nav-group">Ajustes</div>
-          {AJUSTES.map(({ key, label, Icon }) => (
+          <div className="nav-group">{t('app.nav.settings')}</div>
+          {AJUSTES.map(({ key, labelKey, Icon }) => (
             <div key={key} className={`app-nav ${navActive(screen, key) ? 'is-active' : ''}`}>
               <Icon />
-              <span>{label}</span>
+              <span>{t(labelKey)}</span>
             </div>
           ))}
           <div className="app-user">
@@ -373,17 +385,17 @@ export default function AppPreview({ screen = 'inicio', flat = false, className 
             </div>
             <div className="who">
               <b>Tomz</b>
-              <small>Bienvenido</small>
+              <small>{t('app.welcome')}</small>
             </div>
           </div>
         </aside>
         <div className="app-main">
           <div className="app-topbar">
             <div className="titles">
-              <small>{titles.kicker}</small>
-              <b>{titles.title}</b>
+              <small>{t(titles.kicker)}</small>
+              <b>{t(titles.title)}</b>
             </div>
-            <div className="cta">Ejecutar limpieza</div>
+            <div className="cta">{t('app.ctaCleanup')}</div>
           </div>
           <div className="app-content">
             {screen === 'inicio' && <InicioBody />}

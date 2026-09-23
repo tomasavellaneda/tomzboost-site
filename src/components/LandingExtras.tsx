@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { downloadUrl, LINKS, RELEASE } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
+import AppPreview from './AppPreview'
 import { IconCheck, IconChip, IconDownload, IconRocket, IconSettings, IconShield } from './Icons'
 
 export function DownloadButton({
@@ -389,17 +390,16 @@ const SHOT_IDS = ['inicio', 'tweaks', 'debloat', 'affinity', 'bios'] as const
 export function ScreenshotCarousel() {
   const { t } = useI18n()
   const [index, setIndex] = useState(0)
-  const [lightbox, setLightbox] = useState<string | null>(null)
+  const [lightbox, setLightbox] = useState(false)
   const shots = SHOT_IDS.map((id) => ({
     id,
     title: t(`screenshots.${id}` as MessageKey),
-    src: `/screenshots/${id}.png`,
   }))
   const current = shots[index]
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightbox(null)
+      if (e.key === 'Escape') setLightbox(false)
       if (e.key === 'ArrowRight') setIndex((i) => (i + 1) % shots.length)
       if (e.key === 'ArrowLeft') setIndex((i) => (i - 1 + shots.length) % shots.length)
     }
@@ -419,10 +419,12 @@ export function ScreenshotCarousel() {
         <button
           type="button"
           className="shot-main"
-          onClick={() => setLightbox(current.src)}
+          onClick={() => setLightbox(true)}
           aria-label={`${t('screenshots.expand')} ${current.title}`}
         >
-          <img src={current.src} alt={current.title} />
+          <div className="shot-live" aria-hidden>
+            <AppPreview screen={current.id} flat />
+          </div>
           <span className="shot-badge">{current.title}</span>
         </button>
         <div className="shot-thumbs" role="tablist" aria-label={t('screenshots.thumbsAria')}>
@@ -435,7 +437,9 @@ export function ScreenshotCarousel() {
               className={i === index ? 'is-active' : ''}
               onClick={() => setIndex(i)}
             >
-              <img src={s.src} alt="" />
+              <div className="shot-thumb-live" aria-hidden>
+                <AppPreview screen={s.id} flat />
+              </div>
               <span>{s.title}</span>
             </button>
           ))}
@@ -443,8 +447,10 @@ export function ScreenshotCarousel() {
       </div>
 
       {lightbox && (
-        <div className="lightbox" role="dialog" aria-modal="true" onClick={() => setLightbox(null)}>
-          <img src={lightbox} alt={t('screenshots.lightboxAlt')} onClick={(e) => e.stopPropagation()} />
+        <div className="lightbox" role="dialog" aria-modal="true" onClick={() => setLightbox(false)}>
+          <div className="lightbox-live" onClick={(e) => e.stopPropagation()}>
+            <AppPreview screen={current.id} flat />
+          </div>
         </div>
       )}
     </section>

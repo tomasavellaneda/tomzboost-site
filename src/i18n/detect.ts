@@ -1,7 +1,15 @@
 import type { Locale } from './types'
 
-/** Detecta idioma por navegador + zona horaria (BR / LATAM / US). */
+/** Detecta idioma por URL (?lang=), localStorage, navegador y zona horaria. */
 export function detectLocale(): Locale {
+  try {
+    const params = new URLSearchParams(window.location.search)
+    const fromUrl = params.get('lang')
+    if (fromUrl === 'es' || fromUrl === 'pt' || fromUrl === 'en') return fromUrl
+  } catch {
+    /* ignore */
+  }
+
   try {
     const saved = localStorage.getItem('tomz-locale') as Locale | null
     if (saved === 'es' || saved === 'pt' || saved === 'en') return saved
