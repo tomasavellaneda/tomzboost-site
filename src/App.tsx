@@ -213,7 +213,6 @@ export default function App() {
         </div>
       </section>
 
-      <GamesSection />
       <GameResultsSection />
 
       <StatsSection />
@@ -300,6 +299,8 @@ export default function App() {
           <p className="disclaimer">{t('comparison.disclaimer')}</p>
         </div>
       </section>
+
+      <GamesSection />
 
       <section className="steps-band">
         <div className="section-shell">
