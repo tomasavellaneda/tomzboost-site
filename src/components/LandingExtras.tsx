@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { downloadUrl, LINKS, RELEASE } from '../config'
-import { IconDownload, IconRocket } from './Icons'
+import { IconCheck, IconChip, IconDownload, IconRocket, IconSettings, IconShield } from './Icons'
 
 export function DownloadButton({
   className = 'button button-primary',
@@ -50,11 +50,11 @@ export function DownloadButton({
 export function DownloadSection() {
   return (
     <section id="download" className="download-section section-shell">
-      <div className="download-panel">
+      <div className="download-panel download-panel-solo">
         <div className="download-panel-glow" aria-hidden />
         <div className="download-copy">
           <span className="eyebrow">Descarga</span>
-          <h2>Download del TOMZ BOOST</h2>
+          <h2>Descargá TOMZ BOOST</h2>
           <p>Instalá el optimizador y empezá a ganar FPS en minutos.</p>
 
           <ul className="release-meta">
@@ -77,16 +77,12 @@ export function DownloadSection() {
           </ul>
 
           <div className="hero-actions" style={{ marginTop: 28 }}>
-            <DownloadButton className="button button-primary" label="Baixar TOMZ BOOST" large />
+            <DownloadButton className="button button-primary" label="Descargar TOMZ BOOST" large />
             <a className="button button-secondary" href={LINKS.installGuide}>
               Ver guía de instalación
             </a>
           </div>
           <small className="dl-note">Compatible con Windows 10 y Windows 11 · ajustes reversibles</small>
-        </div>
-        <div className="download-visual">
-          <IconRocket />
-          <img src="/logo.png" alt="TOMZ BOOST" />
         </div>
       </div>
     </section>
@@ -115,6 +111,96 @@ export function FloatingSocial() {
         <img src="/icons/whatsapp.svg" alt="" width={22} height={22} />
       </a>
     </div>
+  )
+}
+
+const SERVICES = [
+  {
+    id: 'app',
+    badge: 'Self-service',
+    title: 'Solo la App',
+    desc: 'Accedé a TOMZ BOOST e optimizá tu PC vos mismo, con la misma interfaz premium de la app.',
+    features: [
+      'Descarga e instalación de TOMZ BOOST',
+      'Tweaks, Debloat y Affinity',
+      'Monitoreo de CPU, GPU y RAM',
+      'Actualizaciones de la app',
+    ],
+    cta: { label: 'Descargar la app', href: '#download', primary: true },
+  },
+  {
+    id: 'full',
+    badge: '1 a 1 · Recomendado',
+    title: 'Optimización completa',
+    desc: 'Sesión personalizada con un especialista. Dejamos tu PC lista de punta a punta.',
+    features: [
+      'Configuración y optimización de BIOS',
+      'Configuración y optimización de Windows',
+      'Incluye la app TOMZ BOOST',
+      'Acompañamiento 1 a 1 hasta dejarlo listo',
+    ],
+    cta: { label: 'Pedir optimización 1 a 1', href: LINKS.whatsapp, primary: true, external: true },
+  },
+] as const
+
+export function ServicesSection() {
+  return (
+    <section id="servicios" className="section-block section-shell services-section">
+      <div className="section-heading centered">
+        <span>Servicios</span>
+        <h2>Elegí cómo querés optimizar</h2>
+        <p>Empezá solo con la app o pedí una optimización completa 1 a 1.</p>
+      </div>
+
+      <div className="services-grid">
+        {SERVICES.map((s) => (
+          <article className={`service-card${s.id === 'full' ? ' is-featured' : ''}`} key={s.id}>
+            <div className="service-card-top">
+              <span className="service-badge">{s.badge}</span>
+              <h3>{s.title}</h3>
+              <p>{s.desc}</p>
+            </div>
+            <ul className="service-features">
+              {s.features.map((f) => (
+                <li key={f}>
+                  <IconCheck />
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            {'external' in s.cta && s.cta.external ? (
+              <a
+                className={`button ${s.cta.primary ? 'button-primary' : 'button-secondary'}`}
+                href={s.cta.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {s.cta.label}
+              </a>
+            ) : (
+              <a className={`button ${s.cta.primary ? 'button-primary' : 'button-secondary'}`} href={s.cta.href}>
+                {s.cta.label}
+              </a>
+            )}
+          </article>
+        ))}
+      </div>
+
+      <div className="services-note">
+        <span>
+          <IconChip /> BIOS
+        </span>
+        <span>
+          <IconSettings /> Windows
+        </span>
+        <span>
+          <IconRocket /> App TOMZ BOOST
+        </span>
+        <span>
+          <IconShield /> Ajustes reversibles
+        </span>
+      </div>
+    </section>
   )
 }
 

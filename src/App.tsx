@@ -7,6 +7,7 @@ import {
   GamesMarquee,
   GamesSection,
   ScreenshotCarousel,
+  ServicesSection,
   StatsSection,
 } from './components/LandingExtras'
 import { LINKS } from './config'
@@ -98,6 +99,7 @@ export default function App() {
           <a href="#beneficios">Beneficios</a>
           <a href="#capturas">Capturas</a>
           <a href="#jogos">Juegos</a>
+          <a href="#servicios">Servicios</a>
           <a href="#download">Download</a>
           <a href="#faq">FAQ</a>
         </nav>
@@ -315,6 +317,8 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      <ServicesSection />
 
       <DownloadSection />
 
