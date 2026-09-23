@@ -138,11 +138,51 @@ export const GAMES = [
 
 /** Carrusel infinito: solo el logo original en monocromo, una fila. */
 export function GamesMarquee() {
-  // Tres copias para que el translateX(-33.333%) loop sin saltos
-  const items = [...GAMES, ...GAMES, ...GAMES]
+  const trackRef = useRef<HTMLDivElement>(null)
+  // Dos copias bastan: al recorrer el ancho de un set, reseteamos
+  const items = [...GAMES, ...GAMES]
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+
+    let raf = 0
+    let x = 0
+    let last = performance.now()
+    const speed = 55 // px/s — movimiento claro y continuo
+
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000)
+      last = now
+      x -= speed * dt
+      // Un set = mitad del track (2 copias idénticas)
+      const setWidth = track.scrollWidth / 2
+      if (setWidth > 0 && -x >= setWidth) {
+        x += setWidth
+      }
+      track.style.transform = `translate3d(${x}px,0,0)`
+      raf = requestAnimationFrame(tick)
+    }
+
+    // Esperar a que las imágenes midan el ancho real
+    const start = () => {
+      cancelAnimationFrame(raf)
+      last = performance.now()
+      raf = requestAnimationFrame(tick)
+    }
+
+    start()
+    const imgs = track.querySelectorAll('img')
+    imgs.forEach((img) => {
+      if (!img.complete) img.addEventListener('load', start, { once: true })
+    })
+
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
   return (
     <div className="games-marquee" aria-label="Juegos compatibles">
-      <div className="games-marquee-track">
+      <div className="games-marquee-track" ref={trackRef}>
         {items.map((g, i) => (
           <div className="games-marquee-item" key={`${g.name}-${i}`} title={g.name}>
             <img src={g.src} alt={g.name} loading="eager" draggable={false} />
