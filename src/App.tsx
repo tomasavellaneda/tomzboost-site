@@ -110,7 +110,6 @@ export default function App() {
 
       <section id="top" className="hero section-shell">
         <div className="hero-copy reveal">
-          <img src="/logo.png" alt="TOMZ BOOST" className="brand-lockup" />
           <div className="eyebrow">
             <IconZap /> Performance sin complicaciones
           </div>

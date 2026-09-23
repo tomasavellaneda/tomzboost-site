@@ -138,7 +138,8 @@ export const GAMES = [
 
 /** Carrusel infinito: solo el logo original en monocromo, una fila. */
 export function GamesMarquee() {
-  const items = [...GAMES, ...GAMES]
+  // Tres copias para que el translateX(-33.333%) loop sin saltos
+  const items = [...GAMES, ...GAMES, ...GAMES]
   return (
     <div className="games-marquee" aria-label="Juegos compatibles">
       <div className="games-marquee-track">
