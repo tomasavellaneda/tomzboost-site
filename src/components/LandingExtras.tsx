@@ -119,21 +119,21 @@ export function FloatingSocial() {
 }
 
 export const GAMES = [
-  { name: 'Counter-Strike 2', short: 'Counter-Strike 2', src: '/games/cs2.jpg' },
+  { name: 'Counter-Strike 2', short: 'Counter-Strike 2', src: '/games/cs2.svg' },
   { name: 'Valorant', short: 'Valorant', src: '/games/valorant.svg' },
   { name: 'Fortnite', short: 'Fortnite', src: '/games/fortnite.svg' },
-  { name: 'Call of Duty', short: 'Call of Duty', src: '/games/cod.jpg' },
-  { name: 'Apex Legends', short: 'Apex Legends', src: '/games/apex.jpg' },
-  { name: 'Rainbow Six Siege', short: 'Rainbow Six Siege', src: '/games/r6.jpg' },
+  { name: 'Call of Duty', short: 'Call of Duty', src: '/games/cod.svg' },
+  { name: 'Apex Legends', short: 'Apex Legends', src: '/games/apex.svg' },
+  { name: 'Rainbow Six Siege', short: 'Rainbow Six Siege', src: '/games/r6.svg' },
   { name: 'League of Legends', short: 'League of Legends', src: '/games/lol.svg' },
-  { name: 'GTA V', short: 'GTA V', src: '/games/gtav.jpg' },
-  { name: 'Minecraft', short: 'Minecraft', src: '/games/minecraft.jpg' },
-  { name: 'PUBG', short: 'PUBG', src: '/games/pubg.jpg' },
-  { name: 'Rocket League', short: 'Rocket League', src: '/games/rocketleague.jpg' },
-  { name: 'Rust', short: 'Rust', src: '/games/rust.jpg' },
-  { name: 'EA FC 26', short: 'EA Sports FC', src: '/games/eafc26.jpg' },
-  { name: 'Red Dead Redemption 2', short: 'Red Dead Redemption 2', src: '/games/rdr2.jpg' },
-  { name: 'Dota 2', short: 'Dota 2', src: '/games/dota2.jpg' },
+  { name: 'GTA V', short: 'GTA V', src: '/games/gtav.svg' },
+  { name: 'Minecraft', short: 'Minecraft', src: '/games/minecraft.svg' },
+  { name: 'PUBG', short: 'PUBG', src: '/games/pubg.svg' },
+  { name: 'Rocket League', short: 'Rocket League', src: '/games/rocketleague.svg' },
+  { name: 'Rust', short: 'Rust', src: '/games/rust.svg' },
+  { name: 'EA FC 26', short: 'EA Sports FC', src: '/games/eafc26.svg' },
+  { name: 'Red Dead Redemption 2', short: 'Red Dead Redemption 2', src: '/games/rdr2.svg' },
+  { name: 'Dota 2', short: 'Dota 2', src: '/games/dota2.svg' },
 ]
 
 /** Carrusel infinito: solo el logo original en monocromo, una fila. */
