@@ -61,18 +61,31 @@ export function BookingSection() {
 
   useEffect(() => {
     let cancelled = false
-    fetch('/api/booking/config')
-      .then(async (response) => {
-        if (!response.ok) throw new Error('config')
-        return (await response.json()) as Config
-      })
-      .then((data) => {
-        if (cancelled) return
-        setConfig(data)
-      })
-      .catch(() => {
-        if (!cancelled) setLoadError(true)
-      })
+    let attempt = 0
+
+    async function load() {
+      while (!cancelled && attempt < 4) {
+        attempt += 1
+        try {
+          const response = await fetch('/api/booking/config', { cache: 'no-store' })
+          const data = (await response.json()) as Config
+          if (!response.ok || !Array.isArray(data.days)) throw new Error('config')
+          if (cancelled) return
+          setConfig(data)
+          setLoadError(false)
+          return
+        } catch {
+          if (cancelled) return
+          if (attempt >= 4) {
+            setLoadError(true)
+            return
+          }
+          await new Promise((resolve) => window.setTimeout(resolve, 500 * attempt))
+        }
+      }
+    }
+
+    void load()
     return () => {
       cancelled = true
     }
@@ -120,7 +133,7 @@ export function BookingSection() {
         if (open) setStartsAt(open.startsAt)
       })
       .catch(() => {
-        if (!cancelled) setLoadError(true)
+        /* La agenda ya cargada sigue visible. */
       })
     return () => {
       cancelled = true

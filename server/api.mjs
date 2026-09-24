@@ -53,8 +53,19 @@ async function syncPayment(booking) {
 export async function dispatch({ method, pathname, body, ip = 'local' }) {
   if (method === 'GET' && pathname === '/api/booking/config') {
     const config = getConfig()
-    const bookings = await listBookings()
-    const days = listSlots().map((day) => ({
+    let bookings = []
+    try {
+      bookings = await listBookings()
+    } catch {
+      bookings = []
+    }
+    let slots = []
+    try {
+      slots = listSlots()
+    } catch {
+      slots = []
+    }
+    const days = slots.map((day) => ({
       date: day.date,
       weekday: day.weekday,
       slots: day.slots.map((slot) => ({
@@ -180,6 +191,15 @@ export async function handleNodeRequest(req, res) {
   const host = req.headers.host || 'localhost'
   const url = new URL(req.url || '/', `http://${host}`)
   if (!url.pathname.startsWith('/api/')) return false
+  try {
+    return await handleApiRequest(req, res, url)
+  } catch {
+    if (!res.headersSent) send(res, 500, { error: 'server_error' })
+    return true
+  }
+}
+
+async function handleApiRequest(req, res, url) {
 
   let body = null
   if (req.method === 'POST') {

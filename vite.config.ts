@@ -7,21 +7,24 @@ const { handleNodeRequest } = createRequire(import.meta.url)('./server/api.mjs')
   handleNodeRequest: (req: IncomingMessage, res: ServerResponse) => Promise<boolean>
 }
 
+function attachBookingApi(middlewares: { use: (fn: (req: IncomingMessage, res: ServerResponse, next: (err?: unknown) => void) => void) => void }) {
+  middlewares.use((req, res, next) => {
+    if (!req.url?.startsWith('/api/')) {
+      next()
+      return
+    }
+    handleNodeRequest(req, res).catch((error) => next(error))
+  })
+}
+
 function bookingApi(): Plugin {
   return {
     name: 'booking-api',
     configureServer(server) {
-      server.middlewares.use(async (req, res, next) => {
-        if (!req.url?.startsWith('/api/')) {
-          next()
-          return
-        }
-        try {
-          await handleNodeRequest(req, res)
-        } catch (error) {
-          next(error)
-        }
-      })
+      attachBookingApi(server.middlewares)
+    },
+    configurePreviewServer(server) {
+      attachBookingApi(server.middlewares)
     },
   }
 }
