@@ -136,7 +136,7 @@ export function ServicesSection() {
       title: t('services.full.title'),
       desc: t('services.full.desc'),
       features: [t('services.full.f1'), t('services.full.f2'), t('services.full.f3'), t('services.full.f4')],
-      cta: { label: t('services.full.cta'), href: LINKS.whatsapp, primary: true as const, external: true },
+      cta: { label: t('services.full.cta'), href: '#agendar', primary: true as const },
     },
   ]
 

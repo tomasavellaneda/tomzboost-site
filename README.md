@@ -30,6 +30,24 @@ npm run build
 npm run preview
 ```
 
+## Agenda y PIX (BuckPay)
+
+La optimización 1 a 1 se reserva en `#agendar`. El servidor crea el PIX en BuckPay y confirma el turno cuando el pago figura como `paid`. El token no sale del servidor.
+
+Copiá `.env.example` a `.env` y completá:
+
+- `BUCKPAY_TOKEN` — secret de 40 caracteres
+- `BUCKPAY_USER_AGENT` — el valor que te pasa el gerente de cuentas
+- `BOOKING_AMOUNT_CENTS` — precio en centavos (mínimo 600, máximo 300000)
+- `PUBLIC_BASE_URL` — URL pública para el webhook `transaction.processed`
+- `BOOKING_OFFER_SLUG` — slug de la oferta en el panel de Buck, si ya existe
+
+Horarios por defecto: lunes a sábado, 14:00–22:00, hora de Brasília, turnos de 60 minutos. Se cambian con `SCHEDULE_TZ`, `SCHEDULE_DAYS`, `SCHEDULE_START` y `SCHEDULE_END`.
+
+En desarrollo, `npm run dev` sirve el sitio y `/api` en el mismo puerto. En producción: `npm run build` y `npm start`.
+
+`BUCKPAY_MOCK=1` simula el PIX sin llamar a BuckPay. No lo uses en producción.
+
 ## Enlaces y download
 
 Editá en `src/config.ts`:

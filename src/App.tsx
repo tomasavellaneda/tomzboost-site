@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import AppPreview, { type PreviewScreen } from './components/AppPreview'
+import { BookingSection } from './components/BookingSection'
 import {
   DownloadButton,
   DownloadSection,
@@ -164,6 +165,7 @@ export default function App() {
           <a href="#beneficios">{t('nav.benefits')}</a>
           <a href="#jogos">{t('nav.games')}</a>
           <a href="#servicios">{t('nav.services')}</a>
+          <a href="#agendar">{t('nav.schedule')}</a>
           <a href="#download">{t('nav.download')}</a>
           <a href="#faq">{t('nav.faq')}</a>
         </nav>
@@ -190,7 +192,7 @@ export default function App() {
           <p>{t('hero.body')}</p>
           <div className="hero-actions">
             <DownloadButton label={t('hero.ctaDownload')} />
-            <a className="button button-secondary" href="#servicios">
+            <a className="button button-secondary" href="#agendar">
               <IconSparkles /> {t('hero.ctaFull')}
             </a>
             <a className="button button-secondary" href={LINKS.discord} target="_blank" rel="noreferrer">
@@ -350,6 +352,8 @@ export default function App() {
       </section>
 
       <ServicesSection />
+
+      <BookingSection />
 
       <section id="faq" className="faq-band">
         <div className="section-shell faq-layout">
