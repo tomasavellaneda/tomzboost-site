@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
-import { LINKS } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
 
@@ -248,14 +247,7 @@ export function BookingSection() {
             <span>{t('book.session')}</span>
           </div>
 
-          {!config.paymentsReady && (
-            <p className="booking-alert">
-              {t('book.unavailable')}{' '}
-              <a href={LINKS.whatsapp} target="_blank" rel="noreferrer">
-                WhatsApp
-              </a>
-            </p>
-          )}
+          {!config.paymentsReady && <p className="booking-alert">{t('book.unavailable')}</p>}
 
           <div className="booking-fields">
             <label>

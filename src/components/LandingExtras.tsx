@@ -95,6 +95,18 @@ export function DownloadSection() {
 
 export function FloatingSocial() {
   const { t } = useI18n()
+  const [hide, setHide] = useState(false)
+
+  useEffect(() => {
+    const section = document.getElementById('agendar')
+    if (!section) return
+    const observer = new IntersectionObserver(([entry]) => setHide(entry.isIntersecting), { threshold: 0 })
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
+
+  if (hide) return null
+
   return (
     <div className="floating-actions">
       <a
