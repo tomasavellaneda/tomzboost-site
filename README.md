@@ -46,6 +46,8 @@ Horarios por defecto: lunes a sábado, 14:00–22:00, hora de Brasília, turnos 
 
 En desarrollo, `npm run dev` sirve el sitio y `/api` en el mismo puerto. En producción: `npm run build` y `npm start`.
 
+Vercel publica a producción solo cuando el código está en `main`. El checkout vive en `api/[...path].js`. En el proyecto de Vercel cargá `BUCKPAY_TOKEN`, `BUCKPAY_USER_AGENT` y `PUBLIC_BASE_URL` (la URL del sitio, sin barra final). Sin eso el formulario se ve, pero no genera el PIX.
+
 `BUCKPAY_MOCK=1` simula el PIX sin llamar a BuckPay. No lo uses en producción.
 
 ## Enlaces y download

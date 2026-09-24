@@ -54,6 +54,31 @@ async function syncPayment(booking) {
   })
 }
 
+async function remoteBooking(id) {
+  try {
+    const remote = await getTransaction(id)
+    if (!remote) return { status: 404, body: { error: 'not_found' } }
+    const paid = remote.status === 'paid'
+    const isApp = id.startsWith('tbapp_')
+    return {
+      status: 200,
+      body: {
+        id,
+        status: paid ? 'paid' : 'pending',
+        amountCents: remote.total_amount ?? null,
+        startsAt: null,
+        endsAt: null,
+        expiresAt: null,
+        buyer: { name: '' },
+        product: isApp ? 'app' : 'full',
+        ...(paid && isApp ? { downloadUrl: '/downloads/TomzBoost-Setup.zip' } : {}),
+      },
+    }
+  } catch {
+    return { status: 404, body: { error: 'not_found' } }
+  }
+}
+
 export async function dispatch({ method, pathname, body, ip = 'local' }) {
   if (method === 'GET' && pathname === '/api/booking/config') {
     const config = getConfig()
@@ -95,7 +120,7 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
   const bookingMatch = pathname.match(/^\/api\/bookings\/([A-Za-z0-9_-]+)$/)
   if (method === 'GET' && bookingMatch) {
     const booking = await getBooking(bookingMatch[1])
-    if (!booking) return { status: 404, body: { error: 'not_found' } }
+    if (!booking) return remoteBooking(bookingMatch[1])
     let current = booking
     if (current.status === 'pending') {
       try {
@@ -126,9 +151,9 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
     const validated = validateBuyer(body?.buyer)
     if (validated.error) return { status: 400, body: { error: validated.error } }
 
-    const id = `tb_${crypto.randomUUID().replace(/-/g, '')}`
-    const now = new Date()
     const product = body?.product === 'app' ? 'app' : 'full'
+    const id = `${product === 'app' ? 'tbapp' : 'tb'}_${crypto.randomUUID().replace(/-/g, '')}`
+    const now = new Date()
     const amountCents = product === 'app' ? 9000 : config.amountCents
     const booking = {
       id,

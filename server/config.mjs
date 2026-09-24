@@ -25,7 +25,7 @@ export function getConfig() {
     holdMinutes: clampInt(process.env.HOLD_MINUTES, 20, 5, 120),
     leadHours: clampInt(process.env.LEAD_HOURS, 3, 0, 72),
     horizonDays: clampInt(process.env.HORIZON_DAYS, 14, 1, 60),
-    storeFile: process.env.BOOKINGS_FILE || '',
+    storeFile: process.env.BOOKINGS_FILE || (process.env.VERCEL ? '/tmp/tomz-bookings.json' : ''),
   }
 }
 
