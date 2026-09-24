@@ -2341,6 +2341,13 @@ p {
   letter-spacing: -0.03em;
 }
 
+.service-price {
+  margin-top: 10px;
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.04em;
+}
+
 .service-card-top > p {
   margin-top: 12px;
   color: var(--text-dim);
