@@ -30,6 +30,26 @@ npm run build
 npm run preview
 ```
 
+## Agenda y PIX (BuckPay)
+
+La optimización 1 a 1 se paga primero en `#agendar`. El horario se elige recién cuando BuckPay marca el PIX como `paid`, así un cobro impago no aparece como turno tomado. El token no sale del servidor.
+
+Copiá `.env.example` a `.env` y completá:
+
+- `BUCKPAY_TOKEN` — secret de 40 caracteres
+- `BUCKPAY_USER_AGENT` — el valor que te pasa el gerente de cuentas
+- `BOOKING_AMOUNT_CENTS` — precio de la optimización completa en centavos (por defecto `18000`, R$ 180). La app figura a R$ 90.
+- `PUBLIC_BASE_URL` — URL pública para el webhook `transaction.processed`
+- `BOOKING_OFFER_SLUG` — slug de la oferta en el panel de Buck, si ya existe
+
+Horarios por defecto: lunes a sábado, 14:00–22:00, hora de Brasília, turnos de 60 minutos. Se cambian con `SCHEDULE_TZ`, `SCHEDULE_DAYS`, `SCHEDULE_START` y `SCHEDULE_END`.
+
+En desarrollo, `npm run dev` sirve el sitio y `/api` en el mismo puerto. En producción: `npm run build` y `npm start`.
+
+Vercel publica a producción solo cuando el código está en `main`. El checkout vive en `api/[...path].js`. En el proyecto de Vercel cargá `BUCKPAY_TOKEN`, `BUCKPAY_USER_AGENT` y `PUBLIC_BASE_URL` (la URL del sitio, sin barra final). Sin eso el formulario se ve, pero no genera el PIX.
+
+`BUCKPAY_MOCK=1` simula el PIX sin llamar a BuckPay. No lo uses en producción.
+
 ## Enlaces y download
 
 Editá en `src/config.ts`:

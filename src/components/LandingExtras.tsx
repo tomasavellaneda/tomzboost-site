@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
-import { downloadUrl, LINKS, RELEASE } from '../config'
+import { downloadUrl, LINKS, PRICES, RELEASE } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
 import AppPreview, { type PreviewScreen } from './AppPreview'
@@ -95,6 +95,21 @@ export function DownloadSection() {
 
 export function FloatingSocial() {
   const { t } = useI18n()
+  const [hide, setHide] = useState(false)
+
+  useEffect(() => {
+    const nodes = ['agendar', 'comprar'].map((id) => document.getElementById(id)).filter((node) => node !== null)
+    if (!nodes.length) return
+    const observer = new IntersectionObserver(
+      (entries) => setHide(entries.some((entry) => entry.isIntersecting)),
+      { threshold: 0 },
+    )
+    nodes.forEach((node) => observer.observe(node))
+    return () => observer.disconnect()
+  }, [])
+
+  if (hide) return null
+
   return (
     <div className="floating-actions">
       <a
@@ -128,7 +143,8 @@ export function ServicesSection() {
       title: t('services.app.title'),
       desc: t('services.app.desc'),
       features: [t('services.app.f1'), t('services.app.f2'), t('services.app.f3'), t('services.app.f4')],
-      cta: { label: t('services.app.cta'), href: '#download', primary: true as const },
+      priceCents: PRICES.appCents,
+      cta: { label: t('services.app.cta'), href: '#comprar', primary: true as const },
     },
     {
       id: 'full',
@@ -136,7 +152,8 @@ export function ServicesSection() {
       title: t('services.full.title'),
       desc: t('services.full.desc'),
       features: [t('services.full.f1'), t('services.full.f2'), t('services.full.f3'), t('services.full.f4')],
-      cta: { label: t('services.full.cta'), href: LINKS.whatsapp, primary: true as const, external: true },
+      priceCents: PRICES.fullCents,
+      cta: { label: t('services.full.cta'), href: '#agendar', primary: true as const },
     },
   ]
 
@@ -154,6 +171,7 @@ export function ServicesSection() {
             <div className="service-card-top">
               <span className="service-badge">{s.badge}</span>
               <h3>{s.title}</h3>
+              <p className="service-price">{(s.priceCents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
               <p>{s.desc}</p>
             </div>
             <ul className="service-features">

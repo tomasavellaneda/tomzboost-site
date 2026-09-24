@@ -8,6 +8,11 @@ export const LINKS = {
   installGuide: '#guia',
 } as const
 
+export const PRICES = {
+  appCents: 9000,
+  fullCents: 18000,
+} as const
+
 export const RELEASE = {
   version: '1.0.0',
   size: '48 MB',

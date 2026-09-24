@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
+    "start": "node server/index.mjs",
+    "test": "node --test server/*.test.mjs",
     "screenshots": "node scripts/capture-screenshots.mjs"
   },
   "dependencies": {
