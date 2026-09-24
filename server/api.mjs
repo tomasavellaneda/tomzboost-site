@@ -32,6 +32,10 @@ function publicBooking(booking, { includePix }) {
     endsAt: booking.endsAt,
     expiresAt: booking.expiresAt,
     buyer: { name: booking.buyer.name },
+    product: booking.product || 'full',
+    ...(booking.product === 'app' && booking.status === 'paid'
+      ? { downloadUrl: '/downloads/TomzBoost-Setup.zip' }
+      : {}),
     ...(includePix && booking.pix
       ? { pix: { code: booking.pix.code, qrcodeBase64: booking.pix.qrcode_base64, mime: booking.pix.mime || 'image/png' } }
       : {}),
@@ -82,6 +86,7 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
         holdMinutes: config.holdMinutes,
         paymentsReady: config.paymentsReady,
         mock: config.mock,
+        appAmountCents: 9000,
         days,
       },
     }
@@ -123,10 +128,13 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
 
     const id = `tb_${crypto.randomUUID().replace(/-/g, '')}`
     const now = new Date()
+    const product = body?.product === 'app' ? 'app' : 'full'
+    const amountCents = product === 'app' ? 9000 : config.amountCents
     const booking = {
       id,
+      product,
       status: 'pending',
-      amountCents: config.amountCents,
+      amountCents,
       startsAt: null,
       endsAt: null,
       buyer: validated.buyer,
@@ -142,8 +150,9 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
       const postbackUrl = config.publicBaseUrl ? `${config.publicBaseUrl}/api/webhooks/buckpay` : ''
       pix = await createPixTransaction({
         externalId: id,
-        amountCents: config.amountCents,
+        amountCents,
         buyer: validated.buyer,
+        productName: product === 'app' ? 'TOMZ BOOST App' : config.productName,
         postbackUrl,
       })
     } catch (error) {

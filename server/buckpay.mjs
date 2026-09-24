@@ -43,7 +43,7 @@ async function request(path, { method, body }) {
   return payload
 }
 
-export async function createPixTransaction({ externalId, amountCents, buyer, postbackUrl }) {
+export async function createPixTransaction({ externalId, amountCents, buyer, postbackUrl, productName }) {
   const config = getConfig()
   if (config.mock) {
     const id = crypto.randomUUID()
@@ -68,8 +68,8 @@ export async function createPixTransaction({ externalId, amountCents, buyer, pos
       phone: buyer.phone,
       ...(buyer.document ? { document: buyer.document } : {}),
     },
-    product: { name: config.productName },
-    offer: config.offerSlug ? { slug: config.offerSlug } : { name: config.productName, quantity: 1 },
+    product: { name: productName || config.productName },
+    offer: config.offerSlug ? { slug: config.offerSlug } : { name: productName || config.productName, quantity: 1 },
     ...(buyer.discord ? { tracking: { sck: `discord:${buyer.discord}` } } : {}),
     ...(postbackUrl ? { postbackUrl } : {}),
   }

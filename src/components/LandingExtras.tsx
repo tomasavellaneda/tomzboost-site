@@ -98,10 +98,13 @@ export function FloatingSocial() {
   const [hide, setHide] = useState(false)
 
   useEffect(() => {
-    const section = document.getElementById('agendar')
-    if (!section) return
-    const observer = new IntersectionObserver(([entry]) => setHide(entry.isIntersecting), { threshold: 0 })
-    observer.observe(section)
+    const nodes = ['agendar', 'comprar'].map((id) => document.getElementById(id)).filter((node) => node !== null)
+    if (!nodes.length) return
+    const observer = new IntersectionObserver(
+      (entries) => setHide(entries.some((entry) => entry.isIntersecting)),
+      { threshold: 0 },
+    )
+    nodes.forEach((node) => observer.observe(node))
     return () => observer.disconnect()
   }, [])
 
@@ -141,7 +144,7 @@ export function ServicesSection() {
       desc: t('services.app.desc'),
       features: [t('services.app.f1'), t('services.app.f2'), t('services.app.f3'), t('services.app.f4')],
       priceCents: PRICES.appCents,
-      cta: { label: t('services.app.cta'), href: '#download', primary: true as const },
+      cta: { label: t('services.app.cta'), href: '#comprar', primary: true as const },
     },
     {
       id: 'full',

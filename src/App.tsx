@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import AppPreview, { type PreviewScreen } from './components/AppPreview'
+import { AppCheckout } from './components/AppCheckout'
 import { BookingSection } from './components/BookingSection'
 import {
   DownloadButton,
@@ -352,6 +353,8 @@ export default function App() {
       </section>
 
       <ServicesSection />
+
+      <AppCheckout />
 
       <BookingSection />
 
