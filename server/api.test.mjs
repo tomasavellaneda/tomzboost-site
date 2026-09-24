@@ -47,39 +47,66 @@ test('exige nombre y apellido', () => {
   assert.equal(validateBuyer(buyer).buyer.name, 'Ana Souza')
 })
 
-test('crea un PIX de prueba y confirma el turno al simular el pago', async () => {
-  const config = await dispatch({ method: 'GET', pathname: '/api/booking/config' })
-  const slot = config.body.days[0].slots[0]
+test('el PIX impago no ocupa un horario; el turno se elige después de pagar', async () => {
+  const before = await dispatch({ method: 'GET', pathname: '/api/booking/config' })
+  const slot = before.body.days[0].slots[0]
   const created = await dispatch({
     method: 'POST',
     pathname: '/api/bookings',
-    body: { startsAt: slot.startsAt, buyer },
+    body: { buyer },
   })
   assert.equal(created.status, 201)
   assert.equal(created.body.status, 'pending')
+  assert.equal(created.body.startsAt, null)
   assert.match(created.body.pix.code, /^00020126MOCK/)
 
-  const taken = await dispatch({
+  const during = await dispatch({ method: 'GET', pathname: '/api/booking/config' })
+  assert.equal(during.body.days[0].slots[0].available, true)
+
+  const early = await dispatch({
     method: 'POST',
-    pathname: '/api/bookings',
-    body: { startsAt: slot.startsAt, buyer: { ...buyer, email: 'otro@example.com' } },
+    pathname: `/api/bookings/${created.body.id}/schedule`,
+    body: { startsAt: slot.startsAt },
   })
-  assert.equal(taken.status, 409)
-  assert.equal(taken.body.error, 'slot_taken')
+  assert.equal(early.status, 409)
+  assert.equal(early.body.error, 'unpaid')
 
   const paid = await dispatch({ method: 'POST', pathname: `/api/bookings/${created.body.id}/mock-pay` })
   assert.equal(paid.status, 200)
   assert.equal(paid.body.status, 'paid')
-  assert.equal(paid.body.pix, undefined)
+  assert.equal(paid.body.startsAt, null)
+
+  const scheduled = await dispatch({
+    method: 'POST',
+    pathname: `/api/bookings/${created.body.id}/schedule`,
+    body: { startsAt: slot.startsAt },
+  })
+  assert.equal(scheduled.status, 200)
+  assert.equal(scheduled.body.startsAt, slot.startsAt)
+
+  const after = await dispatch({ method: 'GET', pathname: '/api/booking/config' })
+  assert.equal(after.body.days[0].slots[0].available, false)
+
+  const other = await dispatch({
+    method: 'POST',
+    pathname: '/api/bookings',
+    body: { buyer: { ...buyer, email: 'otro@example.com' } },
+  })
+  await dispatch({ method: 'POST', pathname: `/api/bookings/${other.body.id}/mock-pay` })
+  const clash = await dispatch({
+    method: 'POST',
+    pathname: `/api/bookings/${other.body.id}/schedule`,
+    body: { startsAt: slot.startsAt },
+  })
+  assert.equal(clash.status, 409)
+  assert.equal(clash.body.error, 'slot_taken')
 })
 
 test('el webhook solo confirma si BuckPay dice que está pago', async () => {
-  const config = await dispatch({ method: 'GET', pathname: '/api/booking/config' })
-  const slot = config.body.days[0].slots[1]
   const created = await dispatch({
     method: 'POST',
     pathname: '/api/bookings',
-    body: { startsAt: slot.startsAt, buyer },
+    body: { buyer },
   })
   const pending = await getStored(created.body.id)
   const early = await dispatch({
@@ -106,11 +133,10 @@ test('sin credenciales ni modo prueba no cobra', async () => {
   delete process.env.BOOKING_AMOUNT_CENTS
   const config = await dispatch({ method: 'GET', pathname: '/api/booking/config' })
   assert.equal(config.body.paymentsReady, false)
-  const slot = config.body.days[0]?.slots[0]
   const created = await dispatch({
     method: 'POST',
     pathname: '/api/bookings',
-    body: { startsAt: slot.startsAt, buyer },
+    body: { buyer },
   })
   assert.equal(created.status, 503)
 })

@@ -19,8 +19,8 @@ type Booking = {
   id: string
   status: 'pending' | 'paid' | 'paid_overlap' | 'expired' | 'cancelled'
   amountCents: number
-  startsAt: string
-  endsAt: string
+  startsAt: string | null
+  endsAt: string | null
   expiresAt: string
   pix?: Pix
 }
@@ -36,6 +36,7 @@ const ERROR_KEYS: Record<string, MessageKey> = {
   payments_not_configured: 'book.error.payments_not_configured',
   provider_error: 'book.error.provider_error',
   rate_limited: 'book.error.rate_limited',
+  unpaid: 'book.error.unpaid',
 }
 
 function formatBrl(cents: number) {
@@ -68,12 +69,6 @@ export function BookingSection() {
       .then((data) => {
         if (cancelled) return
         setConfig(data)
-        const first = data.days.find((day) => day.slots.some((slot) => slot.available)) ?? data.days[0]
-        if (first) {
-          setDate(first.date)
-          const open = first.slots.find((slot) => slot.available)
-          if (open) setStartsAt(open.startsAt)
-        }
       })
       .catch(() => {
         if (!cancelled) setLoadError(true)
@@ -110,9 +105,31 @@ export function BookingSection() {
     }
   }, [localeTag])
 
+  useEffect(() => {
+    if (!booking || booking.status !== 'paid' || booking.startsAt) return
+    let cancelled = false
+    fetch('/api/booking/config')
+      .then((response) => response.json() as Promise<Config>)
+      .then((data) => {
+        if (cancelled) return
+        setConfig(data)
+        const first = data.days.find((day) => day.slots.some((slot) => slot.available)) ?? data.days[0]
+        if (!first) return
+        setDate(first.date)
+        const open = first.slots.find((slot) => slot.available)
+        if (open) setStartsAt(open.startsAt)
+      })
+      .catch(() => {
+        if (!cancelled) setLoadError(true)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [booking?.id, booking?.status, booking?.startsAt])
+
   async function submit(event: FormEvent) {
     event.preventDefault()
-    if (!startsAt || busy) return
+    if (busy) return
     setBusy(true)
     setError('')
     try {
@@ -120,7 +137,6 @@ export function BookingSection() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          startsAt,
           buyer: { name, email, phone, discord, document },
         }),
       })
@@ -128,6 +144,31 @@ export function BookingSection() {
       if (!response.ok) {
         const key = payload.error ? ERROR_KEYS[payload.error] : undefined
         setError(key ? t(key) : payload.detail || t('book.error.generic'))
+        return
+      }
+      setBooking(payload)
+    } catch {
+      setError(t('book.error.generic'))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function confirmSlot(event: FormEvent) {
+    event.preventDefault()
+    if (!booking || !startsAt || busy) return
+    setBusy(true)
+    setError('')
+    try {
+      const response = await fetch(`/api/bookings/${booking.id}/schedule`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ startsAt }),
+      })
+      const payload = (await response.json()) as Booking & { error?: string }
+      if (!response.ok) {
+        const key = payload.error ? ERROR_KEYS[payload.error] : undefined
+        setError(key ? t(key) : t('book.error.generic'))
         if (payload.error === 'slot_taken' || payload.error === 'slot_invalid') {
           const fresh = await fetch('/api/booking/config').then((item) => item.json() as Promise<Config>)
           setConfig(fresh)
@@ -163,15 +204,13 @@ export function BookingSection() {
         setConfig(data)
         const first = data.days.find((item) => item.slots.some((entry) => entry.available))
         if (!first) return
-        setDate(first.date)
-        const open = first.slots.find((entry) => entry.available)
-        if (open) setStartsAt(open.startsAt)
       })
       .catch(() => setLoadError(true))
   }
 
-  const when = booking
-    ? new Date(booking.startsAt).toLocaleString(localeTag, {
+  const when =
+    booking?.startsAt
+      ? new Date(booking.startsAt).toLocaleString(localeTag, {
         dateStyle: 'full',
         timeStyle: 'short',
         timeZone: config?.timezone || 'America/Sao_Paulo',
@@ -205,59 +244,6 @@ export function BookingSection() {
             </p>
           )}
 
-          {config.days.length === 0 ? (
-            <p className="booking-alert">{t('book.empty')}</p>
-          ) : (
-            <>
-              <fieldset>
-                <legend>{t('book.day')}</legend>
-                <div className="booking-days">
-                  {config.days.map((item) => (
-                    <button
-                      key={item.date}
-                      type="button"
-                      className={item.date === date ? 'is-active' : ''}
-                      onClick={() => {
-                        setDate(item.date)
-                        const open = item.slots.find((entry) => entry.available) ?? item.slots[0]
-                        if (open) setStartsAt(open.startsAt)
-                      }}
-                    >
-                      {dateLabel(item.date)}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-
-              <fieldset>
-                <legend>{t('book.time')}</legend>
-                <div className="booking-times">
-                  {day?.slots.map((item) => {
-                    const clock: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }
-                    const scheduleLabel = new Date(item.startsAt).toLocaleTimeString(localeTag, {
-                      ...clock,
-                      timeZone: config.timezone,
-                    })
-                    const local = new Date(item.startsAt).toLocaleTimeString(localeTag, clock)
-                    const showLocal = scheduleLabel !== local
-                    return (
-                      <button
-                        key={item.startsAt}
-                        type="button"
-                        disabled={!item.available}
-                        className={item.startsAt === startsAt ? 'is-active' : ''}
-                        onClick={() => setStartsAt(item.startsAt)}
-                      >
-                        {item.start}
-                        {showLocal && <small>{local}</small>}
-                      </button>
-                    )
-                  })}
-                </div>
-              </fieldset>
-            </>
-          )}
-
           <div className="booking-fields">
             <label>
               {t('book.name')}
@@ -283,7 +269,7 @@ export function BookingSection() {
 
           {error && <p className="booking-alert">{error}</p>}
 
-          <button className="button button-primary" type="submit" disabled={busy || !config.paymentsReady || !slot?.available}>
+          <button className="button button-primary" type="submit" disabled={busy || !config.paymentsReady}>
             {busy ? t('book.submitting') : t('book.submit')}
           </button>
         </form>
@@ -292,7 +278,6 @@ export function BookingSection() {
       {booking && booking.status === 'pending' && booking.pix && (
         <div className="booking-card booking-pix">
           <h3>{t('book.pixTitle')}</h3>
-          <p>{when}</p>
           <p>{formatBrl(booking.amountCents)}</p>
           {config?.mock && <p className="booking-alert">{t('book.mock')}</p>}
           <img
@@ -322,7 +307,70 @@ export function BookingSection() {
         </div>
       )}
 
-      {booking && (booking.status === 'paid' || booking.status === 'paid_overlap') && (
+      {booking && booking.status === 'paid' && !booking.startsAt && config && (
+        <form className="booking-card" onSubmit={confirmSlot}>
+          <h3>{t('book.pickTitle')}</h3>
+          <p>{t('book.pickBody')}</p>
+          <p>{formatBrl(booking.amountCents)}</p>
+          {config.days.length === 0 ? (
+            <p className="booking-alert">{t('book.empty')}</p>
+          ) : (
+            <>
+              <fieldset>
+                <legend>{t('book.day')}</legend>
+                <div className="booking-days">
+                  {config.days.map((item) => (
+                    <button
+                      key={item.date}
+                      type="button"
+                      className={item.date === date ? 'is-active' : ''}
+                      onClick={() => {
+                        setDate(item.date)
+                        const open = item.slots.find((entry) => entry.available) ?? item.slots[0]
+                        if (open) setStartsAt(open.startsAt)
+                      }}
+                    >
+                      {dateLabel(item.date)}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>{t('book.time')}</legend>
+                <div className="booking-times">
+                  {day?.slots.map((item) => {
+                    const clock: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }
+                    const scheduleLabel = new Date(item.startsAt).toLocaleTimeString(localeTag, {
+                      ...clock,
+                      timeZone: config.timezone,
+                    })
+                    const local = new Date(item.startsAt).toLocaleTimeString(localeTag, clock)
+                    const showLocal = scheduleLabel !== local
+                    return (
+                      <button
+                        key={item.startsAt}
+                        type="button"
+                        disabled={!item.available}
+                        className={item.startsAt === startsAt ? 'is-active' : ''}
+                        onClick={() => setStartsAt(item.startsAt)}
+                      >
+                        {item.start}
+                        {showLocal && <small>{local}</small>}
+                      </button>
+                    )
+                  })}
+                </div>
+              </fieldset>
+            </>
+          )}
+          {error && <p className="booking-alert">{error}</p>}
+          <button className="button button-primary" type="submit" disabled={busy || !slot?.available}>
+            {busy ? t('book.confirming') : t('book.confirmSlot')}
+          </button>
+        </form>
+      )}
+
+      {booking && booking.startsAt && (booking.status === 'paid' || booking.status === 'paid_overlap') && (
         <div className="booking-card booking-done">
           <h3>{t('book.paidTitle')}</h3>
           <p>{when}</p>

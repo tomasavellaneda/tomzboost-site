@@ -1,7 +1,7 @@
 import { createPixTransaction, getTransaction, mockMarkPaid, providerDetail } from './buckpay.mjs'
 import { getConfig } from './config.mjs'
 import { findSlot, listSlots } from './schedule.mjs'
-import { getBooking, listBookings, saveBooking, slotTaken, updateBooking } from './store.mjs'
+import { claimSlot, getBooking, listBookings, saveBooking, slotTaken, updateBooking } from './store.mjs'
 import { validateBuyer } from './validate.mjs'
 
 const hits = new Map()
@@ -43,10 +43,8 @@ async function syncPayment(booking) {
   const remote = await getTransaction(booking.id)
   if (!remote || remote.status !== 'paid') return booking
   if (remote.total_amount != null && remote.total_amount !== booking.amountCents) return booking
-  const bookings = await listBookings()
-  const overlap = slotTaken(bookings, booking.startsAt, booking.id)
   return updateBooking(booking.id, {
-    status: overlap ? 'paid_overlap' : 'paid',
+    status: 'paid',
     paidAt: new Date().toISOString(),
     buckpayStatus: remote.status,
   })
@@ -111,10 +109,6 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
     }
     const validated = validateBuyer(body?.buyer)
     if (validated.error) return { status: 400, body: { error: validated.error } }
-    const slot = findSlot(body?.startsAt)
-    if (!slot) return { status: 400, body: { error: 'slot_invalid' } }
-    const bookings = await listBookings()
-    if (slotTaken(bookings, slot.startsAt)) return { status: 409, body: { error: 'slot_taken' } }
 
     const id = `tb_${crypto.randomUUID().replace(/-/g, '')}`
     const now = new Date()
@@ -122,16 +116,15 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
       id,
       status: 'pending',
       amountCents: config.amountCents,
-      startsAt: slot.startsAt,
-      endsAt: slot.endsAt,
+      startsAt: null,
+      endsAt: null,
       buyer: validated.buyer,
       pix: null,
       buckpayId: null,
       createdAt: now.toISOString(),
-      expiresAt: new Date(now.getTime() + config.holdMinutes * 60 * 1000).toISOString(),
+      expiresAt: null,
     }
-    const reserved = await saveBooking(booking)
-    if (!reserved) return { status: 409, body: { error: 'slot_taken' } }
+    await saveBooking(booking)
 
     let pix
     try {
@@ -149,6 +142,20 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
 
     const saved = await updateBooking(id, { buckpayId: pix.id, pix: pix.pix })
     return { status: 201, body: publicBooking(saved, { includePix: true }) }
+  }
+
+  const scheduleMatch = pathname.match(/^\/api\/bookings\/([A-Za-z0-9_-]+)\/schedule$/)
+  if (method === 'POST' && scheduleMatch) {
+    const slot = findSlot(body?.startsAt)
+    if (!slot) return { status: 400, body: { error: 'slot_invalid' } }
+    const result = await claimSlot(scheduleMatch[1], slot)
+    if (result.error === 'not_found') return { status: 404, body: { error: 'not_found' } }
+    if (result.error === 'unpaid') return { status: 409, body: { error: 'unpaid' } }
+    if (result.error === 'slot_taken') return { status: 409, body: { error: 'slot_taken' } }
+    if (result.error === 'already_scheduled') {
+      return { status: 200, body: publicBooking(result.booking, { includePix: false }) }
+    }
+    return { status: 200, body: publicBooking(result.booking, { includePix: false }) }
   }
 
   if (method === 'POST' && pathname === '/api/webhooks/buckpay') {

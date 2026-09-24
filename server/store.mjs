@@ -47,7 +47,7 @@ function writeAll(bookings) {
 function expire(bookings, now = Date.now()) {
   let changed = false
   const next = bookings.map((booking) => {
-    if (booking.status === 'pending' && new Date(booking.expiresAt).getTime() <= now) {
+    if (booking.status === 'pending' && booking.startsAt && new Date(booking.expiresAt).getTime() <= now) {
       changed = true
       return { ...booking, status: 'expired' }
     }
@@ -75,10 +75,29 @@ export async function listBookings() {
 export async function saveBooking(booking) {
   return withLock(async () => {
     const { bookings } = expire(readAll())
-    if (slotTaken(bookings, booking.startsAt)) return null
     bookings.push(booking)
     writeAll(bookings)
     return booking
+  })
+}
+
+export async function claimSlot(id, slot) {
+  return withLock(async () => {
+    const { bookings } = expire(readAll())
+    const index = bookings.findIndex((item) => item.id === id)
+    if (index < 0) return { error: 'not_found' }
+    const booking = bookings[index]
+    if (booking.startsAt) return { error: 'already_scheduled', booking }
+    if (booking.status !== 'paid') return { error: 'unpaid' }
+    if (slotTaken(bookings, slot.startsAt, id)) return { error: 'slot_taken' }
+    bookings[index] = {
+      ...booking,
+      startsAt: slot.startsAt,
+      endsAt: slot.endsAt,
+      scheduledAt: new Date().toISOString(),
+    }
+    writeAll(bookings)
+    return { booking: bookings[index] }
   })
 }
 
@@ -99,11 +118,12 @@ export async function getBooking(id) {
 }
 
 export function slotTaken(bookings, startsAt, ignoreId) {
+  if (!startsAt) return false
   const target = new Date(startsAt).getTime()
-  return bookings.some(
-    (booking) =>
-      booking.id !== ignoreId &&
-      (booking.status === 'pending' || booking.status === 'paid' || booking.status === 'paid_overlap') &&
-      new Date(booking.startsAt).getTime() === target,
-  )
+  if (Number.isNaN(target)) return false
+  return bookings.some((booking) => {
+    if (!booking.startsAt || booking.id === ignoreId) return false
+    if (booking.status !== 'paid' && booking.status !== 'paid_overlap') return false
+    return new Date(booking.startsAt).getTime() === target
+  })
 }

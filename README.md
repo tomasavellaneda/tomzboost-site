@@ -32,7 +32,7 @@ npm run preview
 
 ## Agenda y PIX (BuckPay)
 
-La optimización 1 a 1 se reserva en `#agendar`. El servidor crea el PIX en BuckPay y confirma el turno cuando el pago figura como `paid`. El token no sale del servidor.
+La optimización 1 a 1 se paga primero en `#agendar`. El horario se elige recién cuando BuckPay marca el PIX como `paid`, así un cobro impago no aparece como turno tomado. El token no sale del servidor.
 
 Copiá `.env.example` a `.env` y completá:
 
