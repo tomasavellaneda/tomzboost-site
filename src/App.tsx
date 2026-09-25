@@ -265,7 +265,7 @@ export default function App() {
         </div>
       </section>
 
-      <section className="steps-band">
+      <section id="pasos" className="steps-band">
         <div className="section-shell">
           <div className="section-heading">
             <span>{t('steps.eyebrow')}</span>
@@ -283,14 +283,6 @@ export default function App() {
             ))}
           </div>
         </div>
-      </section>
-
-      <section id="guia" className="section-shell guide-row">
-        <div>
-          <span>{t('guide.eyebrow')}</span>
-          <h2>{t('guide.title')}</h2>
-        </div>
-        <p>{t('guide.body')}</p>
       </section>
 
       <section className="section-block section-shell testimonials">
