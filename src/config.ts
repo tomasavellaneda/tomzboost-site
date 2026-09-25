@@ -5,6 +5,7 @@ export const LINKS = {
   download: downloadUrl,
   discord: 'https://discord.gg/SEULINK',
   whatsapp: 'https://wa.me/SEUNUMERO',
+  instagram: 'https://www.instagram.com/tomzboost/',
   installGuide: '#pasos',
 } as const
 

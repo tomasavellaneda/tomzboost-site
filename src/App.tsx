@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import AppPreview, { type PreviewScreen } from './components/AppPreview'
 import { AppCheckout } from './components/AppCheckout'
 import { BookingSection } from './components/BookingSection'
+import { LegalPage } from './components/LegalPage'
+import { SiteFooter } from './components/SiteFooter'
 import {
   DownloadButton,
   DownloadSection,
@@ -151,17 +153,6 @@ function SiteHeader() {
   )
 }
 
-function SiteFooter() {
-  const { t } = useI18n()
-  return (
-    <footer className="site-footer section-shell">
-      <img src="/logo.png" alt="TOMZ BOOST" className="footer-logo" />
-      <p>{t('footer.tagline')}</p>
-      <span>© {new Date().getFullYear()} TOMZ BOOST</span>
-    </footer>
-  )
-}
-
 export default function App() {
   const { t } = useI18n()
   const page = usePage()
@@ -177,11 +168,13 @@ export default function App() {
 
   if (shot) return <ShotPage screen={shot} />
 
-  if (page === 'comprar' || page === 'agendar') {
+  if (page === 'comprar' || page === 'agendar' || page === 'privacidad' || page === 'terminos') {
     return (
       <main className="checkout-page">
         <SiteHeader />
-        {page === 'comprar' ? <AppCheckout /> : <BookingSection />}
+        {page === 'comprar' ? <AppCheckout /> : null}
+        {page === 'agendar' ? <BookingSection /> : null}
+        {page === 'privacidad' || page === 'terminos' ? <LegalPage page={page} /> : null}
         <SiteFooter />
       </main>
     )
