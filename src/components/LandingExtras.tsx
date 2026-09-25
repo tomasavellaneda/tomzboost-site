@@ -34,25 +34,9 @@ export function DownloadSection() {
           <span className="eyebrow">{t('download.eyebrow')}</span>
           <h2>{t('download.title')}</h2>
           <p>{t('download.body')}</p>
-
-          <ul className="release-meta">
-            <li>
-              <b>{t('download.meta.version')}</b>
-              <span>v{RELEASE.version}</span>
-            </li>
-            <li>
-              <b>{t('download.meta.size')}</b>
-              <span>{RELEASE.size}</span>
-            </li>
-            <li>
-              <b>{t('download.meta.compatible')}</b>
-              <span>{RELEASE.platforms.join(' · ')}</span>
-            </li>
-            <li>
-              <b>{t('download.meta.updated')}</b>
-              <span>{RELEASE.updatedAt}</span>
-            </li>
-          </ul>
+          <p className="release-meta">
+            v{RELEASE.version} · {RELEASE.size} · {RELEASE.platforms.join(' · ')}
+          </p>
 
           <div className="hero-actions" style={{ marginTop: 28 }}>
             <DownloadButton className="button button-primary" label={t('download.cta')} large />
@@ -408,7 +392,7 @@ function StatCard({
   const value = useCountUp(target, active)
   return (
     <article className="stat-card">
-      <span className={`stat-dir ${dir}`}>{dir === 'up' ? '↑' : '↓'}</span>
+      <span className="stat-dir">{dir === 'up' ? '↑' : '↓'}</span>
       <b>
         {value}
         {suffix}
