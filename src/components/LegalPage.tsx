@@ -16,6 +16,7 @@ const PAGES = {
     sections: [
       ['terms.toolTitle', 'terms.toolBody'],
       ['terms.warrantyTitle', 'terms.warrantyBody'],
+      ['terms.saleTitle', 'terms.saleBody'],
     ],
   },
 } as const satisfies Record<string, { title: MessageKey; intro: MessageKey; sections: [MessageKey, MessageKey][] }>
