@@ -359,6 +359,41 @@ export const messages = {
     'book.error.generic': 'No pudimos reservar. Probá de nuevo.',
 
     'footer.tagline': 'Performance en cada clic.',
+    'footer.col.nav': 'TomzBoost',
+    'footer.col.legal': 'Legal',
+    'footer.col.social': 'Redes sociales',
+    'footer.link.results': 'Resultados',
+    'footer.link.download': 'Descargar',
+    'footer.link.buy': 'Comprar',
+    'footer.link.privacy': 'Política de Privacidad',
+    'footer.link.terms': 'Términos de Uso',
+    'footer.social.discord': 'Discord',
+    'footer.social.whatsapp': 'WhatsApp',
+    'footer.social.instagram': 'Instagram',
+
+    'legal.draftLabel': 'Borrador',
+    'legal.draftNotice': 'Contenido genérico, revisar con un profesional antes de publicar',
+
+    'privacy.title': 'Política de Privacidad',
+    'privacy.intro':
+      'Este texto es un borrador para el sitio. Describe, en líneas generales, qué datos pide el checkout y quién procesa el pago. No es asesoramiento legal.',
+    'privacy.dataTitle': 'Datos del checkout',
+    'privacy.dataBody':
+      'En el checkout pedimos nombre, email, teléfono y documento. Los usamos para identificar el pedido, enviarte la confirmación o el acceso, y contactarte si hace falta sobre el pago o el servicio contratado.',
+    'privacy.payTitle': 'Pago',
+    'privacy.payBody':
+      'El pago lo procesa BuckPay, un proveedor externo. Los datos necesarios para generar el cobro se envían a ese proveedor. Tomz Boost no opera la pasarela de pago.',
+
+    'terms.title': 'Términos de Uso',
+    'terms.intro':
+      'Este texto es un borrador. Resume condiciones básicas de uso del software y no reemplaza un contrato revisado por un profesional.',
+    'terms.toolTitle': 'Qué es el software',
+    'terms.toolBody':
+      'Tomz Boost es una herramienta de terceros para optimizar Windows. No está afiliada a Microsoft, a los estudios de los juegos ni a los fabricantes de hardware.',
+    'terms.warrantyTitle': 'Resultados y cambios',
+    'terms.warrantyBody':
+      'El software se ofrece sin garantías de resultado. El rendimiento depende de tu equipo y de tu configuración. Los ajustes son reversibles desde la aplicación. El uso queda bajo tu responsabilidad.',
+
     'floating.discord': 'Entrar al Discord',
     'floating.whatsapp': 'Hablar por WhatsApp',
   },
@@ -723,6 +758,41 @@ export const messages = {
     'book.error.generic': 'Não foi possível reservar. Tente de novo.',
 
     'footer.tagline': 'Performance em cada clique.',
+    'footer.col.nav': 'TomzBoost',
+    'footer.col.legal': 'Legal',
+    'footer.col.social': 'Redes sociais',
+    'footer.link.results': 'Resultados',
+    'footer.link.download': 'Baixar',
+    'footer.link.buy': 'Comprar',
+    'footer.link.privacy': 'Política de Privacidade',
+    'footer.link.terms': 'Termos de Uso',
+    'footer.social.discord': 'Discord',
+    'footer.social.whatsapp': 'WhatsApp',
+    'footer.social.instagram': 'Instagram',
+
+    'legal.draftLabel': 'Rascunho',
+    'legal.draftNotice': 'Conteúdo genérico, revisar com um profissional antes de publicar',
+
+    'privacy.title': 'Política de Privacidade',
+    'privacy.intro':
+      'Este texto é um rascunho do site. Descreve, em linhas gerais, quais dados o checkout pede e quem processa o pagamento. Não é aconselhamento jurídico.',
+    'privacy.dataTitle': 'Dados do checkout',
+    'privacy.dataBody':
+      'No checkout pedimos nome, email, telefone e documento. Usamos esses dados para identificar o pedido, enviar a confirmação ou o acesso, e entrar em contato se precisar sobre o pagamento ou o serviço contratado.',
+    'privacy.payTitle': 'Pagamento',
+    'privacy.payBody':
+      'O pagamento é processado pela BuckPay, um fornecedor externo. Os dados necessários para gerar a cobrança são enviados a esse fornecedor. O Tomz Boost não opera o gateway de pagamento.',
+
+    'terms.title': 'Termos de Uso',
+    'terms.intro':
+      'Este texto é um rascunho. Resume condições básicas de uso do software e não substitui um contrato revisado por um profissional.',
+    'terms.toolTitle': 'O que é o software',
+    'terms.toolBody':
+      'O Tomz Boost é uma ferramenta de terceiros para otimizar o Windows. Não é afiliado à Microsoft, aos estúdios dos jogos nem aos fabricantes de hardware.',
+    'terms.warrantyTitle': 'Resultados e mudanças',
+    'terms.warrantyBody':
+      'O software é oferecido sem garantias de resultado. O desempenho depende do seu equipamento e da sua configuração. Os ajustes são reversíveis pelo aplicativo. O uso fica por sua conta e risco.',
+
     'floating.discord': 'Entrar no Discord',
     'floating.whatsapp': 'Falar no WhatsApp',
   },
@@ -1087,6 +1157,41 @@ export const messages = {
     'book.error.generic': 'We could not book that slot. Try again.',
 
     'footer.tagline': 'Performance in every click.',
+    'footer.col.nav': 'TomzBoost',
+    'footer.col.legal': 'Legal',
+    'footer.col.social': 'Social',
+    'footer.link.results': 'Results',
+    'footer.link.download': 'Download',
+    'footer.link.buy': 'Buy',
+    'footer.link.privacy': 'Privacy Policy',
+    'footer.link.terms': 'Terms of Use',
+    'footer.social.discord': 'Discord',
+    'footer.social.whatsapp': 'WhatsApp',
+    'footer.social.instagram': 'Instagram',
+
+    'legal.draftLabel': 'Draft',
+    'legal.draftNotice': 'Generic content — have a professional review it before publishing',
+
+    'privacy.title': 'Privacy Policy',
+    'privacy.intro':
+      'This is a draft for the site. It outlines, in general terms, which data checkout asks for and who processes the payment. It is not legal advice.',
+    'privacy.dataTitle': 'Checkout data',
+    'privacy.dataBody':
+      'At checkout we ask for your name, email, phone number, and document. We use them to identify the order, send the confirmation or access, and contact you if we need to about the payment or the service you bought.',
+    'privacy.payTitle': 'Payment',
+    'privacy.payBody':
+      'Payment is processed by BuckPay, an external provider. The data needed to create the charge is sent to that provider. Tomz Boost does not run the payment gateway.',
+
+    'terms.title': 'Terms of Use',
+    'terms.intro':
+      'This is a draft. It summarizes basic conditions for using the software and does not replace a contract reviewed by a professional.',
+    'terms.toolTitle': 'What the software is',
+    'terms.toolBody':
+      'Tomz Boost is a third-party tool for optimizing Windows. It is not affiliated with Microsoft, game studios, or hardware makers.',
+    'terms.warrantyTitle': 'Results and changes',
+    'terms.warrantyBody':
+      'The software is offered without warranties of result. Performance depends on your hardware and setup. The tweaks are reversible from the app. You use it at your own risk.',
+
     'floating.discord': 'Join Discord',
     'floating.whatsapp': 'Chat on WhatsApp',
   },
