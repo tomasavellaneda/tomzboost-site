@@ -385,6 +385,9 @@ export const messages = {
     'terms.warrantyTitle': 'Resultados y cambios',
     'terms.warrantyBody':
       'El software se ofrece sin garantías de resultado. El rendimiento depende de tu equipo y de tu configuración. Los ajustes son reversibles desde la aplicación. El uso queda bajo tu responsabilidad.',
+    'terms.saleTitle': 'Venta y reembolso',
+    'terms.saleBody':
+      'La licencia es una suscripción: incluye el uso del software y las próximas actualizaciones. Al confirmar el pago se libera una clave única. Esa clave ya quedó emitida aunque todavía no la actives, y no se genera otra igual. El artículo 49 del Código de Defensa del Consumidor prevé arrepentimiento de 7 días en compras fuera de un local físico. Ese plazo no alcanza a un contenido digital entregado de inmediato, que no se puede devolver una vez liberado el acceso. Por eso, la insatisfacción con el resultado, la incompatibilidad con tu PC o no haber activado la clave no dan lugar a reembolso. Abrir un chargeback o una disputa suspende en el acto la licencia y la atención, hasta que la disputa termine. El acceso no sigue mientras el pago esté impugnado.',
 
     'floating.discord': 'Entrar al Discord',
     'floating.whatsapp': 'Hablar por WhatsApp',
@@ -776,6 +779,9 @@ export const messages = {
     'terms.warrantyTitle': 'Resultados e mudanças',
     'terms.warrantyBody':
       'O software é oferecido sem garantias de resultado. O desempenho depende do seu equipamento e da sua configuração. Os ajustes são reversíveis pelo aplicativo. O uso fica por sua conta e risco.',
+    'terms.saleTitle': 'Venda e reembolso',
+    'terms.saleBody':
+      'A licença é uma assinatura: inclui o uso do software e as próximas atualizações. Ao confirmar o pagamento, uma chave única é liberada. Essa chave já foi emitida mesmo que você ainda não a ative, e não será gerada outra igual. O artigo 49 do Código de Defesa do Consumidor prevê arrependimento de 7 dias em compras fora de loja física. Esse prazo não alcança conteúdo digital entregue na hora, que não pode ser devolvido depois que o acesso foi liberado. Por isso, insatisfação com o resultado, incompatibilidade com o seu PC ou o fato de não ter ativado a chave não dão direito a reembolso. Abrir chargeback ou disputa suspende na hora a licença e o atendimento, até a disputa terminar. O acesso não continua enquanto o pagamento estiver contestado.',
 
     'floating.discord': 'Entrar no Discord',
     'floating.whatsapp': 'Falar no WhatsApp',
@@ -1167,6 +1173,9 @@ export const messages = {
     'terms.warrantyTitle': 'Results and changes',
     'terms.warrantyBody':
       'The software is offered without warranties of result. Performance depends on your hardware and setup. The tweaks are reversible from the app. You use it at your own risk.',
+    'terms.saleTitle': 'Sale and refunds',
+    'terms.saleBody':
+      'The license is a subscription: it includes use of the software and upcoming updates. When payment is confirmed, a unique key is issued. That key is already released even if you have not activated it, and an identical one will not be generated. Article 49 of the Brazilian Consumer Defense Code allows a 7-day withdrawal for purchases made outside a physical store. That period does not cover digital content delivered immediately, which cannot be returned once access has been released. Dissatisfaction with the result, incompatibility with your PC, or not having activated the key is not grounds for a refund. Opening a chargeback or payment dispute suspends the license and support immediately, until the dispute ends. Access does not continue while the payment is contested.',
 
     'floating.discord': 'Join Discord',
     'floating.whatsapp': 'Chat on WhatsApp',
