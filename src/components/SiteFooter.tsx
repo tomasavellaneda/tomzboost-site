@@ -45,10 +45,10 @@ export function SiteFooter() {
           <h2>{t('footer.col.legal')}</h2>
           <ul>
             <li>
-              <SiteLink href="/privacidad">{t('footer.link.privacy')}</SiteLink>
+              <SiteLink href="/terminos#politica">{t('footer.link.privacy')}</SiteLink>
             </li>
             <li>
-              <SiteLink href="/terminos">{t('footer.link.terms')}</SiteLink>
+              <SiteLink href="/terminos#termos">{t('footer.link.terms')}</SiteLink>
             </li>
           </ul>
         </nav>

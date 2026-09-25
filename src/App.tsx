@@ -174,7 +174,7 @@ export default function App() {
         <SiteHeader />
         {page === 'comprar' ? <AppCheckout /> : null}
         {page === 'agendar' ? <BookingSection /> : null}
-        {page === 'privacidad' || page === 'terminos' ? <LegalPage page={page} /> : null}
+        {page === 'privacidad' || page === 'terminos' ? <LegalPage /> : null}
         <SiteFooter />
       </main>
     )

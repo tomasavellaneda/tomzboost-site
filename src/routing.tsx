@@ -35,17 +35,15 @@ export function usePage() {
   const page = pageFromPath(url.pathname)
 
   useEffect(() => {
-    if (page !== 'home') {
-      window.scrollTo(0, 0)
-      return
-    }
-    const id = url.hash.replace('#', '')
+    const id = url.hash.replace('#', '') || (page === 'privacidad' ? 'politica' : '')
     if (!id) {
       window.scrollTo(0, 0)
       return
     }
     const frame = window.requestAnimationFrame(() => {
-      document.getElementById(id)?.scrollIntoView()
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView()
+      else window.scrollTo(0, 0)
     })
     return () => window.cancelAnimationFrame(frame)
   }, [href, page, url.hash])
