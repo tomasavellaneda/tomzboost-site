@@ -317,6 +317,10 @@ export const messages = {
     'download.note': 'Compatible con Windows 10 y Windows 11 · ajustes reversibles',
     'download.busy': 'Descargando…',
 
+    'book.steps': 'Progreso del pago',
+    'book.step.data': 'Datos',
+    'book.step.pay': 'Pago',
+    'book.step.done': 'Listo',
     'book.eyebrow': 'Agenda',
     'book.title': 'Reservá la optimización 1 a 1',
     'book.body': 'Primero pagá la optimización completa. Cuando el pago se acredita, elegís el horario. Un pago pendiente no ocupa un turno.',
@@ -688,6 +692,10 @@ export const messages = {
     'download.note': 'Compatível com Windows 10 e Windows 11 · ajustes reversíveis',
     'download.busy': 'Baixando…',
 
+    'book.steps': 'Progresso do pagamento',
+    'book.step.data': 'Dados',
+    'book.step.pay': 'Pagamento',
+    'book.step.done': 'Pronto',
     'book.eyebrow': 'Agenda',
     'book.title': 'Reserve a otimização 1 a 1',
     'book.body': 'Primeiro pague a otimização completa. Quando o pagamento cair, você escolhe o horário. Um pagamento pendente não ocupa um turno.',
@@ -1059,6 +1067,10 @@ export const messages = {
     'download.note': 'Compatible with Windows 10 and Windows 11 · reversible tweaks',
     'download.busy': 'Downloading…',
 
+    'book.steps': 'Checkout progress',
+    'book.step.data': 'Details',
+    'book.step.pay': 'Payment',
+    'book.step.done': 'Done',
     'book.eyebrow': 'Booking',
     'book.title': 'Book the 1-on-1 optimization',
     'book.body': 'Pay for the full optimization first. After the payment clears, you pick a time. A pending payment does not hold a slot.',

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
+import { BookingPlan, BookingSteps } from './CheckoutChrome'
+import { IconCheck } from './Icons'
 
 type Slot = { start: string; startsAt: string; endsAt: string; available: boolean }
 type Day = { date: string; weekday: number; slots: Slot[] }
@@ -241,11 +243,19 @@ export function BookingSection() {
 
       {config && !booking && (
         <form className="booking-card" onSubmit={submit}>
-          <div className="booking-meta">
-            <strong>{config.amountCents != null ? formatBrl(config.amountCents) : '—'}</strong>
-            <span>{t('book.tz')}</span>
-            <span>{t('book.session')}</span>
-          </div>
+          <BookingSteps step={1} />
+          <BookingPlan
+            badge={t('services.full.badge')}
+            title={t('services.full.title')}
+            points={[t('services.full.f1'), t('services.full.f2'), t('services.full.f3')]}
+            price={config.amountCents != null ? formatBrl(config.amountCents) : '—'}
+            notes={
+              <>
+                <span>{t('book.tz')}</span>
+                <span>{t('book.session')}</span>
+              </>
+            }
+          />
 
           {!config.paymentsReady && <p className="booking-alert">{t('book.unavailable')}</p>}
 
@@ -282,38 +292,43 @@ export function BookingSection() {
 
       {booking && booking.status === 'pending' && booking.pix && (
         <div className="booking-card booking-pix">
-          <h3>{t('book.pixTitle')}</h3>
-          <p>{formatBrl(booking.amountCents)}</p>
-          {config?.mock && <p className="booking-alert">{t('book.mock')}</p>}
-          <img
-            alt=""
-            src={`data:${booking.pix.mime || 'image/png'};base64,${booking.pix.qrcodeBase64}`}
-          />
-          <p className="booking-code">{booking.pix.code}</p>
-          <p>{t('book.pixHint')}</p>
-          <div className="booking-actions">
-            <button
-              className="button button-primary"
-              type="button"
-              onClick={async () => {
-                await navigator.clipboard.writeText(booking.pix?.code || '')
-                setCopied(true)
-              }}
-            >
-              {copied ? t('book.copied') : t('book.copy')}
-            </button>
-            {config?.mock && (
-              <button className="button button-secondary" type="button" onClick={simulatePay} disabled={busy}>
-                {t('book.mockPay')}
-              </button>
-            )}
+          <BookingSteps step={2} />
+          <div className="booking-pix-head">
+            <h3>{t('book.pixTitle')}</h3>
+            <p>{formatBrl(booking.amountCents)}</p>
           </div>
+          {config?.mock && <p className="booking-alert">{t('book.mock')}</p>}
+          <div className="booking-qr">
+            <img alt="" src={`data:${booking.pix.mime || 'image/png'};base64,${booking.pix.qrcodeBase64}`} />
+          </div>
+          <div className="booking-pay-code">
+            <p className="booking-code">{booking.pix.code}</p>
+            <div className="booking-actions">
+              <button
+                className="button button-primary"
+                type="button"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(booking.pix?.code || '')
+                  setCopied(true)
+                }}
+              >
+                {copied ? t('book.copied') : t('book.copy')}
+              </button>
+              {config?.mock && (
+                <button className="button button-secondary" type="button" onClick={simulatePay} disabled={busy}>
+                  {t('book.mockPay')}
+                </button>
+              )}
+            </div>
+          </div>
+          <p className="booking-hint">{t('book.pixHint')}</p>
           <p className="booking-waiting">{t('book.waiting')}</p>
         </div>
       )}
 
       {booking && booking.status === 'paid' && !booking.startsAt && config && (
         <form className="booking-card" onSubmit={confirmSlot}>
+          <BookingSteps step={3} />
           <h3>{t('book.pickTitle')}</h3>
           <p>{t('book.pickBody')}</p>
           <p>{formatBrl(booking.amountCents)}</p>
@@ -376,7 +391,13 @@ export function BookingSection() {
       )}
 
       {booking && booking.startsAt && (booking.status === 'paid' || booking.status === 'paid_overlap') && (
-        <div className="booking-card booking-done">
+        <div className={`booking-card booking-done${booking.status === 'paid_overlap' ? ' is-overlap' : ''}`}>
+          <BookingSteps step={3} done />
+          {booking.status === 'paid' && (
+            <div className="booking-check" aria-hidden>
+              <IconCheck />
+            </div>
+          )}
           <h3>{t('book.paidTitle')}</h3>
           <p>{when}</p>
           <p>{booking.status === 'paid_overlap' ? t('book.overlap') : t('book.paidBody')}</p>
@@ -385,6 +406,7 @@ export function BookingSection() {
 
       {booking && (booking.status === 'expired' || booking.status === 'cancelled') && (
         <div className="booking-card">
+          <BookingSteps step={2} />
           <p className="booking-alert">{t('book.expired')}</p>
           <button className="button button-secondary" type="button" onClick={reset}>
             {t('book.retry')}
