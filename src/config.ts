@@ -6,7 +6,7 @@ export const LINKS = {
   discord: 'https://discord.gg/SEULINK',
   whatsapp: 'https://wa.me/SEUNUMERO',
   instagram: 'https://www.instagram.com/tomzboost/',
-  installGuide: '#guia',
+  installGuide: '#pasos',
 } as const
 
 export const PRICES = {
