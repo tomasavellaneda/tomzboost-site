@@ -208,8 +208,8 @@ export const messages = {
     'guide.title': 'Guía rápida',
     'guide.body': 'Descargá el tomzboost, ejecutá el instalador como administrador y activá tu licencia.',
 
-    'testimonials.eyebrow': 'Quién lo usa, lo siente',
-    'testimonials.title': 'Hecho para jugadores de verdad',
+    'testimonials.eyebrow': 'Ejemplos de feedback',
+    'testimonials.title': 'No son reseñas verificadas',
     'testimonials.1.quote': 'Mi CS2 quedó mucho más estable.',
     'testimonials.2.quote': 'Gané rendimiento en Fortnite y Valorant.',
     'testimonials.3.quote': 'Interfaz simple y optimización rápida.',
@@ -572,8 +572,8 @@ export const messages = {
     'guide.title': 'Guia rápido',
     'guide.body': 'Baixe o tomzboost, execute o instalador como administrador e ative sua licença.',
 
-    'testimonials.eyebrow': 'Quem usa, sente',
-    'testimonials.title': 'Feito para jogadores de verdade',
+    'testimonials.eyebrow': 'Exemplos de feedback',
+    'testimonials.title': 'Não são avaliações verificadas',
     'testimonials.1.quote': 'Meu CS2 ficou bem mais estável.',
     'testimonials.2.quote': 'Ganhei desempenho no Fortnite e Valorant.',
     'testimonials.3.quote': 'Interface simples e otimização rápida.',
@@ -936,8 +936,8 @@ export const messages = {
     'guide.title': 'Quick guide',
     'guide.body': 'Download tomzboost, run the installer as administrator, and activate your license.',
 
-    'testimonials.eyebrow': 'Players who use it feel it',
-    'testimonials.title': 'Built for real gamers',
+    'testimonials.eyebrow': 'Example feedback',
+    'testimonials.title': 'Not verified customer reviews',
     'testimonials.1.quote': 'My CS2 got a lot more stable.',
     'testimonials.2.quote': 'I gained performance in Fortnite and Valorant.',
     'testimonials.3.quote': 'Simple UI and fast optimization.',

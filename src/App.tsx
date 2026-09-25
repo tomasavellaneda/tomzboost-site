@@ -10,7 +10,6 @@ import {
   GamesMarquee,
   HeroPreviewCarousel,
   ServicesSection,
-  StatsSection,
 } from './components/LandingExtras'
 import { LINKS } from './config'
 import { useI18n } from './i18n/I18nProvider'
@@ -18,13 +17,11 @@ import { SiteLink, usePage } from './routing'
 import type { MessageKey } from './i18n/messages'
 import { LOCALES } from './i18n/types'
 import {
-  IconArrowRight,
   IconCheck,
   IconChevron,
   IconGauge,
   IconGamepad,
   IconLayers,
-  IconMessage,
   IconPointer,
   IconSettings,
   IconShield,
@@ -221,11 +218,11 @@ export default function App() {
           <p>{t('hero.body')}</p>
           <div className="hero-actions">
             <DownloadButton label={t('hero.ctaDownload')} />
-            <SiteLink className="button button-secondary" href="/agendar">
-              <IconSparkles /> {t('hero.ctaFull')}
-            </SiteLink>
-            <a className="button button-secondary" href={LINKS.discord} target="_blank" rel="noreferrer">
-              <IconMessage /> {t('hero.ctaDiscord')}
+          </div>
+          <div className="hero-links">
+            <SiteLink href="/agendar">{t('hero.ctaFull')}</SiteLink>
+            <a href={LINKS.discord} target="_blank" rel="noreferrer">
+              {t('hero.ctaDiscord')}
             </a>
           </div>
           <div className="trust-row">
@@ -243,8 +240,6 @@ export default function App() {
       </section>
 
       <GameResultsSection />
-
-      <StatsSection />
 
       <section id="beneficios" className="section-block section-shell">
         <div className="section-heading">
@@ -270,64 +265,6 @@ export default function App() {
         </div>
       </section>
 
-      <section id="comparativo" className="performance-band">
-        <div className="section-shell">
-          <div className="section-heading centered">
-            <span>{t('comparison.eyebrow')}</span>
-            <h2>{t('comparison.title')}</h2>
-            <p>{t('comparison.body')}</p>
-          </div>
-          <div className="comparison-wrap">
-            <article className="compare-card before">
-              <header>
-                <span>{t('comparison.beforeLabel')}</span>
-                <strong>{t('comparison.beforeStrong')}</strong>
-              </header>
-              <div className="fps-value">
-                <b>120</b>
-                <span>FPS</span>
-              </div>
-              <div className="bars" aria-hidden>
-                {[45, 60, 42, 72, 51, 78, 48, 68, 56, 82].map((h, i) => (
-                  <i key={i} style={{ height: `${h}%` }} />
-                ))}
-              </div>
-              <ul>
-                <li>{t('comparison.before.1')}</li>
-                <li>{t('comparison.before.2')}</li>
-                <li>{t('comparison.before.3')}</li>
-                <li>{t('comparison.before.4')}</li>
-              </ul>
-            </article>
-            <div className="compare-arrow">
-              <IconArrowRight />
-            </div>
-            <article className="compare-card after">
-              <header>
-                <span>{t('comparison.afterLabel')}</span>
-                <strong>{t('comparison.afterStrong')}</strong>
-              </header>
-              <div className="fps-value">
-                <b>145</b>
-                <span>FPS</span>
-              </div>
-              <div className="bars" aria-hidden>
-                {[72, 78, 75, 85, 82, 90, 86, 92, 88, 96].map((h, i) => (
-                  <i key={i} style={{ height: `${h}%` }} />
-                ))}
-              </div>
-              <ul>
-                <li>{t('comparison.after.1')}</li>
-                <li>{t('comparison.after.2')}</li>
-                <li>{t('comparison.after.3')}</li>
-                <li>{t('comparison.after.4')}</li>
-              </ul>
-            </article>
-          </div>
-          <p className="disclaimer">{t('comparison.disclaimer')}</p>
-        </div>
-      </section>
-
       <section className="steps-band">
         <div className="section-shell">
           <div className="section-heading">
@@ -348,12 +285,12 @@ export default function App() {
         </div>
       </section>
 
-      <section id="guia" className="section-block section-shell">
-        <div className="section-heading centered">
+      <section id="guia" className="section-shell guide-row">
+        <div>
           <span>{t('guide.eyebrow')}</span>
           <h2>{t('guide.title')}</h2>
-          <p>{t('guide.body')}</p>
         </div>
+        <p>{t('guide.body')}</p>
       </section>
 
       <section className="section-block section-shell testimonials">

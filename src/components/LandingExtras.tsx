@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { downloadUrl, LINKS, PRICES, RELEASE } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import { SiteLink } from '../routing'
@@ -16,37 +16,11 @@ export function DownloadButton({
   large?: boolean
 }) {
   const { t } = useI18n()
-  const [busy, setBusy] = useState(false)
   const text = label ?? t('nav.cta')
 
-  function handleClick(_e: MouseEvent<HTMLAnchorElement>) {
-    setBusy(true)
-    window.setTimeout(() => {
-      const isAbsolute = /^https?:\/\//i.test(downloadUrl)
-      if (isAbsolute) {
-        window.open(downloadUrl, '_blank', 'noopener,noreferrer')
-      }
-      setBusy(false)
-    }, 1200)
-  }
-
   return (
-    <a
-      className={`${className}${large ? ' button-large' : ''}${busy ? ' is-downloading' : ''}`}
-      href={downloadUrl}
-      download
-      onClick={handleClick}
-    >
-      {busy ? (
-        <>
-          <span className="dl-spinner" aria-hidden />
-          {t('download.busy')}
-        </>
-      ) : (
-        <>
-          <IconDownload /> {text}
-        </>
-      )}
+    <a className={`${className}${large ? ' button-large' : ''}`} href={downloadUrl} download>
+      <IconDownload /> {text}
     </a>
   )
 }
@@ -145,7 +119,7 @@ export function ServicesSection() {
 
   return (
     <section id="servicios" className="section-block section-shell services-section">
-      <div className="section-heading centered">
+      <div className="section-heading section-heading-split">
         <span>{t('services.eyebrow')}</span>
         <h2>{t('services.title')}</h2>
         <p>{t('services.body')}</p>
@@ -289,11 +263,12 @@ export function GameResultsSection() {
   return (
     <section id="resultados" className="game-results-band">
       <div className="section-shell game-results-shell">
-        <div className="section-heading centered">
+        <div className="section-heading">
           <span>{t('results.eyebrow')}</span>
           <h2>{t('results.title')}</h2>
           <p>{t('results.body')}</p>
         </div>
+        <StatsSection />
 
         <div className="game-results-controls">
           <button type="button" className="game-results-nav" onClick={() => scrollBy(-1)} aria-label="Previous">
@@ -445,7 +420,7 @@ function StatCard({
 
 export function StatsSection() {
   const { t } = useI18n()
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(false)
 
   useEffect(() => {
@@ -472,18 +447,13 @@ export function StatsSection() {
   ]
 
   return (
-    <section ref={ref} className="stats-section section-shell section-block">
-      <div className="section-heading centered">
-        <span>{t('stats.eyebrow')}</span>
-        <h2>{t('stats.title')}</h2>
-        <p>{t('stats.body')}</p>
-      </div>
+    <div ref={ref} className="results-stats">
       <div className="stats-grid">
         {stats.map((s) => (
           <StatCard key={s.id} {...s} active={active} />
         ))}
       </div>
       <p className="disclaimer">{t('stats.disclaimer')}</p>
-    </section>
+    </div>
   )
 }
