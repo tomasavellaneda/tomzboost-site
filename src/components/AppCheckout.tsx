@@ -2,6 +2,8 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { PRICES } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
+import { BookingPlan, BookingSteps } from './CheckoutChrome'
+import { IconCheck } from './Icons'
 
 type Pix = { code: string; qrcodeBase64: string; mime: string }
 type Order = {
@@ -114,9 +116,13 @@ export function AppCheckout() {
 
       {!order && (
         <form className="booking-card" onSubmit={submit}>
-          <div className="booking-meta">
-            <strong>{formatBrl(PRICES.appCents)}</strong>
-          </div>
+          <BookingSteps step={1} />
+          <BookingPlan
+            badge={t('services.app.badge')}
+            title={t('services.app.title')}
+            points={[t('services.app.f1'), t('services.app.f2'), t('services.app.f3')]}
+            price={formatBrl(PRICES.appCents)}
+          />
           {!ready && <p className="booking-alert">{t('book.unavailable')}</p>}
           <div className="booking-fields">
             <label>
@@ -145,35 +151,46 @@ export function AppCheckout() {
 
       {order?.status === 'pending' && order.pix && (
         <div className="booking-card booking-pix">
-          <h3>{t('book.pixTitle')}</h3>
-          <p>{formatBrl(order.amountCents)}</p>
-          {mock && <p className="booking-alert">{t('book.mock')}</p>}
-          <img alt="" src={`data:${order.pix.mime || 'image/png'};base64,${order.pix.qrcodeBase64}`} />
-          <p className="booking-code">{order.pix.code}</p>
-          <p>{t('book.pixHint')}</p>
-          <div className="booking-actions">
-            <button
-              className="button button-primary"
-              type="button"
-              onClick={async () => {
-                await navigator.clipboard.writeText(order.pix?.code || '')
-                setCopied(true)
-              }}
-            >
-              {copied ? t('book.copied') : t('book.copy')}
-            </button>
-            {mock && (
-              <button className="button button-secondary" type="button" onClick={simulatePay} disabled={busy}>
-                {t('book.mockPay')}
-              </button>
-            )}
+          <BookingSteps step={2} />
+          <div className="booking-pix-head">
+            <h3>{t('book.pixTitle')}</h3>
+            <p>{formatBrl(order.amountCents)}</p>
           </div>
+          {mock && <p className="booking-alert">{t('book.mock')}</p>}
+          <div className="booking-qr">
+            <img alt="" src={`data:${order.pix.mime || 'image/png'};base64,${order.pix.qrcodeBase64}`} />
+          </div>
+          <div className="booking-pay-code">
+            <p className="booking-code">{order.pix.code}</p>
+            <div className="booking-actions">
+              <button
+                className="button button-primary"
+                type="button"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(order.pix?.code || '')
+                  setCopied(true)
+                }}
+              >
+                {copied ? t('book.copied') : t('book.copy')}
+              </button>
+              {mock && (
+                <button className="button button-secondary" type="button" onClick={simulatePay} disabled={busy}>
+                  {t('book.mockPay')}
+                </button>
+              )}
+            </div>
+          </div>
+          <p className="booking-hint">{t('book.pixHint')}</p>
           <p className="booking-waiting">{t('book.waiting')}</p>
         </div>
       )}
 
       {order?.status === 'paid' && (
         <div className="booking-card booking-done">
+          <BookingSteps step={3} done />
+          <div className="booking-check" aria-hidden>
+            <IconCheck />
+          </div>
           <h3>{t('appbuy.paidTitle')}</h3>
           <p>{t('appbuy.paidBody')}</p>
           <a className="button button-primary" href={order.downloadUrl || '/downloads/TomzBoost-Setup.zip'}>
