@@ -2411,6 +2411,10 @@ p {
   padding-top: 72px;
 }
 
+.checkout-page .booking-section {
+  padding-top: 148px;
+}
+
 .booking-card {
   display: grid;
   gap: 22px;

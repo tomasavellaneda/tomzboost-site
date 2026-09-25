@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { downloadUrl, LINKS, PRICES, RELEASE } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
+import { SiteLink } from '../routing'
 import type { MessageKey } from '../i18n/messages'
 import AppPreview, { type PreviewScreen } from './AppPreview'
 import { IconCheck, IconChip, IconDownload, IconRocket, IconSettings, IconShield } from './Icons'
@@ -95,20 +96,6 @@ export function DownloadSection() {
 
 export function FloatingSocial() {
   const { t } = useI18n()
-  const [hide, setHide] = useState(false)
-
-  useEffect(() => {
-    const nodes = ['agendar', 'comprar'].map((id) => document.getElementById(id)).filter((node) => node !== null)
-    if (!nodes.length) return
-    const observer = new IntersectionObserver(
-      (entries) => setHide(entries.some((entry) => entry.isIntersecting)),
-      { threshold: 0 },
-    )
-    nodes.forEach((node) => observer.observe(node))
-    return () => observer.disconnect()
-  }, [])
-
-  if (hide) return null
 
   return (
     <div className="floating-actions">
@@ -144,7 +131,7 @@ export function ServicesSection() {
       desc: t('services.app.desc'),
       features: [t('services.app.f1'), t('services.app.f2'), t('services.app.f3'), t('services.app.f4')],
       priceCents: PRICES.appCents,
-      cta: { label: t('services.app.cta'), href: '#comprar', primary: true as const },
+      cta: { label: t('services.app.cta'), href: '/comprar', primary: true as const },
     },
     {
       id: 'full',
@@ -153,7 +140,7 @@ export function ServicesSection() {
       desc: t('services.full.desc'),
       features: [t('services.full.f1'), t('services.full.f2'), t('services.full.f3'), t('services.full.f4')],
       priceCents: PRICES.fullCents,
-      cta: { label: t('services.full.cta'), href: '#agendar', primary: true as const },
+      cta: { label: t('services.full.cta'), href: '/agendar', primary: true as const },
     },
   ]
 
@@ -182,20 +169,9 @@ export function ServicesSection() {
                 </li>
               ))}
             </ul>
-            {'external' in s.cta && s.cta.external ? (
-              <a
-                className={`button ${s.cta.primary ? 'button-primary' : 'button-secondary'}`}
-                href={s.cta.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {s.cta.label}
-              </a>
-            ) : (
-              <a className={`button ${s.cta.primary ? 'button-primary' : 'button-secondary'}`} href={s.cta.href}>
-                {s.cta.label}
-              </a>
-            )}
+            <SiteLink className={`button ${s.cta.primary ? 'button-primary' : 'button-secondary'}`} href={s.cta.href}>
+              {s.cta.label}
+            </SiteLink>
           </article>
         ))}
       </div>
