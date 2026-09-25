@@ -175,13 +175,9 @@ export const GAMES = [
   { name: 'Apex Legends', short: 'Apex Legends', src: '/games/apex.png' },
   { name: 'Rainbow Six Siege', short: 'Rainbow Six Siege', src: '/games/r6.png' },
   { name: 'League of Legends', short: 'League of Legends', src: '/games/lol.svg' },
-  { name: 'GTA V', short: 'GTA V', src: '/games/gtav.png' },
-  { name: 'Minecraft', short: 'Minecraft', src: '/games/minecraft.png' },
   { name: 'PUBG', short: 'PUBG', src: '/games/pubg.png' },
   { name: 'Rocket League', short: 'Rocket League', src: '/games/rocketleague.png' },
-  { name: 'Rust', short: 'Rust', src: '/games/rust.png' },
   { name: 'EA FC 27', short: 'EA Sports FC', src: '/games/eafc26.png' },
-  { name: 'Red Dead Redemption 2', short: 'Red Dead Redemption 2', src: '/games/rdr2.png' },
   { name: 'Dota 2', short: 'Dota 2', src: '/games/dota2.png' },
 ]
 
@@ -240,27 +236,6 @@ export function GamesMarquee() {
   )
 }
 
-export function GamesSection() {
-  const { t } = useI18n()
-  return (
-    <section id="jogos" className="section-block section-shell games-section">
-      <div className="section-heading">
-        <span>{t('games.eyebrow')}</span>
-        <h2>{t('games.title')}</h2>
-        <p>{t('games.body')}</p>
-      </div>
-      <div className="games-logo-grid">
-        {GAMES.map((g) => (
-          <article className="game-logo-card" key={g.name} title={g.name}>
-            <img src={g.src} alt={g.name} loading="lazy" />
-            <b>{g.short}</b>
-          </article>
-        ))}
-      </div>
-    </section>
-  )
-}
-
 const GAME_RESULTS = [
   { id: 'cs2', name: 'Counter-Strike 2', src: '/games/cs2.svg', before: 280, after: 365 },
   { id: 'valorant', name: 'Valorant', src: '/games/valorant.svg', before: 240, after: 336 },
@@ -270,12 +245,8 @@ const GAME_RESULTS = [
   { id: 'r6', name: 'Rainbow Six Siege', src: '/games/r6.png', before: 210, after: 275 },
   { id: 'cod', name: 'Call of Duty', src: '/games/cod.png', before: 118, after: 152 },
   { id: 'pubg', name: 'PUBG', src: '/games/pubg.png', before: 95, after: 128 },
-  { id: 'gtav', name: 'GTA V', src: '/games/gtav.png', before: 82, after: 110 },
-  { id: 'minecraft', name: 'Minecraft', src: '/games/minecraft.png', before: 130, after: 206 },
   { id: 'rocket', name: 'Rocket League', src: '/games/rocketleague.png', before: 240, after: 310 },
-  { id: 'rust', name: 'Rust', src: '/games/rust.png', before: 78, after: 108 },
   { id: 'eafc', name: 'EA Sports FC', src: '/games/eafc26.png', before: 140, after: 182 },
-  { id: 'rdr2', name: 'Red Dead Redemption 2', src: '/games/rdr2.png', before: 62, after: 84 },
   { id: 'dota', name: 'Dota 2', src: '/games/dota2.png', before: 120, after: 158 },
 ] as const
 
