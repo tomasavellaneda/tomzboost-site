@@ -118,7 +118,7 @@ const pt: LegalCopy = {
         },
         {
           kind: 'p',
-          text: 'O pagamento é processado pela BuckPay, um fornecedor externo. Os dados necessários para gerar a cobrança são enviados a esse fornecedor. O TomzBoost não opera o gateway de pagamento.',
+          text: 'O pagamento é processado por um fornecedor externo. Os dados necessários para gerar a cobrança são enviados a esse fornecedor. O TomzBoost não opera o gateway de pagamento.',
         },
       ],
     },
@@ -343,7 +343,7 @@ const es: LegalCopy = {
         },
         {
           kind: 'p',
-          text: 'El pago lo procesa BuckPay, un proveedor externo. Los datos necesarios para generar el cobro se envían a ese proveedor. TomzBoost no opera la pasarela de pago.',
+          text: 'El pago lo procesa un proveedor externo. Los datos necesarios para generar el cobro se envían a ese proveedor. TomzBoost no opera la pasarela de pago.',
         },
       ],
     },
@@ -565,7 +565,7 @@ const en: LegalCopy = {
         },
         {
           kind: 'p',
-          text: 'Payment is processed by BuckPay, an external provider. The data needed to create the charge is sent to that provider. TomzBoost does not run the payment gateway.',
+          text: 'Payment is processed by an external provider. The data needed to create the charge is sent to that provider. TomzBoost does not run the payment gateway.',
         },
       ],
     },
