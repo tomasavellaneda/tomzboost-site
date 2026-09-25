@@ -242,7 +242,7 @@ export function BookingSection() {
       {config && !booking && (
         <form className="booking-card" onSubmit={submit}>
           <div className="booking-meta">
-            <strong>{config.amountCents != null ? formatBrl(config.amountCents) : 'PIX'}</strong>
+            <strong>{config.amountCents != null ? formatBrl(config.amountCents) : '—'}</strong>
             <span>{t('book.tz')}</span>
             <span>{t('book.session')}</span>
           </div>
@@ -286,7 +286,7 @@ export function BookingSection() {
           <p>{formatBrl(booking.amountCents)}</p>
           {config?.mock && <p className="booking-alert">{t('book.mock')}</p>}
           <img
-            alt="PIX"
+            alt=""
             src={`data:${booking.pix.mime || 'image/png'};base64,${booking.pix.qrcodeBase64}`}
           />
           <p className="booking-code">{booking.pix.code}</p>

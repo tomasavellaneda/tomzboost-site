@@ -148,7 +148,7 @@ export function AppCheckout() {
           <h3>{t('book.pixTitle')}</h3>
           <p>{formatBrl(order.amountCents)}</p>
           {mock && <p className="booking-alert">{t('book.mock')}</p>}
-          <img alt="PIX" src={`data:${order.pix.mime || 'image/png'};base64,${order.pix.qrcodeBase64}`} />
+          <img alt="" src={`data:${order.pix.mime || 'image/png'};base64,${order.pix.qrcodeBase64}`} />
           <p className="booking-code">{order.pix.code}</p>
           <p>{t('book.pixHint')}</p>
           <div className="booking-actions">

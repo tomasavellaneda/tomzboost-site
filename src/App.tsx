@@ -15,6 +15,7 @@ import {
 } from './components/LandingExtras'
 import { LINKS } from './config'
 import { useI18n } from './i18n/I18nProvider'
+import { SiteLink, usePage } from './routing'
 import type { MessageKey } from './i18n/messages'
 import { LOCALES } from './i18n/types'
 import {
@@ -132,8 +133,43 @@ function ShotPage({ screen }: { screen: PreviewScreen }) {
   )
 }
 
+function SiteHeader() {
+  const { t } = useI18n()
+  return (
+    <header className="site-header">
+      <SiteLink href="/" aria-label={t('nav.homeAria')}>
+        <img src="/logo.png" alt="TOMZ BOOST" className="header-logo" />
+      </SiteLink>
+      <nav aria-label={t('nav.aria')}>
+        <SiteLink href="/#beneficios">{t('nav.benefits')}</SiteLink>
+        <SiteLink href="/#jogos">{t('nav.games')}</SiteLink>
+        <SiteLink href="/#servicios">{t('nav.services')}</SiteLink>
+        <SiteLink href="/agendar">{t('nav.schedule')}</SiteLink>
+        <SiteLink href="/#download">{t('nav.download')}</SiteLink>
+        <SiteLink href="/#faq">{t('nav.faq')}</SiteLink>
+      </nav>
+      <div className="header-end">
+        <LanguageSwitcher />
+        <DownloadButton className="header-cta" label={t('nav.cta')} />
+      </div>
+    </header>
+  )
+}
+
+function SiteFooter() {
+  const { t } = useI18n()
+  return (
+    <footer className="site-footer section-shell">
+      <img src="/logo.png" alt="TOMZ BOOST" className="footer-logo" />
+      <p>{t('footer.tagline')}</p>
+      <span>© {new Date().getFullYear()} TOMZ BOOST</span>
+    </footer>
+  )
+}
+
 export default function App() {
   const { t } = useI18n()
+  const page = usePage()
   const [shot, setShot] = useState<PreviewScreen | null>(null)
 
   useEffect(() => {
@@ -145,6 +181,16 @@ export default function App() {
   }, [])
 
   if (shot) return <ShotPage screen={shot} />
+
+  if (page === 'comprar' || page === 'agendar') {
+    return (
+      <main className="checkout-page">
+        <SiteHeader />
+        {page === 'comprar' ? <AppCheckout /> : <BookingSection />}
+        <SiteFooter />
+      </main>
+    )
+  }
 
   const benefits = BENEFIT_ICONS.map((Icon, i) => {
     const n = String(i + 1).padStart(2, '0')
@@ -158,23 +204,7 @@ export default function App() {
 
   return (
     <main>
-      <header className="site-header">
-        <a href="#top" aria-label={t('nav.homeAria')}>
-          <img src="/logo.png" alt="TOMZ BOOST" className="header-logo" />
-        </a>
-        <nav aria-label={t('nav.aria')}>
-          <a href="#beneficios">{t('nav.benefits')}</a>
-          <a href="#jogos">{t('nav.games')}</a>
-          <a href="#servicios">{t('nav.services')}</a>
-          <a href="#agendar">{t('nav.schedule')}</a>
-          <a href="#download">{t('nav.download')}</a>
-          <a href="#faq">{t('nav.faq')}</a>
-        </nav>
-        <div className="header-end">
-          <LanguageSwitcher />
-          <DownloadButton className="header-cta" label={t('nav.cta')} />
-        </div>
-      </header>
+      <SiteHeader />
 
       <div className="hero-top">
         <GamesMarquee />
@@ -193,9 +223,9 @@ export default function App() {
           <p>{t('hero.body')}</p>
           <div className="hero-actions">
             <DownloadButton label={t('hero.ctaDownload')} />
-            <a className="button button-secondary" href="#agendar">
+            <SiteLink className="button button-secondary" href="/agendar">
               <IconSparkles /> {t('hero.ctaFull')}
-            </a>
+            </SiteLink>
             <a className="button button-secondary" href={LINKS.discord} target="_blank" rel="noreferrer">
               <IconMessage /> {t('hero.ctaDiscord')}
             </a>
@@ -354,10 +384,6 @@ export default function App() {
 
       <ServicesSection />
 
-      <AppCheckout />
-
-      <BookingSection />
-
       <section id="faq" className="faq-band">
         <div className="section-shell faq-layout">
           <div className="section-heading">
@@ -394,11 +420,7 @@ export default function App() {
 
       <DownloadSection />
 
-      <footer className="site-footer section-shell">
-        <img src="/logo.png" alt="TOMZ BOOST" className="footer-logo" />
-        <p>{t('footer.tagline')}</p>
-        <span>© {new Date().getFullYear()} TOMZ BOOST</span>
-      </footer>
+      <SiteFooter />
 
       <FloatingSocial />
     </main>
