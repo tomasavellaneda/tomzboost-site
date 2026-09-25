@@ -8,7 +8,6 @@ import {
   FloatingSocial,
   GameResultsSection,
   GamesMarquee,
-  GamesSection,
   HeroPreviewCarousel,
   ServicesSection,
   StatsSection,
@@ -142,7 +141,6 @@ function SiteHeader() {
       </SiteLink>
       <nav aria-label={t('nav.aria')}>
         <SiteLink href="/#beneficios">{t('nav.benefits')}</SiteLink>
-        <SiteLink href="/#jogos">{t('nav.games')}</SiteLink>
         <SiteLink href="/#servicios">{t('nav.services')}</SiteLink>
         <SiteLink href="/agendar">{t('nav.schedule')}</SiteLink>
         <SiteLink href="/#download">{t('nav.download')}</SiteLink>
@@ -329,8 +327,6 @@ export default function App() {
           <p className="disclaimer">{t('comparison.disclaimer')}</p>
         </div>
       </section>
-
-      <GamesSection />
 
       <section className="steps-band">
         <div className="section-shell">
