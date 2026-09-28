@@ -1,7 +1,10 @@
+/** Precio de la app en centavos: R$ 67,90. */
+export const APP_AMOUNT_CENTS = 6790
+
 /** Configuración de agenda y BuckPay. Se lee en cada llamada para poder testear. */
 export function getConfig() {
   const amountRaw = process.env.BOOKING_AMOUNT_CENTS?.trim() ?? ''
-  const amountCents = amountRaw === '' ? 18000 : Number(amountRaw)
+  const amountCents = amountRaw === '' ? 15000 : Number(amountRaw)
   const token = process.env.BUCKPAY_TOKEN?.trim() ?? ''
   const userAgent = process.env.BUCKPAY_USER_AGENT?.trim() ?? ''
   const mock = process.env.BUCKPAY_MOCK === '1'

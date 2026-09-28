@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
-import { BookingPlan, BookingSteps } from './CheckoutChrome'
+import { BookingPlan, BookingSteps, PromoPrice, formatBrl } from './CheckoutChrome'
+import { PRICES } from '../config'
 import { IconCheck, IconCopy, IconDownload, IconKey } from './Icons'
 import { SlotCalendar } from './SlotCalendar'
 
@@ -100,10 +101,6 @@ const ERROR_KEYS: Record<string, MessageKey> = {
   provider_error: 'book.error.provider_error',
   rate_limited: 'book.error.rate_limited',
   unpaid: 'book.error.unpaid',
-}
-
-function formatBrl(cents: number) {
-  return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
 export function BookingSection() {
@@ -329,7 +326,13 @@ export function BookingSection() {
             badge={t('services.full.badge')}
             title={t('services.full.title')}
             points={[t('services.full.f1'), t('services.full.f2'), t('services.full.f3')]}
-            price={config.amountCents != null ? formatBrl(config.amountCents) : '—'}
+            price={
+              config.amountCents != null ? (
+                <PromoPrice cents={config.amountCents} wasCents={PRICES.fullWasCents} />
+              ) : (
+                '—'
+              )
+            }
             notes={
               <>
                 <span>{t('book.tz')}</span>

@@ -28,6 +28,22 @@ export function BookingSteps({ step, done = false }: { step: 1 | 2 | 3; done?: b
   )
 }
 
+export function formatBrl(cents: number) {
+  return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
+
+export function PromoPrice({ cents, wasCents }: { cents: number; wasCents: number }) {
+  const { t } = useI18n()
+  if (wasCents <= cents) return <strong className="promo-price">{formatBrl(cents)}</strong>
+  return (
+    <span className="promo-price">
+      <s>{formatBrl(wasCents)}</s>
+      <strong>{formatBrl(cents)}</strong>
+      <em>{t('price.promo')}</em>
+    </span>
+  )
+}
+
 export function BookingPlan({
   badge,
   title,
@@ -38,7 +54,7 @@ export function BookingPlan({
   badge: string
   title: string
   points: string[]
-  price: string
+  price: ReactNode
   notes?: ReactNode
 }) {
   return (
@@ -53,7 +69,7 @@ export function BookingPlan({
         </ul>
       </div>
       <div className="booking-meta">
-        <strong>{price}</strong>
+        {price}
         {notes}
       </div>
     </div>

@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { PRICES, downloadUrl } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
-import { BookingPlan, BookingSteps } from './CheckoutChrome'
+import { BookingPlan, BookingSteps, PromoPrice } from './CheckoutChrome'
 import { PaidReceipt } from './PaidReceipt'
 
 type Pix = { code: string; qrcodeBase64: string; mime: string }
@@ -182,7 +182,7 @@ export function AppCheckout() {
             badge={t('services.app.badge')}
             title={t('services.app.title')}
             points={[t('services.app.f1'), t('services.app.f2'), t('services.app.f3')]}
-            price={formatBrl(PRICES.appCents)}
+            price={<PromoPrice cents={PRICES.appCents} wasCents={PRICES.appWasCents} />}
           />
           {!ready && <p className="booking-alert">{t('book.unavailable')}</p>}
           <div className="booking-fields">

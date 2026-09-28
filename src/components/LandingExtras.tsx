@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { downloadUrl, LINKS, PRICES, RELEASE } from '../config'
+import { PromoPrice } from './CheckoutChrome'
 import { useI18n } from '../i18n/I18nProvider'
 import { SiteLink } from '../routing'
 import type { MessageKey } from '../i18n/messages'
@@ -88,6 +89,7 @@ export function ServicesSection() {
       desc: t('services.app.desc'),
       features: [t('services.app.f1'), t('services.app.f2'), t('services.app.f3'), t('services.app.f4')],
       priceCents: PRICES.appCents,
+      wasCents: PRICES.appWasCents,
       cta: { label: t('services.app.cta'), href: '/comprar', primary: true as const },
     },
     {
@@ -97,6 +99,7 @@ export function ServicesSection() {
       desc: t('services.full.desc'),
       features: [t('services.full.f1'), t('services.full.f2'), t('services.full.f3'), t('services.full.f4')],
       priceCents: PRICES.fullCents,
+      wasCents: PRICES.fullWasCents,
       cta: { label: t('services.full.cta'), href: '/agendar', primary: true as const },
     },
   ]
@@ -115,7 +118,7 @@ export function ServicesSection() {
             <div className="service-card-top">
               <span className="service-badge">{s.badge}</span>
               <h3>{s.title}</h3>
-              <p className="service-price">{(s.priceCents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+              <PromoPrice cents={s.priceCents} wasCents={s.wasCents} />
               <p>{s.desc}</p>
             </div>
             <ul className="service-features">
