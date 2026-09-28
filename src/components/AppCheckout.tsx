@@ -127,6 +127,10 @@ export function AppCheckout() {
       })
       const payload = (await response.json()) as Order & { error?: string; detail?: string }
       if (!response.ok) {
+        if (payload.error === 'provider_error' && payload.detail) {
+          setError(payload.detail)
+          return
+        }
         const key = payload.error ? ERROR_KEYS[payload.error] : undefined
         setError(key ? t(key) : payload.detail || t('book.error.generic'))
         return
