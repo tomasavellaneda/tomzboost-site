@@ -36,7 +36,7 @@ function publicBooking(booking, { includePix }) {
     product: booking.product || 'full',
     ...(booking.product === 'app' && booking.status === 'paid'
       ? {
-          downloadUrl: '/downloads/TomzBoost-Setup.zip',
+          downloadUrl: 'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.2/Tomz-Boost-Setup-1.0.2.exe',
           ...(booking.licenseKey ? { licenseKey: booking.licenseKey } : {}),
         }
       : {}),
@@ -79,7 +79,7 @@ async function remoteBooking(id) {
         expiresAt: null,
         buyer: { name: '' },
         product: isApp ? 'app' : 'full',
-        ...(paid && isApp ? { downloadUrl: '/downloads/TomzBoost-Setup.zip' } : {}),
+        ...(paid && isApp ? { downloadUrl: 'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.2/Tomz-Boost-Setup-1.0.2.exe' } : {}),
       },
     }
   } catch {

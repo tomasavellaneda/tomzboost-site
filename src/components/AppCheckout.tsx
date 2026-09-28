@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { PRICES } from '../config'
+import { PRICES, downloadUrl } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
 import { BookingPlan, BookingSteps } from './CheckoutChrome'
@@ -161,7 +161,7 @@ export function AppCheckout() {
       <section id="comprar" className="section-block section-shell booking-section">
         <PaidReceipt
           licenseKey={order.licenseKey}
-          downloadUrl={order.downloadUrl || '/downloads/TomzBoost-Setup.zip'}
+          downloadUrl={order.downloadUrl || downloadUrl}
         />
       </section>
     )

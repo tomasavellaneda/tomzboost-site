@@ -142,7 +142,10 @@ test('el PIX de la app cobra R$ 6 y no pide horario', async () => {
   assert.equal(created.body.startsAt, null)
   const paid = await dispatch({ method: 'POST', pathname: `/api/bookings/${created.body.id}/mock-pay` })
   assert.equal(paid.body.status, 'paid')
-  assert.equal(paid.body.downloadUrl, '/downloads/TomzBoost-Setup.zip')
+  assert.equal(
+    paid.body.downloadUrl,
+    'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.2/Tomz-Boost-Setup-1.0.2.exe',
+  )
   assert.match(paid.body.licenseKey, /^TOMZ(?:-[0-9A-F]{4}){4}$/)
   assert.equal(isValidLicenseKey(paid.body.licenseKey), true)
   const again = await dispatch({ method: 'GET', pathname: `/api/bookings/${created.body.id}` })
