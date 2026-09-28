@@ -2379,6 +2379,7 @@ p {
 /* ——— Services ——— */
 .services-section {
   padding-block: 24px 8px;
+  scroll-margin-top: 88px;
 }
 
 .services-grid {
