@@ -57,8 +57,7 @@ async function syncPayment(booking) {
     buckpayStatus: remote.status,
   }
   if (booking.product === 'app' && !booking.licenseKey) {
-    const licenseKey = issueLicenseKey(booking)
-    if (typeof licenseKey === 'string' && licenseKey.trim()) patch.licenseKey = licenseKey.trim()
+    patch.licenseKey = issueLicenseKey()
   }
   return updateBooking(booking.id, patch)
 }
@@ -137,6 +136,10 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
       } catch {
         /* El cliente sigue viendo pending y reintenta. */
       }
+    }
+    if (current.product === 'app' && current.status === 'paid' && !current.licenseKey) {
+      const licenseKey = issueLicenseKey()
+      current = (await updateBooking(current.id, { licenseKey })) || { ...current, licenseKey }
     }
     return { status: 200, body: publicBooking(current, { includePix: current.status === 'pending' }) }
   }
