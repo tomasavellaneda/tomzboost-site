@@ -32,6 +32,15 @@ export function formatBrl(cents: number) {
   return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
+function discountPercent(cents: number, wasCents: number) {
+  const value = ((wasCents - cents) / wasCents) * 100
+  const rounded = Math.round(value * 10) / 10
+  return rounded.toLocaleString('pt-BR', {
+    minimumFractionDigits: Number.isInteger(rounded) ? 0 : 1,
+    maximumFractionDigits: 1,
+  })
+}
+
 export function PromoPrice({ cents, wasCents }: { cents: number; wasCents: number }) {
   const { t } = useI18n()
   if (wasCents <= cents) return <strong className="promo-price">{formatBrl(cents)}</strong>
@@ -39,7 +48,9 @@ export function PromoPrice({ cents, wasCents }: { cents: number; wasCents: numbe
     <span className="promo-price">
       <s>{formatBrl(wasCents)}</s>
       <strong>{formatBrl(cents)}</strong>
-      <em>{t('price.promo')}</em>
+      <em>
+        {t('price.promo')} · {discountPercent(cents, wasCents)}%
+      </em>
     </span>
   )
 }
