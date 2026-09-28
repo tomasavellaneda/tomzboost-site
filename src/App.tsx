@@ -81,8 +81,8 @@ const FAQ_STRUCTURE = [
 
 const TESTIMONIAL_META = [
   { name: 'Rafael M.', meta: 'Counter-Strike 2', initial: 'R', quoteKey: 'testimonials.1.quote' },
-  { name: 'Lucas A.', meta: 'Fortnite + Valorant', initial: 'L', quoteKey: 'testimonials.2.quote' },
-  { name: 'Matheus R.', meta: 'Windows 11', initial: 'M', quoteKey: 'testimonials.3.quote' },
+  { name: 'Lucas A.', meta: 'Valorant', initial: 'L', quoteKey: 'testimonials.2.quote' },
+  { name: 'Matheus R.', meta: 'Fortnite', initial: 'M', quoteKey: 'testimonials.3.quote' },
 ] as const
 
 function Stars() {
