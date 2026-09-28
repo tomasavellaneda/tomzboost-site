@@ -25,8 +25,19 @@ const ERROR_KEYS: Record<string, MessageKey> = {
   rate_limited: 'book.error.rate_limited',
 }
 
+const ORDER_STORAGE = 'tomz-app-order'
+
 function formatBrl(cents: number) {
   return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
+
+function rememberOrder(id: string) {
+  try {
+    sessionStorage.setItem(ORDER_STORAGE, id)
+    sessionStorage.removeItem('tomz-preview-license')
+  } catch {
+    /* El pedido igual queda en esta visita. */
+  }
 }
 
 export function AppCheckout() {
@@ -39,44 +50,41 @@ export function AppCheckout() {
   const [document, setDocument] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [order, setOrder] = useState<Order | null>(() => {
-    if (typeof window === 'undefined') return null
-    if (new URLSearchParams(window.location.search).get('pago') !== '1') return null
-    let licenseKey = ''
-    try {
-      licenseKey = sessionStorage.getItem('tomz-preview-license') || ''
-    } catch {
-      licenseKey = ''
-    }
-    return {
-      id: 'preview',
-      status: 'paid',
-      amountCents: PRICES.appCents,
-      downloadUrl: '/downloads/TomzBoost-Setup.zip',
-      ...(licenseKey ? { licenseKey } : {}),
-    }
-  })
+  const [order, setOrder] = useState<Order | null>(null)
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
-    if (order?.id !== 'preview' || order.licenseKey) return
+    const url = new URL(window.location.href)
+    if (url.searchParams.has('pago')) {
+      url.searchParams.delete('pago')
+      const query = url.searchParams.toString()
+      window.history.replaceState(null, '', url.pathname + (query ? `?${query}` : '') + url.hash)
+    }
+    let id = ''
+    try {
+      sessionStorage.removeItem('tomz-preview-license')
+      id = sessionStorage.getItem(ORDER_STORAGE) || ''
+    } catch {
+      id = ''
+    }
+    if (!/^[A-Za-z0-9_-]{8,}$/.test(id)) return
     let cancelled = false
-    fetch('/api/app-license', { cache: 'no-store' })
-      .then((response) => response.json())
-      .then((data: { licenseKey?: string }) => {
-        if (cancelled || !data.licenseKey) return
-        try {
-          sessionStorage.setItem('tomz-preview-license', data.licenseKey)
-        } catch {
-          /* La clave igual se muestra en esta visita. */
+    fetch(`/api/bookings/${id}`, { cache: 'no-store' })
+      .then(async (response) => {
+        if (cancelled) return
+        if (!response.ok) {
+          sessionStorage.removeItem(ORDER_STORAGE)
+          return
         }
-        setOrder((current) => (current?.id === 'preview' ? { ...current, licenseKey: data.licenseKey } : current))
+        const next = (await response.json()) as Order
+        if (next.status === 'paid' || next.status === 'pending') setOrder(next)
+        else sessionStorage.removeItem(ORDER_STORAGE)
       })
       .catch(() => {})
     return () => {
       cancelled = true
     }
-  }, [order?.id, order?.licenseKey])
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -123,6 +131,7 @@ export function AppCheckout() {
         setError(key ? t(key) : payload.detail || t('book.error.generic'))
         return
       }
+      rememberOrder(payload.id)
       setOrder(payload)
     } catch {
       setError(t('book.error.generic'))
