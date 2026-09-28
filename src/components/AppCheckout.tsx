@@ -3,7 +3,7 @@ import { PRICES } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
 import { BookingPlan, BookingSteps } from './CheckoutChrome'
-import { PaidReceipt, PREVIEW_LICENSE_KEY } from './PaidReceipt'
+import { PaidReceipt } from './PaidReceipt'
 
 type Pix = { code: string; qrcodeBase64: string; mime: string }
 type Order = {
@@ -42,15 +42,41 @@ export function AppCheckout() {
   const [order, setOrder] = useState<Order | null>(() => {
     if (typeof window === 'undefined') return null
     if (new URLSearchParams(window.location.search).get('pago') !== '1') return null
+    let licenseKey = ''
+    try {
+      licenseKey = sessionStorage.getItem('tomz-preview-license') || ''
+    } catch {
+      licenseKey = ''
+    }
     return {
       id: 'preview',
       status: 'paid',
       amountCents: PRICES.appCents,
       downloadUrl: '/downloads/TomzBoost-Setup.zip',
-      licenseKey: PREVIEW_LICENSE_KEY,
+      ...(licenseKey ? { licenseKey } : {}),
     }
   })
   const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    if (order?.id !== 'preview' || order.licenseKey) return
+    let cancelled = false
+    fetch('/api/app-license', { cache: 'no-store' })
+      .then((response) => response.json())
+      .then((data: { licenseKey?: string }) => {
+        if (cancelled || !data.licenseKey) return
+        try {
+          sessionStorage.setItem('tomz-preview-license', data.licenseKey)
+        } catch {
+          /* La clave igual se muestra en esta visita. */
+        }
+        setOrder((current) => (current?.id === 'preview' ? { ...current, licenseKey: data.licenseKey } : current))
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [order?.id, order?.licenseKey])
 
   useEffect(() => {
     let cancelled = false

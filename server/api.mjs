@@ -22,6 +22,22 @@ function rateLimit(ip) {
 
 export function resetRateLimitForTests() {
   hits.clear()
+  previewHits.clear()
+}
+
+const previewHits = new Map()
+
+function previewRateLimit(ip) {
+  const now = Date.now()
+  const windowMs = 60 * 60 * 1000
+  const recent = (previewHits.get(ip) || []).filter((time) => now - time < windowMs)
+  if (recent.length >= 30) {
+    previewHits.set(ip, recent)
+    return false
+  }
+  recent.push(now)
+  previewHits.set(ip, recent)
+  return true
 }
 
 function publicBooking(booking, { includePix }) {
@@ -88,6 +104,11 @@ async function remoteBooking(id) {
 }
 
 export async function dispatch({ method, pathname, body, ip = 'local' }) {
+  if (method === 'GET' && pathname === '/api/app-license') {
+    if (!previewRateLimit(ip)) return { status: 429, body: { error: 'rate_limited' } }
+    return { status: 200, body: { licenseKey: issueLicenseKey() } }
+  }
+
   if (method === 'GET' && pathname === '/api/booking/config') {
     const config = getConfig()
     let bookings = []
