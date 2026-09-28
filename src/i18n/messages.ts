@@ -25,8 +25,8 @@ export const messages = {
     'hero.body':
       'Optimizá Windows en pocos clics, reducí procesos innecesarios y aumentá el rendimiento de tus juegos favoritos.',
     'hero.ctaDownload': 'Descargar ahora',
-    'hero.ctaFull': 'Optimización completa',
-    'hero.ctaDiscord': 'Entrar al Discord',
+    'hero.ctaFull': 'Optimizá ahora',
+    'hero.ctaDiscord': 'Contactar con soporte',
     'hero.trustReversible': 'Ajustes reversibles',
     'hero.trustWindows': 'Windows 10 y 11',
 
@@ -426,8 +426,8 @@ export const messages = {
     'hero.body':
       'Otimize o Windows em poucos cliques, reduza processos desnecessários e aumente o desempenho dos seus jogos favoritos.',
     'hero.ctaDownload': 'Baixar agora',
-    'hero.ctaFull': 'Otimização completa',
-    'hero.ctaDiscord': 'Entrar no Discord',
+    'hero.ctaFull': 'Otimize agora',
+    'hero.ctaDiscord': 'Falar com o suporte',
     'hero.trustReversible': 'Ajustes reversíveis',
     'hero.trustWindows': 'Windows 10 e 11',
 
@@ -827,8 +827,8 @@ export const messages = {
     'hero.body':
       'Optimize Windows in a few clicks, cut unnecessary processes, and boost your favorite games.',
     'hero.ctaDownload': 'Download now',
-    'hero.ctaFull': 'Full optimization',
-    'hero.ctaDiscord': 'Join Discord',
+    'hero.ctaFull': 'Optimize now',
+    'hero.ctaDiscord': 'Contact support',
     'hero.trustReversible': 'Reversible tweaks',
     'hero.trustWindows': 'Windows 10 & 11',
 
