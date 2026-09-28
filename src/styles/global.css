@@ -2500,6 +2500,79 @@ p {
   padding-top: 72px;
 }
 
+.booking-license {
+  display: grid;
+  gap: 10px;
+}
+
+.booking-license .receipt-download {
+  width: 100%;
+}
+
+.admin-page .booking-card label {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-page .booking-card input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #111;
+  color: var(--text);
+}
+
+.admin-board {
+  display: grid;
+  gap: 16px;
+  width: min(860px, 100%);
+  margin: 28px auto 0;
+}
+
+.admin-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.admin-list {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-row {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #141414;
+}
+
+.admin-row header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.admin-row p {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.admin-subtitle {
+  margin: 12px 0 0;
+  font-size: 18px;
+}
+
+.admin-key code {
+  font-size: 14px;
+  letter-spacing: 0.03em;
+}
+
 .checkout-page .booking-section {
   padding-top: 148px;
 }

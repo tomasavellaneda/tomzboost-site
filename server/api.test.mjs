@@ -76,7 +76,8 @@ test('el PIX impago no ocupa un horario; el turno se elige después de pagar', a
   assert.equal(paid.status, 200)
   assert.equal(paid.body.status, 'paid')
   assert.equal(paid.body.startsAt, null)
-  assert.equal(paid.body.licenseKey, undefined)
+  assert.match(paid.body.licenseKey, /^TOMZ(?:-[0-9A-F]{4}){4}$/)
+  assert.equal(isValidLicenseKey(paid.body.licenseKey), true)
 
   const scheduled = await dispatch({
     method: 'POST',
@@ -85,6 +86,7 @@ test('el PIX impago no ocupa un horario; el turno se elige después de pagar', a
   })
   assert.equal(scheduled.status, 200)
   assert.equal(scheduled.body.startsAt, slot.startsAt)
+  assert.equal(scheduled.body.licenseKey, paid.body.licenseKey)
 
   const after = await dispatch({ method: 'GET', pathname: '/api/booking/config' })
   assert.equal(after.body.days[0].slots[0].available, false)
@@ -154,6 +156,40 @@ test('el PIX de la app cobra R$ 6 y no pide horario', async () => {
 
 test('no hay una dirección pública que entregue claves', async () => {
   assert.equal(await dispatch({ method: 'GET', pathname: '/api/app-license' }), null)
+})
+
+test('el panel de admin muestra la optimización paga y no abre sin clave', async () => {
+  process.env.ADMIN_PASSWORD = 'agenda-test-99'
+  const created = await dispatch({
+    method: 'POST',
+    pathname: '/api/bookings',
+    body: { buyer },
+  })
+  const locked = await dispatch({ method: 'GET', pathname: '/api/admin/bookings' })
+  assert.equal(locked.status, 401)
+  const bad = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'otra' } })
+  assert.equal(bad.status, 401)
+  const login = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'agenda-test-99' } })
+  assert.equal(login.status, 200)
+  await dispatch({ method: 'POST', pathname: `/api/bookings/${created.body.id}/mock-pay` })
+  const slot = (await dispatch({ method: 'GET', pathname: '/api/booking/config' })).body.days[0].slots[0]
+  await dispatch({
+    method: 'POST',
+    pathname: `/api/bookings/${created.body.id}/schedule`,
+    body: { startsAt: slot.startsAt },
+  })
+  const list = await dispatch({
+    method: 'GET',
+    pathname: '/api/admin/bookings',
+    authorization: `Bearer ${login.body.token}`,
+  })
+  assert.equal(list.status, 200)
+  const row = list.body.bookings.find((item) => item.id === created.body.id)
+  assert.equal(row.product, 'full')
+  assert.equal(row.startsAt, slot.startsAt)
+  assert.equal(isValidLicenseKey(row.licenseKey), true)
+  assert.equal(row.buyer.email, buyer.email)
+  delete process.env.ADMIN_PASSWORD
 })
 
 test('sin credenciales ni modo prueba no cobra', async () => {

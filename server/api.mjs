@@ -1,3 +1,4 @@
+import { adminConfigured, adminSessionToken, checkAdminPassword, checkAdminToken } from './admin.mjs'
 import { createPixTransaction, getTransaction, mockMarkPaid, providerDetail } from './buckpay.mjs'
 import { getConfig } from './config.mjs'
 import { issueLicenseKey } from './license.mjs'
@@ -6,6 +7,16 @@ import { claimSlot, getBooking, listBookings, saveBooking, slotTaken, updateBook
 import { validateBuyer } from './validate.mjs'
 
 const hits = new Map()
+const INSTALLER = 'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.2/Tomz-Boost-Setup-1.0.2.exe'
+
+function paidAccess(booking) {
+  const paid = booking.status === 'paid' || booking.status === 'paid_overlap'
+  if (!paid) return {}
+  return {
+    downloadUrl: INSTALLER,
+    ...(booking.licenseKey ? { licenseKey: booking.licenseKey } : {}),
+  }
+}
 
 function rateLimit(ip) {
   const now = Date.now()
@@ -34,12 +45,7 @@ function publicBooking(booking, { includePix }) {
     expiresAt: booking.expiresAt,
     buyer: { name: booking.buyer.name },
     product: booking.product || 'full',
-    ...(booking.product === 'app' && booking.status === 'paid'
-      ? {
-          downloadUrl: 'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.2/Tomz-Boost-Setup-1.0.2.exe',
-          ...(booking.licenseKey ? { licenseKey: booking.licenseKey } : {}),
-        }
-      : {}),
+    ...paidAccess(booking),
     ...(includePix && booking.pix
       ? { pix: { code: booking.pix.code, qrcodeBase64: booking.pix.qrcode_base64, mime: booking.pix.mime || 'image/png' } }
       : {}),
@@ -56,9 +62,7 @@ async function syncPayment(booking) {
     paidAt: new Date().toISOString(),
     buckpayStatus: remote.status,
   }
-  if (booking.product === 'app' && !booking.licenseKey) {
-    patch.licenseKey = issueLicenseKey()
-  }
+  if (!booking.licenseKey) patch.licenseKey = issueLicenseKey()
   return updateBooking(booking.id, patch)
 }
 
@@ -79,7 +83,7 @@ async function remoteBooking(id) {
         expiresAt: null,
         buyer: { name: '' },
         product: isApp ? 'app' : 'full',
-        ...(paid && isApp ? { downloadUrl: 'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.2/Tomz-Boost-Setup-1.0.2.exe' } : {}),
+        ...(paid ? { downloadUrl: INSTALLER } : {}),
       },
     }
   } catch {
@@ -87,7 +91,47 @@ async function remoteBooking(id) {
   }
 }
 
-export async function dispatch({ method, pathname, body, ip = 'local' }) {
+function adminView(booking) {
+  return {
+    id: booking.id,
+    product: booking.product || 'full',
+    status: booking.status,
+    amountCents: booking.amountCents,
+    startsAt: booking.startsAt,
+    endsAt: booking.endsAt,
+    paidAt: booking.paidAt || null,
+    createdAt: booking.createdAt || null,
+    licenseKey: booking.licenseKey || null,
+    buyer: {
+      name: booking.buyer?.name || '',
+      email: booking.buyer?.email || '',
+      phone: booking.buyer?.phone || '',
+      discord: booking.buyer?.discord || '',
+    },
+  }
+}
+
+export async function dispatch({ method, pathname, body, ip = 'local', authorization = '' }) {
+  if (pathname === '/api/admin/login' && method === 'POST') {
+    if (!adminConfigured()) return { status: 503, body: { error: 'admin_not_configured' } }
+    if (!checkAdminPassword(body?.password)) return { status: 401, body: { error: 'unauthorized' } }
+    return { status: 200, body: { token: adminSessionToken() } }
+  }
+
+  if (pathname === '/api/admin/bookings' && method === 'GET') {
+    if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
+    const bookings = (await listBookings())
+      .filter((booking) => booking.status === 'paid' || booking.status === 'paid_overlap')
+      .map(adminView)
+      .sort((a, b) => {
+        if (!a.startsAt && !b.startsAt) return String(b.paidAt || '').localeCompare(String(a.paidAt || ''))
+        if (!a.startsAt) return -1
+        if (!b.startsAt) return 1
+        return String(a.startsAt).localeCompare(String(b.startsAt))
+      })
+    return { status: 200, body: { bookings } }
+  }
+
   if (method === 'GET' && pathname === '/api/booking/config') {
     const config = getConfig()
     let bookings = []
@@ -137,7 +181,7 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
         /* El cliente sigue viendo pending y reintenta. */
       }
     }
-    if (current.product === 'app' && current.status === 'paid' && !current.licenseKey) {
+    if ((current.status === 'paid' || current.status === 'paid_overlap') && !current.licenseKey) {
       const licenseKey = issueLicenseKey()
       current = (await updateBooking(current.id, { licenseKey })) || { ...current, licenseKey }
     }
@@ -270,6 +314,7 @@ async function handleApiRequest(req, res, url) {
     searchParams: url.searchParams,
     body,
     ip: req.socket?.remoteAddress || 'local',
+    authorization: req.headers.authorization || '',
   })
   if (!result) {
     send(res, 404, { error: 'not_found' })

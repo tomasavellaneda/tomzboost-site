@@ -1,6 +1,6 @@
 import { useEffect, useState, type AnchorHTMLAttributes, type MouseEvent } from 'react'
 
-export type Page = 'home' | 'comprar' | 'agendar' | 'privacidad' | 'terminos'
+export type Page = 'home' | 'comprar' | 'agendar' | 'privacidad' | 'terminos' | 'admin'
 
 export function pageFromPath(pathname: string): Page {
   const path = pathname.replace(/\/+$/, '') || '/'
@@ -8,6 +8,7 @@ export function pageFromPath(pathname: string): Page {
   if (path === '/agendar') return 'agendar'
   if (path === '/privacidad') return 'privacidad'
   if (path === '/terminos') return 'terminos'
+  if (path === '/admin') return 'admin'
   return 'home'
 }
 
