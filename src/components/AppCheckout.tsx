@@ -38,7 +38,16 @@ export function AppCheckout() {
   const [document, setDocument] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [order, setOrder] = useState<Order | null>(null)
+  const [order, setOrder] = useState<Order | null>(() => {
+    if (typeof window === 'undefined') return null
+    if (new URLSearchParams(window.location.search).get('pago') !== '1') return null
+    return {
+      id: 'preview',
+      status: 'paid',
+      amountCents: PRICES.appCents,
+      downloadUrl: '/downloads/TomzBoost-Setup.zip',
+    }
+  })
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {

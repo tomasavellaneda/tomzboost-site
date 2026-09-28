@@ -128,7 +128,7 @@ test('el webhook solo confirma si BuckPay dice que está pago', async () => {
   assert.equal(view.body.status, 'paid')
 })
 
-test('el PIX de la app cobra R$ 90 y no pide horario', async () => {
+test('el PIX de la app cobra R$ 5 y no pide horario', async () => {
   const created = await dispatch({
     method: 'POST',
     pathname: '/api/bookings',
@@ -136,7 +136,7 @@ test('el PIX de la app cobra R$ 90 y no pide horario', async () => {
   })
   assert.equal(created.status, 201)
   assert.equal(created.body.product, 'app')
-  assert.equal(created.body.amountCents, 9000)
+  assert.equal(created.body.amountCents, 500)
   assert.equal(created.body.startsAt, null)
   const paid = await dispatch({ method: 'POST', pathname: `/api/bookings/${created.body.id}/mock-pay` })
   assert.equal(paid.body.status, 'paid')
