@@ -141,6 +141,7 @@ test('el PIX de la app cobra R$ 5 y no pide horario', async () => {
   const paid = await dispatch({ method: 'POST', pathname: `/api/bookings/${created.body.id}/mock-pay` })
   assert.equal(paid.body.status, 'paid')
   assert.equal(paid.body.downloadUrl, '/downloads/TomzBoost-Setup.zip')
+  assert.equal(paid.body.licenseKey, undefined)
 })
 
 test('sin credenciales ni modo prueba no cobra', async () => {

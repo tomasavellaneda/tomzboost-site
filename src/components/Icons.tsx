@@ -199,3 +199,33 @@ export function IconChip(props: IconProps) {
     </svg>
   )
 }
+
+export function IconKey(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden {...props}>
+      <circle cx="8" cy="15" r="4" />
+      <path d="m10.8 12.2 8.2-8.2" />
+      <path d="M16 7l3 3" />
+      <path d="m18 4 2 2" />
+    </svg>
+  )
+}
+
+export function IconCopy(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden {...props}>
+      <rect x="9" y="9" width="13" height="13" rx="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  )
+}
+
+export function IconHeadset(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden {...props}>
+      <path d="M3 14v-1a9 9 0 0 1 18 0v1" />
+      <path d="M21 16v2a2 2 0 0 1-2 2h-1v-6h3z" />
+      <path d="M3 16v2a2 2 0 0 0 2 2h1v-6H3z" />
+    </svg>
+  )
+}
