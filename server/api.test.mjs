@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { afterEach, beforeEach, test } from 'node:test'
 import { dispatch, resetRateLimitForTests } from './api.mjs'
 import { resetBuckpayForTests } from './buckpay.mjs'
+import { isValidLicenseKey } from './license.mjs'
 import { resetStoreForTests } from './store.mjs'
 import { normalizePhone, validateBuyer } from './validate.mjs'
 
@@ -75,6 +76,7 @@ test('el PIX impago no ocupa un horario; el turno se elige después de pagar', a
   assert.equal(paid.status, 200)
   assert.equal(paid.body.status, 'paid')
   assert.equal(paid.body.startsAt, null)
+  assert.equal(paid.body.licenseKey, undefined)
 
   const scheduled = await dispatch({
     method: 'POST',
@@ -141,7 +143,10 @@ test('el PIX de la app cobra R$ 5 y no pide horario', async () => {
   const paid = await dispatch({ method: 'POST', pathname: `/api/bookings/${created.body.id}/mock-pay` })
   assert.equal(paid.body.status, 'paid')
   assert.equal(paid.body.downloadUrl, '/downloads/TomzBoost-Setup.zip')
-  assert.equal(paid.body.licenseKey, undefined)
+  assert.match(paid.body.licenseKey, /^TOMZ(?:-[0-9A-F]{4}){4}$/)
+  assert.equal(isValidLicenseKey(paid.body.licenseKey), true)
+  const again = await dispatch({ method: 'GET', pathname: `/api/bookings/${created.body.id}` })
+  assert.equal(again.body.licenseKey, paid.body.licenseKey)
 })
 
 test('sin credenciales ni modo prueba no cobra', async () => {

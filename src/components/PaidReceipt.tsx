@@ -13,8 +13,8 @@ import {
   IconZap,
 } from './Icons'
 
-/** Solo para /comprar?pago=1. No es una clave emitida. */
-export const PREVIEW_LICENSE_KEY = 'TB7K-9F2D-4Q8M-3Z6P'
+/** Solo para /comprar?pago=1. Tiene el formato de la app y no es una clave emitida. */
+export const PREVIEW_LICENSE_KEY = 'TOMZ-0000-0000-0000-0000'
 
 const HOW_KEYS = ['appbuy.how1', 'appbuy.how2', 'appbuy.how3', 'appbuy.how4'] as const
 

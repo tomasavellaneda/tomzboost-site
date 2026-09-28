@@ -2949,9 +2949,9 @@ p {
 
 .receipt-key code {
   font-family: var(--font-mono);
-  font-size: clamp(18px, 2.2vw, 26px);
+  font-size: clamp(15px, 1.7vw, 22px);
   font-weight: 650;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   overflow-wrap: anywhere;
 }
 
