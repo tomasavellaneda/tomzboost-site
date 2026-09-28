@@ -325,6 +325,8 @@ export const messages = {
     'book.body':
       'Primero pagá la optimización completa. Cuando el pago se acredita, se libera tu clave y elegís el día y el horario. Un pago pendiente no ocupa un turno.',
     'book.day': 'Día',
+    'book.prevMonth': 'Mes anterior',
+    'book.nextMonth': 'Mes siguiente',
     'book.time': 'Horario',
     'book.name': 'Nombre y apellido',
     'book.email': 'Email',
@@ -723,6 +725,8 @@ export const messages = {
     'book.body':
       'Primeiro pague a otimização completa. Quando o pagamento cair, sua chave é liberada e você escolhe o dia e o horário. Um pagamento pendente não ocupa um turno.',
     'book.day': 'Dia',
+    'book.prevMonth': 'Mês anterior',
+    'book.nextMonth': 'Próximo mês',
     'book.time': 'Horário',
     'book.name': 'Nome e sobrenome',
     'book.email': 'Email',
@@ -1121,6 +1125,8 @@ export const messages = {
     'book.body':
       'Pay for the full optimization first. When the payment clears, your key unlocks and you pick the day and time. A pending payment does not hold a slot.',
     'book.day': 'Day',
+    'book.prevMonth': 'Previous month',
+    'book.nextMonth': 'Next month',
     'book.time': 'Time',
     'book.name': 'Full name',
     'book.email': 'Email',
