@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
 import { BookingPlan, BookingSteps } from './CheckoutChrome'
 import { IconCheck, IconCopy, IconDownload, IconKey } from './Icons'
+import { SlotCalendar } from './SlotCalendar'
 
 type Slot = { start: string; startsAt: string; endsAt: string; available: boolean }
 type Day = { date: string; weekday: number; slots: Slot[] }
@@ -193,18 +194,6 @@ export function BookingSection() {
   const day = config?.days.find((item) => item.date === date)
   const slot = day?.slots.find((item) => item.startsAt === startsAt)
   const localeTag = locale === 'pt' ? 'pt-BR' : locale === 'en' ? 'en-US' : 'es-AR'
-
-  const dateLabel = useMemo(() => {
-    return (value: string) => {
-      const [year, month, dayNum] = value.split('-').map(Number)
-      return new Date(Date.UTC(year, month - 1, dayNum, 15)).toLocaleDateString(localeTag, {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        timeZone: 'UTC',
-      })
-    }
-  }, [localeTag])
 
   useEffect(() => {
     if (!booking || booking.status !== 'paid' || booking.startsAt) return
@@ -431,22 +420,17 @@ export function BookingSection() {
             <>
               <fieldset>
                 <legend>{t('book.day')}</legend>
-                <div className="booking-days">
-                  {config.days.map((item) => (
-                    <button
-                      key={item.date}
-                      type="button"
-                      className={item.date === date ? 'is-active' : ''}
-                      onClick={() => {
-                        setDate(item.date)
-                        const open = item.slots.find((entry) => entry.available) ?? item.slots[0]
-                        if (open) setStartsAt(open.startsAt)
-                      }}
-                    >
-                      {dateLabel(item.date)}
-                    </button>
-                  ))}
-                </div>
+                <SlotCalendar
+                  days={config.days}
+                  date={date}
+                  localeTag={localeTag}
+                  timezone={config.timezone}
+                  onSelect={(item) => {
+                    setDate(item.date)
+                    const open = item.slots.find((entry) => entry.available) ?? item.slots[0]
+                    if (open) setStartsAt(open.startsAt)
+                  }}
+                />
               </fieldset>
               <fieldset>
                 <legend>{t('book.time')}</legend>

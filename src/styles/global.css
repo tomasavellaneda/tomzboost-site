@@ -2720,7 +2720,6 @@ p {
   text-transform: uppercase;
 }
 
-.booking-days,
 .booking-times,
 .booking-actions {
   display: flex;
@@ -2728,7 +2727,6 @@ p {
   gap: 8px;
 }
 
-.booking-days button,
 .booking-times button {
   min-height: 42px;
   padding: 8px 12px;
@@ -2739,10 +2737,109 @@ p {
   cursor: pointer;
 }
 
-.booking-days button.is-active,
 .booking-times button.is-active {
   background: var(--text);
   color: var(--bg);
+}
+
+.slot-calendar {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 360px);
+  margin-inline: auto;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #141414;
+}
+
+.slot-calendar-head {
+  display: grid;
+  grid-template-columns: 32px 1fr 32px;
+  align-items: center;
+  gap: 8px;
+}
+
+.slot-calendar-head strong {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.slot-calendar-head button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.slot-calendar-head button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.slot-calendar-head svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.slot-calendar-week,
+.slot-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.slot-calendar-week span {
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.slot-calendar-grid button {
+  aspect-ratio: 1;
+  min-height: 36px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  color: #4a4a4a;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.slot-calendar-grid button.is-open {
+  color: var(--text);
+}
+
+.slot-calendar-grid button.is-today:not(.is-active) {
+  border-color: #555;
+}
+
+.slot-calendar-grid button.is-active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.slot-calendar-grid button:disabled {
+  cursor: default;
 }
 
 .booking-times button {
