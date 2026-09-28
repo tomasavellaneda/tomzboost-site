@@ -1,5 +1,6 @@
 /** Enlaces y metadatos públicos — reemplazá SEUNUMERO / SEULINK / URL del instalador. */
-export const downloadUrl = '/downloads/TomzBoost-Setup.zip'
+export const downloadUrl =
+  'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.2/Tomz-Boost-Setup-1.0.2.exe'
 
 export const LINKS = {
   download: downloadUrl,
@@ -15,8 +16,8 @@ export const PRICES = {
 } as const
 
 export const RELEASE = {
-  version: '1.0.0',
-  size: '48 MB',
+  version: '1.0.2',
+  size: '81 MB',
   updatedAt: '23 Sep 2026',
   platforms: ['Windows 10', 'Windows 11'] as const,
 }

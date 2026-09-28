@@ -19,7 +19,7 @@ export function DownloadButton({
   const text = label ?? t('nav.cta')
 
   return (
-    <a className={`${className}${large ? ' button-large' : ''}`} href={downloadUrl} download>
+    <a className={`${className}${large ? ' button-large' : ''}`} href={downloadUrl}>
       <IconDownload /> {text}
     </a>
   )
