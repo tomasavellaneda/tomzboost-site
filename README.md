@@ -38,7 +38,7 @@ Copiá `.env.example` a `.env` y completá:
 
 - `BUCKPAY_TOKEN` — secret de 40 caracteres
 - `BUCKPAY_USER_AGENT` — el valor que te pasa el gerente de cuentas
-- `BOOKING_AMOUNT_CENTS` — precio de la optimización completa en centavos (por defecto `18000`, R$ 180). La app figura a R$ 90.
+- `BOOKING_AMOUNT_CENTS` — precio de la optimización completa en centavos (por defecto `15000`, R$ 150). La app se cobra a R$ 67,90.
 - `PUBLIC_BASE_URL` — URL pública para el webhook `transaction.processed`
 - `BOOKING_OFFER_SLUG` — slug de la oferta en el panel de Buck, si ya existe
 

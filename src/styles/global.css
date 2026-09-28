@@ -2430,11 +2430,46 @@ p {
   letter-spacing: -0.03em;
 }
 
-.service-price {
+.promo-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 10px;
   margin-top: 10px;
+}
+
+.promo-price s {
+  color: var(--text-faint);
+  font-size: 16px;
+  font-weight: 550;
+  text-decoration: line-through;
+}
+
+.promo-price strong {
+  color: var(--text);
   font-size: 28px;
   font-weight: 750;
   letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.promo-price em {
+  color: var(--text);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.booking-meta .promo-price {
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+.booking-meta .promo-price strong {
+  font-size: 32px;
+  letter-spacing: -0.05em;
 }
 
 .service-card-top > p {
@@ -3335,6 +3370,10 @@ p {
     justify-items: start;
     max-width: none;
     text-align: left;
+  }
+
+  .booking-meta .promo-price {
+    justify-content: flex-start;
   }
 
   .booking-pay-code {

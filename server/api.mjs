@@ -1,6 +1,6 @@
 import { adminConfigured, adminSessionToken, checkAdminPassword, checkAdminToken } from './admin.mjs'
 import { createPixTransaction, getTransaction, mockMarkPaid, providerDetail } from './buckpay.mjs'
-import { getConfig } from './config.mjs'
+import { APP_AMOUNT_CENTS, getConfig } from './config.mjs'
 import { issueLicenseKey } from './license.mjs'
 import { findSlot, listSlots } from './schedule.mjs'
 import { claimSlot, getBooking, listBookings, saveBooking, slotTaken, updateBooking } from './store.mjs'
@@ -163,7 +163,7 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
         holdMinutes: config.holdMinutes,
         paymentsReady: config.paymentsReady,
         mock: config.mock,
-        appAmountCents: 600,
+        appAmountCents: APP_AMOUNT_CENTS,
         days,
       },
     }
@@ -210,7 +210,7 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
     const product = body?.product === 'app' ? 'app' : 'full'
     const id = `${product === 'app' ? 'tbapp' : 'tb'}_${crypto.randomUUID().replace(/-/g, '')}`
     const now = new Date()
-    const amountCents = product === 'app' ? 600 : config.amountCents
+    const amountCents = product === 'app' ? APP_AMOUNT_CENTS : config.amountCents
     const booking = {
       id,
       product,
