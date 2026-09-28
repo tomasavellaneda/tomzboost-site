@@ -111,7 +111,7 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
         holdMinutes: config.holdMinutes,
         paymentsReady: config.paymentsReady,
         mock: config.mock,
-        appAmountCents: 9000,
+        appAmountCents: 500,
         days,
       },
     }
@@ -154,7 +154,7 @@ export async function dispatch({ method, pathname, body, ip = 'local' }) {
     const product = body?.product === 'app' ? 'app' : 'full'
     const id = `${product === 'app' ? 'tbapp' : 'tb'}_${crypto.randomUUID().replace(/-/g, '')}`
     const now = new Date()
-    const amountCents = product === 'app' ? 9000 : config.amountCents
+    const amountCents = product === 'app' ? 500 : config.amountCents
     const booking = {
       id,
       product,

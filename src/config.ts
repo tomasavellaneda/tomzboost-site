@@ -10,7 +10,7 @@ export const LINKS = {
 } as const
 
 export const PRICES = {
-  appCents: 9000,
+  appCents: 500,
   fullCents: 18000,
 } as const
 
