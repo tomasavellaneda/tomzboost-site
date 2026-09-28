@@ -3,7 +3,7 @@ import { PRICES } from '../config'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
 import { BookingPlan, BookingSteps } from './CheckoutChrome'
-import { IconCheck } from './Icons'
+import { PaidReceipt, PREVIEW_LICENSE_KEY } from './PaidReceipt'
 
 type Pix = { code: string; qrcodeBase64: string; mime: string }
 type Order = {
@@ -12,6 +12,7 @@ type Order = {
   amountCents: number
   pix?: Pix
   downloadUrl?: string
+  licenseKey?: string
 }
 
 const ERROR_KEYS: Record<string, MessageKey> = {
@@ -46,6 +47,7 @@ export function AppCheckout() {
       status: 'paid',
       amountCents: PRICES.appCents,
       downloadUrl: '/downloads/TomzBoost-Setup.zip',
+      licenseKey: PREVIEW_LICENSE_KEY,
     }
   })
   const [copied, setCopied] = useState(false)
@@ -113,6 +115,17 @@ export function AppCheckout() {
     } finally {
       setBusy(false)
     }
+  }
+
+  if (order?.status === 'paid') {
+    return (
+      <section id="comprar" className="section-block section-shell booking-section">
+        <PaidReceipt
+          licenseKey={order.licenseKey}
+          downloadUrl={order.downloadUrl || '/downloads/TomzBoost-Setup.zip'}
+        />
+      </section>
+    )
   }
 
   return (
@@ -194,19 +207,6 @@ export function AppCheckout() {
         </div>
       )}
 
-      {order?.status === 'paid' && (
-        <div className="booking-card booking-done">
-          <BookingSteps step={3} done />
-          <div className="booking-check" aria-hidden>
-            <IconCheck />
-          </div>
-          <h3>{t('appbuy.paidTitle')}</h3>
-          <p>{t('appbuy.paidBody')}</p>
-          <a className="button button-primary" href={order.downloadUrl || '/downloads/TomzBoost-Setup.zip'}>
-            {t('appbuy.download')}
-          </a>
-        </div>
-      )}
     </section>
   )
 }

@@ -1,5 +1,6 @@
 import { createPixTransaction, getTransaction, mockMarkPaid, providerDetail } from './buckpay.mjs'
 import { getConfig } from './config.mjs'
+import { issueLicenseKey } from './license.mjs'
 import { findSlot, listSlots } from './schedule.mjs'
 import { claimSlot, getBooking, listBookings, saveBooking, slotTaken, updateBooking } from './store.mjs'
 import { validateBuyer } from './validate.mjs'
@@ -34,7 +35,10 @@ function publicBooking(booking, { includePix }) {
     buyer: { name: booking.buyer.name },
     product: booking.product || 'full',
     ...(booking.product === 'app' && booking.status === 'paid'
-      ? { downloadUrl: '/downloads/TomzBoost-Setup.zip' }
+      ? {
+          downloadUrl: '/downloads/TomzBoost-Setup.zip',
+          ...(booking.licenseKey ? { licenseKey: booking.licenseKey } : {}),
+        }
       : {}),
     ...(includePix && booking.pix
       ? { pix: { code: booking.pix.code, qrcodeBase64: booking.pix.qrcode_base64, mime: booking.pix.mime || 'image/png' } }
@@ -47,11 +51,16 @@ async function syncPayment(booking) {
   const remote = await getTransaction(booking.id)
   if (!remote || remote.status !== 'paid') return booking
   if (remote.total_amount != null && remote.total_amount !== booking.amountCents) return booking
-  return updateBooking(booking.id, {
+  const patch = {
     status: 'paid',
     paidAt: new Date().toISOString(),
     buckpayStatus: remote.status,
-  })
+  }
+  if (booking.product === 'app' && !booking.licenseKey) {
+    const licenseKey = issueLicenseKey(booking)
+    if (typeof licenseKey === 'string' && licenseKey.trim()) patch.licenseKey = licenseKey.trim()
+  }
+  return updateBooking(booking.id, patch)
 }
 
 async function remoteBooking(id) {
