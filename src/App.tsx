@@ -216,7 +216,7 @@ export default function App() {
           </div>
           <div className="hero-links">
             <SiteLink href="/#servicios">{t('hero.ctaFull')}</SiteLink>
-            <a href={LINKS.discord} target="_blank" rel="noreferrer">
+            <a href={LINKS.whatsapp} target="_blank" rel="noreferrer">
               {t('hero.ctaDiscord')}
             </a>
           </div>
