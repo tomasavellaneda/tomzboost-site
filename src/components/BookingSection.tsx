@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
 import { BookingPlan, BookingSteps } from './CheckoutChrome'
-import { IconCheck } from './Icons'
+import { IconCheck, IconCopy, IconDownload, IconKey } from './Icons'
 
 type Slot = { start: string; startsAt: string; endsAt: string; available: boolean }
 type Day = { date: string; weekday: number; slots: Slot[] }
@@ -23,7 +23,68 @@ type Booking = {
   startsAt: string | null
   endsAt: string | null
   expiresAt: string
+  licenseKey?: string
+  downloadUrl?: string
   pix?: Pix
+}
+
+const FULL_ORDER = 'tomz-full-order'
+
+function rememberFullOrder(id: string) {
+  try {
+    sessionStorage.setItem(FULL_ORDER, id)
+  } catch {
+    /* El pedido igual queda en esta visita. */
+  }
+}
+
+function LicenseKeyBox({
+  licenseKey,
+  downloadUrl,
+  hint = true,
+}: {
+  licenseKey?: string
+  downloadUrl?: string
+  hint?: boolean
+}) {
+  const { t } = useI18n()
+  const [copied, setCopied] = useState(false)
+  if (!licenseKey) return null
+  return (
+    <div className="booking-license">
+      <p className="receipt-keycard-label">
+        <IconKey />
+        {t('appbuy.keyLabel')}
+      </p>
+      <div className="receipt-key">
+        <code>{licenseKey}</code>
+        <button
+          className="receipt-copy"
+          type="button"
+          aria-label={t('appbuy.copy')}
+          onClick={async () => {
+            await navigator.clipboard.writeText(licenseKey)
+            setCopied(true)
+          }}
+        >
+          <IconCopy />
+        </button>
+      </div>
+      {copied && (
+        <p className="receipt-copied">
+          <IconCheck />
+          {t('appbuy.copied')}
+        </p>
+      )}
+      {hint && <p className="booking-hint">{t('book.keyHint')}</p>}
+      {downloadUrl && (
+        <a className="button button-primary receipt-download" href={downloadUrl}>
+          <IconDownload />
+          {t('appbuy.download')}
+        </a>
+      )}
+    </div>
+  )
 }
 
 const ERROR_KEYS: Record<string, MessageKey> = {
@@ -59,6 +120,32 @@ export function BookingSection() {
   const [error, setError] = useState('')
   const [booking, setBooking] = useState<Booking | null>(null)
   const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    let id = ''
+    try {
+      id = sessionStorage.getItem(FULL_ORDER) || ''
+    } catch {
+      id = ''
+    }
+    if (!/^[A-Za-z0-9_-]{8,}$/.test(id)) return
+    let cancelled = false
+    fetch(`/api/bookings/${id}`, { cache: 'no-store' })
+      .then(async (response) => {
+        if (cancelled) return
+        if (!response.ok) {
+          sessionStorage.removeItem(FULL_ORDER)
+          return
+        }
+        const next = (await response.json()) as Booking
+        if (next.status === 'paid' || next.status === 'pending' || next.status === 'paid_overlap') setBooking(next)
+        else sessionStorage.removeItem(FULL_ORDER)
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -164,6 +251,7 @@ export function BookingSection() {
         setError(key ? t(key) : payload.detail || t('book.error.generic'))
         return
       }
+      rememberFullOrder(payload.id)
       setBooking(payload)
     } catch {
       setError(t('book.error.generic'))
@@ -334,6 +422,7 @@ export function BookingSection() {
         <form className="booking-card" onSubmit={confirmSlot}>
           <BookingSteps step={3} />
           <h3>{t('book.pickTitle')}</h3>
+          <LicenseKeyBox licenseKey={booking.licenseKey} downloadUrl={booking.downloadUrl} />
           <p>{t('book.pickBody')}</p>
           <p>{formatBrl(booking.amountCents)}</p>
           {config.days.length === 0 ? (
@@ -403,6 +492,7 @@ export function BookingSection() {
             </div>
           )}
           <h3>{t('book.paidTitle')}</h3>
+          <LicenseKeyBox licenseKey={booking.licenseKey} downloadUrl={booking.downloadUrl} hint={false} />
           <p>{when}</p>
           <p>{booking.status === 'paid_overlap' ? t('book.overlap') : t('book.paidBody')}</p>
         </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import AppPreview, { type PreviewScreen } from './components/AppPreview'
+import { AdminPage } from './components/AdminPage'
 import { AppCheckout } from './components/AppCheckout'
 import { BookingSection } from './components/BookingSection'
 import { LegalPage } from './components/LegalPage'
@@ -168,12 +169,13 @@ export default function App() {
 
   if (shot) return <ShotPage screen={shot} />
 
-  if (page === 'comprar' || page === 'agendar' || page === 'privacidad' || page === 'terminos') {
+  if (page === 'comprar' || page === 'agendar' || page === 'privacidad' || page === 'terminos' || page === 'admin') {
     return (
       <main className="checkout-page">
         <SiteHeader />
         {page === 'comprar' ? <AppCheckout /> : null}
         {page === 'agendar' ? <BookingSection /> : null}
+        {page === 'admin' ? <AdminPage /> : null}
         {page === 'privacidad' || page === 'terminos' ? <LegalPage /> : null}
         <SiteFooter />
       </main>
