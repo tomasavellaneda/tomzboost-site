@@ -16,7 +16,7 @@ const buyer = {
 
 beforeEach(() => {
   process.env.BUCKPAY_MOCK = '1'
-  process.env.BOOKING_AMOUNT_CENTS = '15000'
+  process.env.BOOKING_AMOUNT_CENTS = '14990'
   process.env.BUCKPAY_TOKEN = ''
   process.env.BUCKPAY_USER_AGENT = ''
   process.env.PUBLIC_BASE_URL = ''
@@ -58,7 +58,7 @@ test('el PIX impago no ocupa un horario; el turno se elige después de pagar', a
   })
   assert.equal(created.status, 201)
   assert.equal(created.body.status, 'pending')
-  assert.equal(created.body.amountCents, 15000)
+  assert.equal(created.body.amountCents, 14990)
   assert.equal(created.body.startsAt, null)
   assert.match(created.body.pix.code, /^00020126MOCK/)
 

@@ -2454,7 +2454,7 @@ p {
 }
 
 .promo-price em {
-  color: var(--text);
+  color: #3ddc84;
   font-size: 11px;
   font-style: normal;
   font-weight: 700;

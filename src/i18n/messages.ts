@@ -234,7 +234,7 @@ export const messages = {
     'services.note.reversible': 'Ajustes reversibles',
     'appbuy.eyebrow': 'Solo la app',
     'appbuy.title': 'Comprá la app',
-    'appbuy.body': 'De R$ 90 a R$ 67,90. Cuando el pago se acredita, se habilita la descarga.',
+    'appbuy.body': 'De R$ 139,90 a R$ 67,90. Cuando el pago se acredita, se habilita la descarga.',
     'appbuy.paidTitle': '¡Gracias por tu compra!',
     'appbuy.paidBody':
       'Tu pedido quedó confirmado y ya se está procesando. Abajo está tu clave de activación. Copiala y pegala en la app para empezar a usar Tomz Boost.',
@@ -635,7 +635,7 @@ export const messages = {
     'services.note.reversible': 'Ajustes reversíveis',
     'appbuy.eyebrow': 'Só o app',
     'appbuy.title': 'Compre o app',
-    'appbuy.body': 'De R$ 90 por R$ 67,90. Quando o pagamento cair, o download libera.',
+    'appbuy.body': 'De R$ 139,90 por R$ 67,90. Quando o pagamento cair, o download libera.',
     'appbuy.paidTitle': 'Obrigado pela sua compra!',
     'appbuy.paidBody':
       'Seu pedido foi confirmado e já está sendo processado. Abaixo está sua chave de ativação. Copie e cole no aplicativo para começar a usar o Tomz Boost.',
@@ -1036,7 +1036,7 @@ export const messages = {
     'services.note.reversible': 'Reversible tweaks',
     'appbuy.eyebrow': 'App only',
     'appbuy.title': 'Buy the app',
-    'appbuy.body': 'From R$ 90 to R$ 67.90. The download unlocks when the payment clears.',
+    'appbuy.body': 'From R$ 139.90 to R$ 67.90. The download unlocks when the payment clears.',
     'appbuy.paidTitle': 'Thanks for your purchase!',
     'appbuy.paidBody':
       'Your order is confirmed and already being processed. Your activation key is below. Copy and paste it into the app to start using Tomz Boost.',

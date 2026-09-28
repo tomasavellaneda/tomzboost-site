@@ -12,9 +12,9 @@ export const LINKS = {
 
 export const PRICES = {
   appCents: 6790,
-  appWasCents: 9000,
-  fullCents: 15000,
-  fullWasCents: 18000,
+  appWasCents: 13990,
+  fullCents: 14990,
+  fullWasCents: 34990,
 } as const
 
 export const RELEASE = {
