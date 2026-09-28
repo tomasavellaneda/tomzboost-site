@@ -149,6 +149,16 @@ test('el PIX de la app cobra R$ 5 y no pide horario', async () => {
   assert.equal(again.body.licenseKey, paid.body.licenseKey)
 })
 
+test('la vista sin pago entrega una clave real de la app', async () => {
+  const first = await dispatch({ method: 'GET', pathname: '/api/app-license' })
+  assert.equal(first.status, 200)
+  assert.match(first.body.licenseKey, /^TOMZ(?:-[0-9A-F]{4}){4}$/)
+  assert.equal(isValidLicenseKey(first.body.licenseKey), true)
+  assert.notEqual(first.body.licenseKey, 'TOMZ-0000-0000-0000-0000')
+  const second = await dispatch({ method: 'GET', pathname: '/api/app-license' })
+  assert.notEqual(second.body.licenseKey, first.body.licenseKey)
+})
+
 test('sin credenciales ni modo prueba no cobra', async () => {
   process.env.BUCKPAY_MOCK = '0'
   delete process.env.BOOKING_AMOUNT_CENTS

@@ -11,7 +11,7 @@ test('cada clave de la app es válida y distinta', () => {
   assert.notEqual(first, second)
 })
 
-test('una clave alterada o la de la vista previa no activan la app', () => {
+test('una clave alterada o de ceros no activa la app', () => {
   const key = generateLicenseKey()
   const broken = key.slice(0, -1) + (key.endsWith('A') ? 'B' : 'A')
   assert.equal(isValidLicenseKey(broken), false)
