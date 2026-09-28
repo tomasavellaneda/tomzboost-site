@@ -253,7 +253,7 @@ export const messages = {
     'appbuy.how4': 'Listo. Ahora optimizá tu PC y tus juegos.',
     'appbuy.helpTitle': '¿Necesitás ayuda?',
     'appbuy.helpBody': 'El equipo de soporte está listo para atenderte.',
-    'appbuy.discord': 'Entrá a Discord',
+    'appbuy.support': 'Escribinos por WhatsApp',
     'appbuy.secure': 'Pago seguro',
     'appbuy.instant': 'Entrega inmediata',
 
@@ -654,7 +654,7 @@ export const messages = {
     'appbuy.how4': 'Pronto! Agora é só otimizar seu PC e turbinar seus jogos.',
     'appbuy.helpTitle': 'Precisa de ajuda?',
     'appbuy.helpBody': 'Nosso time de suporte está pronto para te atender.',
-    'appbuy.discord': 'Acesse o Discord',
+    'appbuy.support': 'Fale no WhatsApp',
     'appbuy.secure': 'Pagamento seguro',
     'appbuy.instant': 'Entrega imediata',
 
@@ -1055,7 +1055,7 @@ export const messages = {
     'appbuy.how4': 'Done. Now optimize your PC and your games.',
     'appbuy.helpTitle': 'Need help?',
     'appbuy.helpBody': 'Our support team is ready to help you.',
-    'appbuy.discord': 'Open Discord',
+    'appbuy.support': 'Message us on WhatsApp',
     'appbuy.secure': 'Secure payment',
     'appbuy.instant': 'Instant delivery',
 

@@ -1,11 +1,11 @@
-/** Enlaces y metadatos públicos — reemplazá SEUNUMERO. */
+/** Enlaces y metadatos públicos. */
 export const downloadUrl =
   'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.2/Tomz-Boost-Setup-1.0.2.exe'
 
 export const LINKS = {
   download: downloadUrl,
   discord: 'https://discord.com/users/1554052825875484743',
-  whatsapp: 'https://wa.me/SEUNUMERO',
+  whatsapp: 'https://wa.me/5491123195888',
   instagram: 'https://www.instagram.com/tomzboost/',
   installGuide: '#pasos',
 } as const

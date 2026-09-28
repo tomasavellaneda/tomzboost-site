@@ -91,9 +91,9 @@ export function PaidReceipt({
               {t('appbuy.helpTitle')}
             </h3>
             <p>{t('appbuy.helpBody')}</p>
-            <a className="button button-secondary" href={LINKS.discord} target="_blank" rel="noreferrer">
-              <img src="/icons/discord.svg" alt="" width={16} height={16} />
-              {t('appbuy.discord')}
+            <a className="button button-secondary" href={LINKS.whatsapp} target="_blank" rel="noreferrer">
+              <img src="/icons/whatsapp.svg" alt="" width={16} height={16} />
+              {t('appbuy.support')}
               <IconArrowRight />
             </a>
           </div>
