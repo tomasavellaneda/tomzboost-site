@@ -1527,7 +1527,7 @@ p {
 
 .testimonial-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 14px;
   margin-top: 48px;
 }
@@ -1542,32 +1542,16 @@ p {
 }
 
 .testimonial-shots {
-  display: grid;
-  gap: 8px;
   margin-bottom: 16px;
-}
-
-.testimonial-shots.is-pair {
-  grid-template-columns: 1fr 1fr;
 }
 
 .testimonial-shots img {
   width: 100%;
-  height: 176px;
+  height: 240px;
   object-fit: cover;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: #101010;
-}
-
-.testimonial-shots.is-pair img {
-  height: 168px;
-}
-
-.testimonial-shots img.is-contain {
-  height: 248px;
-  object-fit: contain;
-  background: #102033;
 }
 
 .stars {

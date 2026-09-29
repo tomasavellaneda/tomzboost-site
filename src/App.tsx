@@ -86,10 +86,7 @@ const TESTIMONIAL_META = [
     meta: 'Counter-Strike 2',
     initial: 'R',
     quoteKey: 'testimonials.1.quote',
-    shots: [
-      { src: '/reviews/cs2-444.jpg', alt: 'Counter-Strike 2, 444 FPS', focus: '74% 18%', fit: 'cover' },
-      { src: '/reviews/cs2-458.jpg', alt: 'Counter-Strike 2, 458 FPS', focus: 'center 12%', fit: 'cover' },
-    ],
+    shot: { src: '/reviews/cs2-444.jpg', alt: 'Counter-Strike 2, 444 FPS', focus: '74% 18%' },
   },
   {
     name: 'Lucas A.',
@@ -97,7 +94,7 @@ const TESTIMONIAL_META = [
     meta: 'Valorant',
     initial: 'L',
     quoteKey: 'testimonials.2.quote',
-    shots: [{ src: '/reviews/valorant-328.jpg', alt: 'Valorant, 328 FPS', focus: 'center 28%', fit: 'cover' }],
+    shot: { src: '/reviews/valorant-328.jpg', alt: 'Valorant, 328 FPS', focus: 'center 28%' },
   },
   {
     name: 'Matheus R.',
@@ -105,11 +102,16 @@ const TESTIMONIAL_META = [
     meta: 'Fortnite',
     initial: 'M',
     quoteKey: 'testimonials.3.quote',
-    shots: [{ src: '/reviews/fortnite-203.jpg', alt: 'Fortnite, 203 FPS', focus: 'center center', fit: 'contain' }],
+    shot: { src: '/reviews/fortnite-463.jpg', alt: 'Fortnite, 463 FPS', focus: 'center center' },
   },
-  { name: 'Diego L.', handle: '@diego.lol', meta: 'League of Legends', initial: 'D', quoteKey: 'testimonials.4.quote', shots: [] },
-  { name: 'Bruno S.', handle: '@bruno.apex', meta: 'Apex Legends', initial: 'B', quoteKey: 'testimonials.5.quote', shots: [] },
-  { name: 'Camila T.', handle: '@cami.rl', meta: 'Rocket League', initial: 'C', quoteKey: 'testimonials.6.quote', shots: [] },
+  {
+    name: 'Enzo V.',
+    handle: '@enzo.cs',
+    meta: 'Counter-Strike 2',
+    initial: 'E',
+    quoteKey: 'testimonials.4.quote',
+    shot: { src: '/reviews/cs2-458.jpg', alt: 'Counter-Strike 2, 458 FPS', focus: 'center 16%' },
+  },
 ] as const
 
 function Stars() {
@@ -315,19 +317,9 @@ export default function App() {
         <div className="testimonial-grid">
           {TESTIMONIAL_META.map((item) => (
             <article className="testimonial" key={item.name}>
-              {item.shots.length > 0 && (
-                <div className={item.shots.length > 1 ? 'testimonial-shots is-pair' : 'testimonial-shots'}>
-                  {item.shots.map((shot) => (
-                    <img
-                      key={shot.src}
-                      src={shot.src}
-                      alt={shot.alt}
-                      className={shot.fit === 'contain' ? 'is-contain' : undefined}
-                      style={{ objectPosition: shot.focus }}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="testimonial-shots">
+                <img src={item.shot.src} alt={item.shot.alt} style={{ objectPosition: item.shot.focus }} />
+              </div>
               <Stars />
               <blockquote>“{t(item.quoteKey)}”</blockquote>
               <footer>
