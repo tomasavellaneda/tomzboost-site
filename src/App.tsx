@@ -80,9 +80,12 @@ const FAQ_STRUCTURE = [
 ] as const
 
 const TESTIMONIAL_META = [
-  { name: 'Rafael M.', meta: 'Counter-Strike 2', initial: 'R', quoteKey: 'testimonials.1.quote' },
-  { name: 'Lucas A.', meta: 'Valorant', initial: 'L', quoteKey: 'testimonials.2.quote' },
-  { name: 'Matheus R.', meta: 'Fortnite', initial: 'M', quoteKey: 'testimonials.3.quote' },
+  { name: 'Rafael M.', handle: '@rafa.cs', meta: 'Counter-Strike 2', initial: 'R', quoteKey: 'testimonials.1.quote' },
+  { name: 'Lucas A.', handle: '@lucas.val', meta: 'Valorant', initial: 'L', quoteKey: 'testimonials.2.quote' },
+  { name: 'Matheus R.', handle: '@matheus.fn', meta: 'Fortnite', initial: 'M', quoteKey: 'testimonials.3.quote' },
+  { name: 'Diego L.', handle: '@diego.lol', meta: 'League of Legends', initial: 'D', quoteKey: 'testimonials.4.quote' },
+  { name: 'Bruno S.', handle: '@bruno.apex', meta: 'Apex Legends', initial: 'B', quoteKey: 'testimonials.5.quote' },
+  { name: 'Camila T.', handle: '@cami.rl', meta: 'Rocket League', initial: 'C', quoteKey: 'testimonials.6.quote' },
 ] as const
 
 function Stars() {
@@ -293,7 +296,9 @@ export default function App() {
               <footer>
                 <span>{item.initial}</span>
                 <div>
-                  <b>{item.name}</b>
+                  <b>
+                    {item.name} <em>{item.handle}</em>
+                  </b>
                   <small>{item.meta}</small>
                 </div>
               </footer>

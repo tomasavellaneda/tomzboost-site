@@ -90,7 +90,7 @@ export function ServicesSection() {
       features: [t('services.app.f1'), t('services.app.f2'), t('services.app.f3'), t('services.app.f4')],
       priceCents: PRICES.appCents,
       wasCents: PRICES.appWasCents,
-      cta: { label: t('services.app.cta'), href: '/comprar', primary: true as const },
+      cta: { label: t('services.app.cta'), href: '/comprar', primary: false as const },
     },
     {
       id: 'full',
