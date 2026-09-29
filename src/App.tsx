@@ -80,12 +80,38 @@ const FAQ_STRUCTURE = [
 ] as const
 
 const TESTIMONIAL_META = [
-  { name: 'Rafael M.', handle: '@rafa.cs', meta: 'Counter-Strike 2', initial: 'R', quoteKey: 'testimonials.1.quote' },
-  { name: 'Lucas A.', handle: '@lucas.val', meta: 'Valorant', initial: 'L', quoteKey: 'testimonials.2.quote' },
-  { name: 'Matheus R.', handle: '@matheus.fn', meta: 'Fortnite', initial: 'M', quoteKey: 'testimonials.3.quote' },
-  { name: 'Diego L.', handle: '@diego.lol', meta: 'League of Legends', initial: 'D', quoteKey: 'testimonials.4.quote' },
-  { name: 'Bruno S.', handle: '@bruno.apex', meta: 'Apex Legends', initial: 'B', quoteKey: 'testimonials.5.quote' },
-  { name: 'Camila T.', handle: '@cami.rl', meta: 'Rocket League', initial: 'C', quoteKey: 'testimonials.6.quote' },
+  {
+    name: 'Rafael M.',
+    handle: '@rafa.cs',
+    meta: 'Counter-Strike 2',
+    initial: 'R',
+    quoteKey: 'testimonials.1.quote',
+    shot: { src: '/reviews/cs2-444.jpg', alt: 'Counter-Strike 2, 444 FPS', focus: '74% 18%' },
+  },
+  {
+    name: 'Lucas A.',
+    handle: '@lucas.val',
+    meta: 'Valorant',
+    initial: 'L',
+    quoteKey: 'testimonials.2.quote',
+    shot: { src: '/reviews/valorant-328.jpg', alt: 'Valorant, 328 FPS', focus: 'center 28%' },
+  },
+  {
+    name: 'Matheus R.',
+    handle: '@matheus.fn',
+    meta: 'Fortnite',
+    initial: 'M',
+    quoteKey: 'testimonials.3.quote',
+    shot: { src: '/reviews/fortnite-463.jpg', alt: 'Fortnite, 463 FPS', focus: 'center center' },
+  },
+  {
+    name: 'Enzo V.',
+    handle: '@enzo.cs',
+    meta: 'Counter-Strike 2',
+    initial: 'E',
+    quoteKey: 'testimonials.4.quote',
+    shot: { src: '/reviews/cs2-458.jpg', alt: 'Counter-Strike 2, 458 FPS', focus: 'center 16%' },
+  },
 ] as const
 
 function Stars() {
@@ -291,6 +317,9 @@ export default function App() {
         <div className="testimonial-grid">
           {TESTIMONIAL_META.map((item) => (
             <article className="testimonial" key={item.name}>
+              <div className="testimonial-shots">
+                <img src={item.shot.src} alt={item.shot.alt} style={{ objectPosition: item.shot.focus }} />
+              </div>
               <Stars />
               <blockquote>“{t(item.quoteKey)}”</blockquote>
               <footer>

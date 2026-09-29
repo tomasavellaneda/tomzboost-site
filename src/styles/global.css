@@ -1527,16 +1527,31 @@ p {
 
 .testimonial-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 14px;
   margin-top: 48px;
 }
 
 .testimonial {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--border);
   background: linear-gradient(180deg, #1e1e1e, #171717);
   border-radius: 16px;
-  padding: 26px;
+  padding: 18px 18px 22px;
+}
+
+.testimonial-shots {
+  margin-bottom: 16px;
+}
+
+.testimonial-shots img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #101010;
 }
 
 .stars {
@@ -1563,6 +1578,7 @@ p {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid var(--border);
 }
