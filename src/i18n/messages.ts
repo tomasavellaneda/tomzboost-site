@@ -206,10 +206,10 @@ export const messages = {
 
     'testimonials.eyebrow': 'Reseñas',
     'testimonials.title': 'El FPS que ganaron en sus juegos',
-    'testimonials.1.quote': 'En CS2 el promedio marcó 444 FPS, con 38 de ping.',
-    'testimonials.2.quote': 'En Valorant el FPS del cliente marcó 328 en la ponte, del lado atacante.',
+    'testimonials.1.quote': 'En CS2 el promedio marcó 444 FPS.',
+    'testimonials.2.quote': 'En Valorant el FPS del cliente marcó 328.',
     'testimonials.3.quote': 'En Fortnite el contador marcó 463 FPS, con el mínimo en 398.',
-    'testimonials.4.quote': 'En CS2 la media quedó en 458 FPS, con 37 de ping.',
+    'testimonials.4.quote': 'En CS2 la media quedó en 458 FPS.',
     'testimonials.5.quote': 'Apex me andaba en 90. Ahora se queda en 140 y el aterrizaje se siente más limpio.',
     'testimonials.6.quote': 'Rocket League estaba en 120. Llegué a 200 y la pelota se lee mejor.',
 
@@ -610,10 +610,10 @@ export const messages = {
 
     'testimonials.eyebrow': 'Avaliações',
     'testimonials.title': 'O FPS que ganharam nos jogos',
-    'testimonials.1.quote': 'No CS2 a média marcou 444 FPS, com 38 de ping.',
-    'testimonials.2.quote': 'No Valorant o FPS do cliente marcou 328 na ponte, do lado atacante.',
+    'testimonials.1.quote': 'No CS2 a média marcou 444 FPS.',
+    'testimonials.2.quote': 'No Valorant o FPS do cliente marcou 328.',
     'testimonials.3.quote': 'No Fortnite o contador marcou 463 FPS, com o mínimo em 398.',
-    'testimonials.4.quote': 'No CS2 a média ficou em 458 FPS, com 37 de ping.',
+    'testimonials.4.quote': 'No CS2 a média ficou em 458 FPS.',
     'testimonials.5.quote': 'O Apex ficava em 90. Agora segura 140 e a queda fica mais limpa.',
     'testimonials.6.quote': 'O Rocket League estava em 120. Cheguei a 200 e a bola fica mais clara.',
 
@@ -1014,10 +1014,10 @@ export const messages = {
 
     'testimonials.eyebrow': 'Reviews',
     'testimonials.title': 'The FPS they picked up in-game',
-    'testimonials.1.quote': 'In CS2 the average read 444 FPS, with 38 ping.',
-    'testimonials.2.quote': 'In Valorant the client FPS read 328 on the bridge, attacker side.',
+    'testimonials.1.quote': 'In CS2 the average read 444 FPS.',
+    'testimonials.2.quote': 'In Valorant the client FPS read 328.',
     'testimonials.3.quote': 'In Fortnite the counter read 463 FPS, with the low at 398.',
-    'testimonials.4.quote': 'In CS2 the average held 458 FPS, with 37 ping.',
+    'testimonials.4.quote': 'In CS2 the average held 458 FPS.',
     'testimonials.5.quote': 'Apex sat around 90. It holds 140 now and the drop-in feels cleaner.',
     'testimonials.6.quote': 'Rocket League was at 120. I hit 200 and the ball reads better.',
 
