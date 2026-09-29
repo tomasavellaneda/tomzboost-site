@@ -209,6 +209,9 @@ export const messages = {
     'testimonials.1.quote': 'En CS2 pasé de 160 a 240 FPS. En los sprays ya no se me cae a 90.',
     'testimonials.2.quote': 'El Valorant me quedaba en 144 con tirones. Ahora se mantiene en 220.',
     'testimonials.3.quote': 'Fortnite me andaba en 100 FPS. Después de optimizar llegué a 170.',
+    'testimonials.4.quote': 'En League pasé de 80 a 144 FPS estables. El late game ya no se traba.',
+    'testimonials.5.quote': 'Apex me andaba en 90. Ahora se queda en 140 y el aterrizaje se siente más limpio.',
+    'testimonials.6.quote': 'Rocket League estaba en 120. Llegué a 200 y la pelota se lee mejor.',
 
     'services.eyebrow': 'Servicios',
     'services.title': 'Elegí cómo querés optimizar',
@@ -610,6 +613,9 @@ export const messages = {
     'testimonials.1.quote': 'No CS2 fui de 160 para 240 FPS. Nos sprays não cai mais para 90.',
     'testimonials.2.quote': 'O Valorant ficava em 144 com travadinhas. Agora segura 220.',
     'testimonials.3.quote': 'O Fortnite ficava nos 100 FPS. Depois de otimizar cheguei a 170.',
+    'testimonials.4.quote': 'No League fui de 80 para 144 FPS estáveis. O late game não trava mais.',
+    'testimonials.5.quote': 'O Apex ficava em 90. Agora segura 140 e a queda fica mais limpa.',
+    'testimonials.6.quote': 'O Rocket League estava em 120. Cheguei a 200 e a bola fica mais clara.',
 
     'services.eyebrow': 'Serviços',
     'services.title': 'Escolha como quer otimizar',
@@ -1011,6 +1017,9 @@ export const messages = {
     'testimonials.1.quote': 'In CS2 I went from 160 to 240 FPS. Sprays do not drop to 90 anymore.',
     'testimonials.2.quote': 'Valorant sat at 144 with stutters. It holds 220 now.',
     'testimonials.3.quote': 'Fortnite was around 100 FPS. After optimizing I hit 170.',
+    'testimonials.4.quote': 'In League I went from 80 to a steady 144 FPS. Late game does not hitch anymore.',
+    'testimonials.5.quote': 'Apex sat around 90. It holds 140 now and the drop-in feels cleaner.',
+    'testimonials.6.quote': 'Rocket League was at 120. I hit 200 and the ball reads better.',
 
     'services.eyebrow': 'Services',
     'services.title': 'Choose how you want to optimize',
