@@ -1,9 +1,9 @@
 import { adminConfigured, adminSessionToken, checkAdminPassword, checkAdminToken } from './admin.mjs'
 import { createPixTransaction, getTransaction, mockMarkPaid, providerDetail } from './buckpay.mjs'
 import { APP_AMOUNT_CENTS, getConfig } from './config.mjs'
-import { issueLicenseKey } from './license.mjs'
+import { generateLicenseKey, issueLicenseKey, normalizeHwid } from './license.mjs'
 import { findSlot, listSlots } from './schedule.mjs'
-import { claimSlot, getBooking, listBookings, saveBooking, slotTaken, updateBooking } from './store.mjs'
+import { claimSlot, getBooking, listBookings, listIssuedKeys, saveBooking, saveIssuedKey, slotTaken, updateBooking } from './store.mjs'
 import { validateBuyer } from './validate.mjs'
 
 const hits = new Map()
@@ -111,6 +111,45 @@ function adminView(booking) {
   }
 }
 
+function orderView(booking) {
+  return {
+    id: booking.id,
+    product: booking.product || 'full',
+    status: booking.status || 'unknown',
+    amountCents: Number.isFinite(booking.amountCents) ? booking.amountCents : null,
+    licenseKey: booking.licenseKey || null,
+    paidAt: booking.paidAt || null,
+    createdAt: booking.createdAt || null,
+    startsAt: booking.startsAt || null,
+    endsAt: booking.endsAt || null,
+    scheduledAt: booking.scheduledAt || null,
+    providerStatus: booking.buckpayStatus || null,
+    buyer: {
+      name: booking.buyer?.name || '',
+      email: booking.buyer?.email || '',
+      phone: booking.buyer?.phone || '',
+      discord: booking.buyer?.discord || '',
+    },
+  }
+}
+
+function sessionView(booking) {
+  return {
+    id: booking.id,
+    product: booking.product || 'full',
+    status: booking.status,
+    startsAt: booking.startsAt,
+    endsAt: booking.endsAt || null,
+    licenseKey: booking.licenseKey || null,
+    buyer: {
+      name: booking.buyer?.name || '',
+      email: booking.buyer?.email || '',
+      phone: booking.buyer?.phone || '',
+      discord: booking.buyer?.discord || '',
+    },
+  }
+}
+
 export async function dispatch({ method, pathname, body, ip = 'local', authorization = '' }) {
   if (pathname === '/api/admin/login' && method === 'POST') {
     if (!adminConfigured()) return { status: 503, body: { error: 'admin_not_configured' } }
@@ -130,6 +169,52 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
         return String(a.startsAt).localeCompare(String(b.startsAt))
       })
     return { status: 200, body: { bookings } }
+  }
+
+  if (pathname === '/api/admin/orders' && method === 'GET') {
+    if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
+    const orders = (await listBookings())
+      .map(orderView)
+      .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')))
+    return { status: 200, body: { orders } }
+  }
+
+  if (pathname === '/api/admin/agenda' && method === 'GET') {
+    if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
+    const sessions = (await listBookings())
+      .filter((booking) => booking.startsAt && (booking.status === 'paid' || booking.status === 'paid_overlap'))
+      .map(sessionView)
+      .sort((a, b) => String(a.startsAt).localeCompare(String(b.startsAt)))
+    return { status: 200, body: { sessions, timezone: getConfig().timezone } }
+  }
+
+  if (pathname === '/api/admin/keys' && method === 'GET') {
+    if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
+    return { status: 200, body: { keys: await listIssuedKeys(200) } }
+  }
+
+  if (pathname === '/api/admin/keys' && method === 'POST') {
+    if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
+    const count = Math.min(50, Math.max(1, Math.trunc(Number(body?.count)) || 1))
+    const hwid = normalizeHwid(body?.hwid || '')
+    if (hwid && hwid.length < 8) return { status: 400, body: { error: 'hwid_invalid' } }
+    const note = String(body?.note || '')
+      .trim()
+      .slice(0, 120)
+    const issued = []
+    for (let index = 0; index < count; index += 1) {
+      const record = {
+        id: crypto.randomUUID(),
+        key: generateLicenseKey(hwid || undefined),
+        hwid: hwid || null,
+        note,
+        createdAt: new Date().toISOString(),
+        source: 'admin',
+      }
+      await saveIssuedKey(record)
+      issued.push(record)
+    }
+    return { status: 201, body: { keys: issued } }
   }
 
   if (method === 'GET' && pathname === '/api/booking/config') {

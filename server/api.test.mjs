@@ -206,6 +206,95 @@ test('sin credenciales ni modo prueba no cobra', async () => {
   assert.equal(created.status, 503)
 })
 
+test('el panel lista todos los pedidos con su estado y su clave', async () => {
+  process.env.ADMIN_PASSWORD = 'panel-test-77'
+  const paid = await dispatch({ method: 'POST', pathname: '/api/bookings', body: { buyer } })
+  await dispatch({ method: 'POST', pathname: `/api/bookings/${paid.body.id}/mock-pay` })
+  const pending = await dispatch({ method: 'POST', pathname: '/api/bookings', body: { buyer } })
+
+  const login = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'panel-test-77' } })
+  const authorization = `Bearer ${login.body.token}`
+
+  const locked = await dispatch({ method: 'GET', pathname: '/api/admin/orders' })
+  assert.equal(locked.status, 401)
+
+  const list = await dispatch({ method: 'GET', pathname: '/api/admin/orders', authorization })
+  assert.equal(list.status, 200)
+  const paidRow = list.body.orders.find((row) => row.id === paid.body.id)
+  const pendingRow = list.body.orders.find((row) => row.id === pending.body.id)
+  assert.equal(paidRow.status, 'paid')
+  assert.equal(isValidLicenseKey(paidRow.licenseKey), true)
+  assert.equal(paidRow.buyer.email, buyer.email)
+  assert.equal(pendingRow.status, 'pending')
+  assert.equal(pendingRow.licenseKey, null)
+  delete process.env.ADMIN_PASSWORD
+})
+
+test('el panel genera keys gratis, con y sin HWID', async () => {
+  process.env.ADMIN_PASSWORD = 'panel-test-88'
+  const login = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'panel-test-88' } })
+  const authorization = `Bearer ${login.body.token}`
+
+  const blocked = await dispatch({ method: 'POST', pathname: '/api/admin/keys', body: { count: 1 } })
+  assert.equal(blocked.status, 401)
+
+  const free = await dispatch({
+    method: 'POST',
+    pathname: '/api/admin/keys',
+    body: { count: 3, note: 'sorteo' },
+    authorization,
+  })
+  assert.equal(free.status, 201)
+  assert.equal(free.body.keys.length, 3)
+  assert.equal(new Set(free.body.keys.map((row) => row.key)).size, 3)
+  for (const row of free.body.keys) {
+    assert.equal(isValidLicenseKey(row.key), true)
+    assert.equal(row.hwid, null)
+    assert.equal(row.note, 'sorteo')
+  }
+
+  const bound = await dispatch({
+    method: 'POST',
+    pathname: '/api/admin/keys',
+    body: { count: 1, hwid: '1742-90E2-2B1B-6CB8' },
+    authorization,
+  })
+  assert.equal(bound.status, 201)
+  const boundKey = bound.body.keys[0].key
+  assert.equal(isValidLicenseKey(boundKey, '1742-90E2-2B1B-6CB8'), true)
+  assert.equal(isValidLicenseKey(boundKey, 'AAAA-1111-BBBB-2222'), false)
+
+  const log = await dispatch({ method: 'GET', pathname: '/api/admin/keys', authorization })
+  assert.equal(log.status, 200)
+  assert.equal(log.body.keys.length, 4)
+  delete process.env.ADMIN_PASSWORD
+})
+
+test('la agenda del panel muestra la sesión agendada', async () => {
+  process.env.ADMIN_PASSWORD = 'panel-test-99'
+  const created = await dispatch({ method: 'POST', pathname: '/api/bookings', body: { buyer } })
+  await dispatch({ method: 'POST', pathname: `/api/bookings/${created.body.id}/mock-pay` })
+  const slot = (await dispatch({ method: 'GET', pathname: '/api/booking/config' })).body.days[0].slots[0]
+  await dispatch({
+    method: 'POST',
+    pathname: `/api/bookings/${created.body.id}/schedule`,
+    body: { startsAt: slot.startsAt },
+  })
+
+  const login = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'panel-test-99' } })
+  const agenda = await dispatch({
+    method: 'GET',
+    pathname: '/api/admin/agenda',
+    authorization: `Bearer ${login.body.token}`,
+  })
+  assert.equal(agenda.status, 200)
+  const session = agenda.body.sessions.find((row) => row.id === created.body.id)
+  assert.equal(session.startsAt, slot.startsAt)
+  assert.equal(session.buyer.name, buyer.name)
+  assert.equal(isValidLicenseKey(session.licenseKey), true)
+  delete process.env.ADMIN_PASSWORD
+})
+
 async function getStored(id) {
   const { listBookings } = await import('./store.mjs')
   const all = await listBookings()
