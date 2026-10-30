@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 import { afterEach, beforeEach, test } from 'node:test'
 import { dispatch, resetRateLimitForTests } from './api.mjs'
 import { resetBuckpayForTests } from './buckpay.mjs'
-import { isValidLicenseKey } from './license.mjs'
+import { generateLicenseKey, isValidLicenseKey } from './license.mjs'
+import { resetLicenseClaimsForTests } from './license-claims.mjs'
 import { resetStoreForTests } from './store.mjs'
 import { normalizePhone, validateBuyer } from './validate.mjs'
 
@@ -29,6 +30,7 @@ beforeEach(() => {
   process.env.LEAD_HOURS = '1'
   process.env.HORIZON_DAYS = '3'
   resetStoreForTests()
+  resetLicenseClaimsForTests()
   resetBuckpayForTests()
   resetRateLimitForTests()
 })
@@ -303,25 +305,49 @@ test('el endpoint de salud informa qué store está en uso', async () => {
   assert.equal(health.body.store, 'file')
 })
 
-test('el panel exige HWID para emitir keys, incluso las gratis', async () => {
-  process.env.ADMIN_PASSWORD = 'panel-test-66'
-  const login = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'panel-test-66' } })
-  const authorization = `Bearer ${login.body.token}`
+test('activar una key la ata al primer equipo y rechaza los demás', async () => {
+  const key = generateLicenseKey()
 
-  const withoutHwid = await dispatch({ method: 'POST', pathname: '/api/admin/keys', body: { count: 1 }, authorization })
-  assert.equal(withoutHwid.status, 400)
-  assert.equal(withoutHwid.body.error, 'hwid_required')
-
-  const withHwid = await dispatch({
+  const first = await dispatch({
     method: 'POST',
-    pathname: '/api/admin/keys',
-    body: { count: 1, hwid: '1742-90E2-2B1B-6CB8' },
-    authorization,
+    pathname: '/api/license/activate',
+    body: { key, hwid: '1742-90E2-2B1B-6CB8' },
   })
-  assert.equal(withHwid.status, 201)
-  assert.equal(isValidLicenseKey(withHwid.body.keys[0].key, '1742-90E2-2B1B-6CB8'), true)
-  assert.equal(isValidLicenseKey(withHwid.body.keys[0].key, 'AAAA-1111-BBBB-2222'), false)
-  delete process.env.ADMIN_PASSWORD
+  assert.equal(first.status, 200)
+  assert.equal(first.body.hwid, '174290E22B1B6CB8')
+
+  const again = await dispatch({
+    method: 'POST',
+    pathname: '/api/license/activate',
+    body: { key, hwid: '1742-90E2-2B1B-6CB8' },
+  })
+  assert.equal(again.status, 200)
+
+  const other = await dispatch({
+    method: 'POST',
+    pathname: '/api/license/activate',
+    body: { key, hwid: 'AAAA-1111-BBBB-2222' },
+  })
+  assert.equal(other.status, 409)
+  assert.equal(other.body.error, 'already_bound')
+})
+
+test('activar rechaza keys inválidas y HWID vacío', async () => {
+  const bad = await dispatch({
+    method: 'POST',
+    pathname: '/api/license/activate',
+    body: { key: 'TOMZ-0000-0000-0000-0000', hwid: '1742-90E2-2B1B-6CB8' },
+  })
+  assert.equal(bad.status, 400)
+  assert.equal(bad.body.error, 'invalid_key')
+
+  const noHwid = await dispatch({
+    method: 'POST',
+    pathname: '/api/license/activate',
+    body: { key: generateLicenseKey() },
+  })
+  assert.equal(noHwid.status, 400)
+  assert.equal(noHwid.body.error, 'hwid_required')
 })
 
 test('la compra de la app ata la key al HWID del comprador', async () => {

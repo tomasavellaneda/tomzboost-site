@@ -1,7 +1,8 @@
 import { adminConfigured, adminSessionToken, checkAdminPassword, checkAdminToken } from './admin.mjs'
 import { createPixTransaction, getTransaction, mockMarkPaid, providerDetail } from './buckpay.mjs'
 import { APP_AMOUNT_CENTS, getConfig } from './config.mjs'
-import { generateLicenseKey, issueLicenseKey, normalizeHwid } from './license.mjs'
+import { generateLicenseKey, isValidLicenseKey, issueLicenseKey, normalizeHwid } from './license.mjs'
+import { claimLicenseKey } from './license-claims.mjs'
 import { command, redisConfigured } from './redis.mjs'
 import { findSlot, listSlots } from './schedule.mjs'
 import { claimSlot, getBooking, listBookings, listIssuedKeys, saveBooking, saveIssuedKey, slotTaken, updateBooking } from './store.mjs'
@@ -224,7 +225,7 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
     if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
     const count = Math.min(50, Math.max(1, Math.trunc(Number(body?.count)) || 1))
     const hwid = normalizeHwid(body?.hwid || '')
-    if (!hwid || hwid.length < 8) return { status: 400, body: { error: 'hwid_required' } }
+    if (hwid && hwid.length < 8) return { status: 400, body: { error: 'hwid_invalid' } }
     const note = String(body?.note || '')
       .trim()
       .slice(0, 120)
@@ -242,6 +243,20 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
       issued.push(record)
     }
     return { status: 201, body: { keys: issued } }
+  }
+
+  if (method === 'POST' && pathname === '/api/license/activate') {
+    if (!rateLimit(ip)) return { status: 429, body: { error: 'rate_limited' } }
+    const rawKey = String(body?.key || '')
+    const hwid = normalizeHwid(body?.hwid || '')
+    if (!isValidLicenseKey(rawKey, hwid || undefined)) return { status: 400, body: { error: 'invalid_key' } }
+    if (hwid.length < 8) return { status: 400, body: { error: 'hwid_required' } }
+    const claimKey = rawKey.toUpperCase().replace(/[^A-Z0-9]/g, '')
+    const claim = await claimLicenseKey(claimKey, hwid)
+    if (!claim.ok) {
+      return { status: 409, body: { error: 'already_bound', hwid: claim.hwid } }
+    }
+    return { status: 200, body: { ok: true, hwid } }
   }
 
   if (method === 'GET' && pathname === '/api/booking/config') {
