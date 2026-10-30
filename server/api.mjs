@@ -168,7 +168,13 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
     }
     return {
       status: 200,
-      body: { ok: true, store: configured ? 'redis' : 'file', redis, at: new Date().toISOString() },
+      body: {
+        ok: true,
+        store: configured ? 'redis' : 'file',
+        redis,
+        base: getConfig().publicBaseUrl || null,
+        at: new Date().toISOString(),
+      },
     }
   }
 
