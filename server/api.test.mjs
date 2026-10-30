@@ -4,6 +4,7 @@ import { dispatch, resetRateLimitForTests } from './api.mjs'
 import { resetBuckpayForTests } from './buckpay.mjs'
 import { generateLicenseKey, isValidLicenseKey } from './license.mjs'
 import { resetLicenseClaimsForTests } from './license-claims.mjs'
+import { resetPushForTests } from './push.mjs'
 import { resetStoreForTests } from './store.mjs'
 import { normalizePhone, validateBuyer } from './validate.mjs'
 
@@ -29,8 +30,12 @@ beforeEach(() => {
   process.env.HOLD_MINUTES = '20'
   process.env.LEAD_HOURS = '1'
   process.env.HORIZON_DAYS = '3'
+  delete process.env.VAPID_PUBLIC_KEY
+  delete process.env.VAPID_PRIVATE_KEY
+  delete process.env.VAPID_SUBJECT
   resetStoreForTests()
   resetLicenseClaimsForTests()
+  resetPushForTests()
   resetBuckpayForTests()
   resetRateLimitForTests()
 })
@@ -392,8 +397,89 @@ test('soporte puede liberar una clave para que se active en otro equipo', async 
   delete process.env.ADMIN_PASSWORD
 })
 
+test('push: sin token no se puede suscribir ni consultar el estado', async () => {
+  const subscription = fakePushSubscription('https://push.example/uno')
+
+  const subscribe = await dispatch({
+    method: 'POST',
+    pathname: '/api/admin/push/subscribe',
+    body: { subscription },
+  })
+  assert.equal(subscribe.status, 401)
+
+  const status = await dispatch({ method: 'GET', pathname: '/api/admin/push/status' })
+  assert.equal(status.status, 401)
+
+  const testPush = await dispatch({ method: 'POST', pathname: '/api/admin/push/test', body: {} })
+  assert.equal(testPush.status, 401)
+})
+
+test('push: guarda y cuenta las suscripciones sin duplicar', async () => {
+  process.env.ADMIN_PASSWORD = 'push-test-77'
+  const login = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'push-test-77' } })
+  const authorization = `Bearer ${login.body.token}`
+  const subscription = fakePushSubscription('https://push.example/uno')
+
+  const saved = await dispatch({
+    method: 'POST',
+    pathname: '/api/admin/push/subscribe',
+    body: { subscription },
+    authorization,
+  })
+  assert.equal(saved.status, 201)
+  assert.equal(saved.body.count, 1)
+
+  const status = await dispatch({ method: 'GET', pathname: '/api/admin/push/status', authorization })
+  assert.equal(status.status, 200)
+  assert.deepEqual(status.body, { count: 1 })
+
+  const duplicate = await dispatch({
+    method: 'POST',
+    pathname: '/api/admin/push/subscribe',
+    body: { subscription },
+    authorization,
+  })
+  assert.equal(duplicate.status, 201)
+  assert.deepEqual(
+    (await dispatch({ method: 'GET', pathname: '/api/admin/push/status', authorization })).body,
+    { count: 1 },
+  )
+
+  const invalid = await dispatch({
+    method: 'POST',
+    pathname: '/api/admin/push/subscribe',
+    body: { subscription: { endpoint: 'http://no-es-https', keys: {} } },
+    authorization,
+  })
+  assert.equal(invalid.status, 400)
+  assert.equal(invalid.body.error, 'subscription_invalid')
+
+  const testPush = await dispatch({ method: 'POST', pathname: '/api/admin/push/test', body: {}, authorization })
+  assert.equal(testPush.status, 200)
+  assert.equal(testPush.body.sent, 0)
+  assert.equal(testPush.body.configured, false)
+
+  delete process.env.ADMIN_PASSWORD
+})
+
+test('push: la clave pública VAPID está disponible sin token', async () => {
+  process.env.VAPID_PUBLIC_KEY = 'BPUBLIC_KEY_DE_PRUEBA'
+  process.env.VAPID_PRIVATE_KEY = 'PRIVATE_KEY_DE_PRUEBA'
+  const response = await dispatch({ method: 'GET', pathname: '/api/push/key' })
+  assert.equal(response.status, 200)
+  assert.equal(response.body.publicKey, 'BPUBLIC_KEY_DE_PRUEBA')
+})
+
 async function getStored(id) {
   const { listBookings } = await import('./store.mjs')
   const all = await listBookings()
   return all.find((item) => item.id === id)
+}
+
+function fakePushSubscription(endpoint) {
+  return {
+    endpoint,
+    expirationTime: null,
+    keys: { p256dh: 'BExampleP256dhKey', auth: 'exampleAuthSecret' },
+  }
 }

@@ -3,6 +3,15 @@ import { createPixTransaction, getTransaction, mockMarkPaid, providerDetail } fr
 import { APP_AMOUNT_CENTS, getConfig } from './config.mjs'
 import { generateLicenseKey, isValidLicenseKey, issueLicenseKey, normalizeHwid } from './license.mjs'
 import { claimLicenseKey, releaseLicenseKey } from './license-claims.mjs'
+import {
+  countPushSubscriptions,
+  isValidPushSubscription,
+  notifyPayment,
+  notifySchedule,
+  pushPublicKey,
+  savePushSubscription,
+  sendPushToAll,
+} from './push.mjs'
 import { command, redisConfigured } from './redis.mjs'
 import { findSlot, listSlots } from './schedule.mjs'
 import { claimSlot, getBooking, listBookings, listIssuedKeys, saveBooking, saveIssuedKey, slotTaken, updateBooking } from './store.mjs'
@@ -65,7 +74,15 @@ async function syncPayment(booking) {
     buckpayStatus: remote.status,
   }
   if (!booking.licenseKey) patch.licenseKey = issueLicenseKey(booking.hwid || undefined)
-  return updateBooking(booking.id, patch)
+  const updated = await updateBooking(booking.id, patch)
+  if (updated) {
+    try {
+      await notifyPayment(updated)
+    } catch {
+      /* Una notificación caída no puede frenar la confirmación del pago. */
+    }
+  }
+  return updated
 }
 
 async function remoteBooking(id) {
@@ -177,6 +194,34 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
         at: new Date().toISOString(),
       },
     }
+  }
+
+  if (method === 'GET' && pathname === '/api/push/key') {
+    return { status: 200, body: { publicKey: pushPublicKey() } }
+  }
+
+  if (pathname === '/api/admin/push/subscribe' && method === 'POST') {
+    if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
+    const subscription = body?.subscription
+    if (!isValidPushSubscription(subscription)) return { status: 400, body: { error: 'subscription_invalid' } }
+    await savePushSubscription(subscription)
+    return { status: 201, body: { ok: true, count: await countPushSubscriptions() } }
+  }
+
+  if (pathname === '/api/admin/push/status' && method === 'GET') {
+    if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
+    return { status: 200, body: { count: await countPushSubscriptions() } }
+  }
+
+  if (pathname === '/api/admin/push/test' && method === 'POST') {
+    if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
+    const result = await sendPushToAll({
+      title: 'Notificación de prueba',
+      body: 'Tomz Boost está conectado. Vas a recibir avisos de ventas y sesiones.',
+      url: '/admin',
+      tag: 'tomz-test',
+    })
+    return { status: 200, body: { ok: true, ...result } }
   }
 
   if (pathname === '/api/admin/login' && method === 'POST') {
@@ -393,6 +438,11 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
     if (result.error === 'slot_taken') return { status: 409, body: { error: 'slot_taken' } }
     if (result.error === 'already_scheduled') {
       return { status: 200, body: publicBooking(result.booking, { includePix: false }) }
+    }
+    try {
+      await notifySchedule(result.booking)
+    } catch {
+      /* Una notificación caída no puede frenar el agendamiento. */
     }
     return { status: 200, body: publicBooking(result.booking, { includePix: false }) }
   }

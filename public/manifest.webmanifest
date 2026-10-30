@@ -1,0 +1,25 @@
+{
+  "name": "Tomz Boost",
+  "short_name": "Tomz Boost",
+  "description": "Panel de administración de Tomz Boost",
+  "lang": "es",
+  "start_url": "/admin",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#111111",
+  "background_color": "#111111",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

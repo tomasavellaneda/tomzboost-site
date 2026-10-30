@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import type { MessageKey } from '../i18n/messages'
 import { useI18n } from '../i18n/I18nProvider'
+import {
+  currentPushState,
+  enablePush,
+  fetchPushCount,
+  pushSupported,
+  registerPushServiceWorker,
+  sendTestPush,
+  type PushDeviceState,
+} from '../push'
 import { IconCheck, IconCopy } from './Icons'
 
 type Buyer = { name: string; email: string; phone: string; discord: string }
@@ -49,6 +58,14 @@ const STATUS_KEYS: Record<string, MessageKey> = {
   pending: 'admin.statusPending',
   expired: 'admin.statusExpired',
   cancelled: 'admin.statusCancelled',
+}
+
+const PUSH_LABEL_KEYS: Record<Exclude<PushDeviceState, 'loading'>, MessageKey> = {
+  unsupported: 'push.unsupported',
+  blocked: 'push.blocked',
+  enabled: 'push.enabled',
+  off: 'push.off',
+  error: 'push.error',
 }
 
 export function AdminPage() {
@@ -224,6 +241,7 @@ export function AdminPage() {
 
       {token && (
         <div className="admin-board">
+          <PushCard token={token} />
           <div className="admin-toolbar">
             <nav className="admin-tabs" aria-label={t('admin.title')}>
               {(['agenda', 'orders', 'keys'] as const).map((name) => (
@@ -321,6 +339,116 @@ export function AdminPage() {
           )}
         </div>
       )}
+    </section>
+  )
+}
+
+function PushCard({ token }: { token: string }) {
+  const { t } = useI18n()
+  const [state, setState] = useState<PushDeviceState>('loading')
+  const [count, setCount] = useState<number | null>(null)
+  const [pending, setPending] = useState<'activate' | 'test' | null>(null)
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    let active = true
+    void (async () => {
+      if (!pushSupported()) {
+        if (active) setState('unsupported')
+        return
+      }
+      await registerPushServiceWorker()
+      const [nextState, total] = await Promise.all([
+        currentPushState(),
+        fetchPushCount(token).catch(() => null),
+      ])
+      if (!active) return
+      setState(nextState)
+      if (total != null) setCount(total)
+    })().catch(() => {
+      if (active) setState('error')
+    })
+    return () => {
+      active = false
+    }
+  }, [token])
+
+  async function activate(): Promise<void> {
+    if (pending) return
+    setPending('activate')
+    setMessage('')
+    try {
+      const next = await enablePush(token)
+      setState(next)
+      if (next === 'enabled') {
+        setCount(await fetchPushCount(token).catch(() => count))
+      } else if (next !== 'off') {
+        setMessage(t(next === 'unsupported' ? 'push.unsupported' : 'push.error'))
+      }
+    } catch {
+      setState('error')
+      setMessage(t('push.error'))
+    } finally {
+      setPending(null)
+    }
+  }
+
+  async function test(): Promise<void> {
+    if (pending) return
+    setPending('test')
+    setMessage('')
+    try {
+      const result = await sendTestPush(token)
+      if (result.sent > 0) {
+        setMessage(t('push.testSent'))
+      } else if (result.failed === 0) {
+        setMessage(t('push.noDevices'))
+      } else {
+        setMessage(t('push.testFailed'))
+      }
+      setCount(await fetchPushCount(token).catch(() => count))
+    } catch {
+      setMessage(t('push.testFailed'))
+    } finally {
+      setPending(null)
+    }
+  }
+
+  const label = state === 'loading' ? '…' : t(PUSH_LABEL_KEYS[state])
+  const canActivate =
+    state !== 'loading' && state !== 'unsupported' && state !== 'blocked' && state !== 'enabled'
+
+  return (
+    <section className={`admin-push is-${state}`} aria-label={t('push.title')}>
+      <header>
+        <h3>{t('push.title')}</h3>
+        <span className={`admin-push-status is-${state}`}>{label}</span>
+      </header>
+      <p className="admin-muted">{t('push.body')}</p>
+      <div className="admin-push-actions">
+        <button
+          className="button button-primary"
+          type="button"
+          disabled={pending !== null || !canActivate}
+          onClick={() => void activate()}
+        >
+          {pending === 'activate' ? t('push.activating') : t('push.enable')}
+        </button>
+        <button
+          className="button button-secondary"
+          type="button"
+          disabled={pending !== null}
+          onClick={() => void test()}
+        >
+          {pending === 'test' ? t('push.testing') : t('push.test')}
+        </button>
+      </div>
+      {count != null && (
+        <p className="admin-muted">
+          {t('push.devices')}: {count}
+        </p>
+      )}
+      {message && <p className="admin-push-message">{message}</p>}
     </section>
   )
 }
