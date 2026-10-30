@@ -2,6 +2,7 @@ import { adminConfigured, adminSessionToken, checkAdminPassword, checkAdminToken
 import { createPixTransaction, getTransaction, mockMarkPaid, providerDetail } from './buckpay.mjs'
 import { APP_AMOUNT_CENTS, getConfig } from './config.mjs'
 import { generateLicenseKey, issueLicenseKey, normalizeHwid } from './license.mjs'
+import { command, redisConfigured } from './redis.mjs'
 import { findSlot, listSlots } from './schedule.mjs'
 import { claimSlot, getBooking, listBookings, listIssuedKeys, saveBooking, saveIssuedKey, slotTaken, updateBooking } from './store.mjs'
 import { validateBuyer } from './validate.mjs'
@@ -151,6 +152,26 @@ function sessionView(booking) {
 }
 
 export async function dispatch({ method, pathname, body, ip = 'local', authorization = '' }) {
+  if (method === 'GET' && pathname === '/api/health') {
+    const configured = redisConfigured()
+    let redis = 'not_configured'
+    if (configured) {
+      try {
+        const stamp = String(Date.now())
+        await command('SET', 'tomz:health', stamp, 'EX', '60')
+        const back = await command('GET', 'tomz:health')
+        const pong = await command('PING')
+        redis = back === stamp && pong === 'PONG' ? 'ok' : `mismatch:${back}/${pong}`
+      } catch (error) {
+        redis = `error:${error.message}`
+      }
+    }
+    return {
+      status: 200,
+      body: { ok: true, store: configured ? 'redis' : 'file', redis, at: new Date().toISOString() },
+    }
+  }
+
   if (pathname === '/api/admin/login' && method === 'POST') {
     if (!adminConfigured()) return { status: 503, body: { error: 'admin_not_configured' } }
     if (!checkAdminPassword(body?.password)) return { status: 401, body: { error: 'unauthorized' } }

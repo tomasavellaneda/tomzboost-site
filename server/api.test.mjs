@@ -295,6 +295,13 @@ test('la agenda del panel muestra la sesión agendada', async () => {
   delete process.env.ADMIN_PASSWORD
 })
 
+test('el endpoint de salud informa qué store está en uso', async () => {
+  const health = await dispatch({ method: 'GET', pathname: '/api/health' })
+  assert.equal(health.status, 200)
+  assert.equal(health.body.ok, true)
+  assert.equal(health.body.store, 'file')
+})
+
 async function getStored(id) {
   const { listBookings } = await import('./store.mjs')
   const all = await listBookings()
