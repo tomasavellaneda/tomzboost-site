@@ -1,6 +1,6 @@
 /** Enlaces y metadatos públicos. */
 export const downloadUrl =
-  'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.2/Tomz-Boost-Setup-1.0.2.exe'
+  'https://github.com/tomasavellaneda/tomz-boost/releases/download/v1.0.3/Tomz-Boost-1.0.3-win64.zip'
 
 export const LINKS = {
   download: downloadUrl,
@@ -18,8 +18,8 @@ export const PRICES = {
 } as const
 
 export const RELEASE = {
-  version: '1.0.2',
-  size: '81 MB',
-  updatedAt: '23 Sep 2026',
+  version: '1.0.3',
+  size: '107 MB',
+  updatedAt: '30 Oct 2026',
   platforms: ['Windows 10', 'Windows 11'] as const,
 }
