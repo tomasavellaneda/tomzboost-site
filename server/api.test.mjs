@@ -363,6 +363,35 @@ test('la compra de la app ata la key al HWID del comprador', async () => {
   assert.equal(isValidLicenseKey(paid.body.licenseKey, 'AAAA-1111-BBBB-2222'), false)
 })
 
+test('soporte puede liberar una clave para que se active en otro equipo', async () => {
+  process.env.ADMIN_PASSWORD = 'panel-test-55'
+  const key = generateLicenseKey()
+  const login = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'panel-test-55' } })
+  const authorization = `Bearer ${login.body.token}`
+
+  const first = await dispatch({ method: 'POST', pathname: '/api/license/activate', body: { key, hwid: '1742-90E2-2B1B-6CB8' } })
+  assert.equal(first.status, 200)
+
+  const blocked = await dispatch({ method: 'POST', pathname: '/api/license/activate', body: { key, hwid: 'AAAA-1111-BBBB-2222' } })
+  assert.equal(blocked.status, 409)
+
+  const locked = await dispatch({ method: 'POST', pathname: '/api/admin/keys/release', body: { key } })
+  assert.equal(locked.status, 401)
+
+  const released = await dispatch({
+    method: 'POST',
+    pathname: '/api/admin/keys/release',
+    body: { key },
+    authorization,
+  })
+  assert.equal(released.status, 200)
+  assert.equal(released.body.released, true)
+
+  const moved = await dispatch({ method: 'POST', pathname: '/api/license/activate', body: { key, hwid: 'AAAA-1111-BBBB-2222' } })
+  assert.equal(moved.status, 200)
+  delete process.env.ADMIN_PASSWORD
+})
+
 async function getStored(id) {
   const { listBookings } = await import('./store.mjs')
   const all = await listBookings()

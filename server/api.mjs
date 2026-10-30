@@ -2,7 +2,7 @@ import { adminConfigured, adminSessionToken, checkAdminPassword, checkAdminToken
 import { createPixTransaction, getTransaction, mockMarkPaid, providerDetail } from './buckpay.mjs'
 import { APP_AMOUNT_CENTS, getConfig } from './config.mjs'
 import { generateLicenseKey, isValidLicenseKey, issueLicenseKey, normalizeHwid } from './license.mjs'
-import { claimLicenseKey } from './license-claims.mjs'
+import { claimLicenseKey, releaseLicenseKey } from './license-claims.mjs'
 import { command, redisConfigured } from './redis.mjs'
 import { findSlot, listSlots } from './schedule.mjs'
 import { claimSlot, getBooking, listBookings, listIssuedKeys, saveBooking, saveIssuedKey, slotTaken, updateBooking } from './store.mjs'
@@ -245,8 +245,17 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
     return { status: 201, body: { keys: issued } }
   }
 
-  if (method === 'POST' && pathname === '/api/license/activate') {
-    if (!rateLimit(ip)) return { status: 429, body: { error: 'rate_limited' } }
+  if (pathname === '/api/admin/keys/release' && method === 'POST') {
+    if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
+    const key = String(body?.key || '')
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+    if (!key) return { status: 400, body: { error: 'key_required' } }
+    const released = await releaseLicenseKey(key)
+    return { status: 200, body: { ok: true, released } }
+  }
+
+  if (method === 'POST' && pathname === '/api/license/activate') {    if (!rateLimit(ip)) return { status: 429, body: { error: 'rate_limited' } }
     const rawKey = String(body?.key || '')
     const hwid = normalizeHwid(body?.hwid || '')
     if (!isValidLicenseKey(rawKey, hwid || undefined)) return { status: 400, body: { error: 'invalid_key' } }

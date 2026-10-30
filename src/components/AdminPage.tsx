@@ -341,7 +341,25 @@ function KeysTab({
   const [hwid, setHwid] = useState('')
   const [note, setNote] = useState('')
   const [busy, setBusy] = useState(false)
+  const [releasedId, setReleasedId] = useState('')
   const localeTag = locale === 'pt' ? 'pt-BR' : locale === 'en' ? 'en-US' : 'es-AR'
+
+  async function release(entry: IssuedKey): Promise<void> {
+    try {
+      const response = await fetch('/api/admin/keys/release', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ key: entry.key }),
+      })
+      if (!response.ok) {
+        onError(t('admin.keyError'))
+        return
+      }
+      setReleasedId(entry.id)
+    } catch {
+      onError(t('admin.keyError'))
+    }
+  }
 
   async function submit(event: FormEvent) {
     event.preventDefault()
@@ -419,6 +437,9 @@ function KeysTab({
             </header>
             <AdminKey value={entry.key} />
             <p className="admin-muted">{entry.hwid ? `${t('admin.boundTo')} ${formatHwid(entry.hwid)}` : t('admin.unbound')}</p>
+            <button className="button button-secondary" type="button" onClick={() => void release(entry)}>
+              {releasedId === entry.id ? t('admin.released') : t('admin.release')}
+            </button>
           </article>
         ))}
       </div>
