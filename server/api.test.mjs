@@ -230,7 +230,7 @@ test('el panel lista todos los pedidos con su estado y su clave', async () => {
   delete process.env.ADMIN_PASSWORD
 })
 
-test('el panel genera keys gratis, con y sin HWID', async () => {
+test('el panel genera keys gratis atadas a un equipo', async () => {
   process.env.ADMIN_PASSWORD = 'panel-test-88'
   const login = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'panel-test-88' } })
   const authorization = `Bearer ${login.body.token}`
@@ -241,15 +241,16 @@ test('el panel genera keys gratis, con y sin HWID', async () => {
   const free = await dispatch({
     method: 'POST',
     pathname: '/api/admin/keys',
-    body: { count: 3, note: 'sorteo' },
+    body: { count: 3, hwid: '9111-2222-3333-4444', note: 'sorteo' },
     authorization,
   })
   assert.equal(free.status, 201)
   assert.equal(free.body.keys.length, 3)
   assert.equal(new Set(free.body.keys.map((row) => row.key)).size, 3)
   for (const row of free.body.keys) {
-    assert.equal(isValidLicenseKey(row.key), true)
-    assert.equal(row.hwid, null)
+    assert.equal(isValidLicenseKey(row.key, '9111-2222-3333-4444'), true)
+    assert.equal(isValidLicenseKey(row.key, '1742-90E2-2B1B-6CB8'), false)
+    assert.equal(row.hwid, '9111222233334444')
     assert.equal(row.note, 'sorteo')
   }
 
@@ -300,6 +301,40 @@ test('el endpoint de salud informa qué store está en uso', async () => {
   assert.equal(health.status, 200)
   assert.equal(health.body.ok, true)
   assert.equal(health.body.store, 'file')
+})
+
+test('el panel exige HWID para emitir keys, incluso las gratis', async () => {
+  process.env.ADMIN_PASSWORD = 'panel-test-66'
+  const login = await dispatch({ method: 'POST', pathname: '/api/admin/login', body: { password: 'panel-test-66' } })
+  const authorization = `Bearer ${login.body.token}`
+
+  const withoutHwid = await dispatch({ method: 'POST', pathname: '/api/admin/keys', body: { count: 1 }, authorization })
+  assert.equal(withoutHwid.status, 400)
+  assert.equal(withoutHwid.body.error, 'hwid_required')
+
+  const withHwid = await dispatch({
+    method: 'POST',
+    pathname: '/api/admin/keys',
+    body: { count: 1, hwid: '1742-90E2-2B1B-6CB8' },
+    authorization,
+  })
+  assert.equal(withHwid.status, 201)
+  assert.equal(isValidLicenseKey(withHwid.body.keys[0].key, '1742-90E2-2B1B-6CB8'), true)
+  assert.equal(isValidLicenseKey(withHwid.body.keys[0].key, 'AAAA-1111-BBBB-2222'), false)
+  delete process.env.ADMIN_PASSWORD
+})
+
+test('la compra de la app ata la key al HWID del comprador', async () => {
+  const created = await dispatch({
+    method: 'POST',
+    pathname: '/api/bookings',
+    body: { product: 'app', buyer, hwid: '1742-90E2-2B1B-6CB8' },
+  })
+  assert.equal(created.status, 201)
+  assert.equal(isValidLicenseKey(created.body.licenseKey), false)
+  const paid = await dispatch({ method: 'POST', pathname: `/api/bookings/${created.body.id}/mock-pay` })
+  assert.equal(isValidLicenseKey(paid.body.licenseKey, '1742-90E2-2B1B-6CB8'), true)
+  assert.equal(isValidLicenseKey(paid.body.licenseKey, 'AAAA-1111-BBBB-2222'), false)
 })
 
 async function getStored(id) {

@@ -47,7 +47,7 @@ export function isValidLicenseKey(raw, hwid) {
   })
 }
 
-/** Clave de la app, sin atar a un equipo. Se guarda una sola vez en el pedido. */
-export function issueLicenseKey() {
-  return generateLicenseKey()
+/** Clave de la app. Si recibe un HWID queda atada a ese equipo. */
+export function issueLicenseKey(hwid) {
+  return generateLicenseKey(hwid)
 }

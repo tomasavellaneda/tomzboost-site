@@ -346,6 +346,10 @@ function KeysTab({
   async function submit(event: FormEvent) {
     event.preventDefault()
     if (busy) return
+    if (!hwid.trim()) {
+      onError(t('admin.hwidRequired'))
+      return
+    }
     setBusy(true)
     try {
       const response = await fetch('/api/admin/keys', {
@@ -390,6 +394,7 @@ function KeysTab({
               onChange={(event) => setHwid(event.target.value.toUpperCase())}
               placeholder="XXXX-XXXX-XXXX-XXXX"
               spellCheck={false}
+              required
             />
           </label>
         </div>
@@ -398,7 +403,7 @@ function KeysTab({
           <input value={note} onChange={(event) => setNote(event.target.value)} placeholder={t('admin.noteHint')} />
         </label>
         <p className="admin-muted">{t('admin.hwidHint')}</p>
-        <button className="button button-primary" type="submit" disabled={busy}>
+        <button className="button button-primary" type="submit" disabled={busy || !hwid.trim()}>
           {busy ? t('admin.generating') : t('admin.generate')}
         </button>
       </form>

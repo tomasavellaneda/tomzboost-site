@@ -63,7 +63,7 @@ async function syncPayment(booking) {
     paidAt: new Date().toISOString(),
     buckpayStatus: remote.status,
   }
-  if (!booking.licenseKey) patch.licenseKey = issueLicenseKey()
+  if (!booking.licenseKey) patch.licenseKey = issueLicenseKey(booking.hwid || undefined)
   return updateBooking(booking.id, patch)
 }
 
@@ -224,7 +224,7 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
     if (!adminConfigured() || !checkAdminToken(authorization)) return { status: 401, body: { error: 'unauthorized' } }
     const count = Math.min(50, Math.max(1, Math.trunc(Number(body?.count)) || 1))
     const hwid = normalizeHwid(body?.hwid || '')
-    if (hwid && hwid.length < 8) return { status: 400, body: { error: 'hwid_invalid' } }
+    if (!hwid || hwid.length < 8) return { status: 400, body: { error: 'hwid_required' } }
     const note = String(body?.note || '')
       .trim()
       .slice(0, 120)
@@ -294,7 +294,7 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
       }
     }
     if ((current.status === 'paid' || current.status === 'paid_overlap') && !current.licenseKey) {
-      const licenseKey = issueLicenseKey()
+      const licenseKey = issueLicenseKey(current.hwid || undefined)
       current = (await updateBooking(current.id, { licenseKey })) || { ...current, licenseKey }
     }
     return { status: 200, body: publicBooking(current, { includePix: current.status === 'pending' }) }
@@ -323,6 +323,7 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
     const id = `${product === 'app' ? 'tbapp' : 'tb'}_${crypto.randomUUID().replace(/-/g, '')}`
     const now = new Date()
     const amountCents = product === 'app' ? APP_AMOUNT_CENTS : config.amountCents
+    const hwid = product === 'app' ? normalizeHwid(body?.hwid || '') : ''
     const booking = {
       id,
       product,
@@ -331,6 +332,7 @@ export async function dispatch({ method, pathname, body, ip = 'local', authoriza
       startsAt: null,
       endsAt: null,
       buyer: validated.buyer,
+      hwid: hwid && hwid.length >= 8 ? hwid : null,
       pix: null,
       buckpayId: null,
       createdAt: now.toISOString(),
